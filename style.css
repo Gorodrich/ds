@@ -1,0 +1,398 @@
+/* 基本リセット */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  overflow-x: hidden;
+}
+
+/* フォントとカラー */
+body {
+  font-family: "Noto Sans JP", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+  line-height: 1.7;
+  background: #fafafa;
+  color: #222;
+}
+
+/* ヘッダー */
+.site-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #f0f2f5;
+  padding: 12px 20px;
+  border-bottom: 1px solid #ccc;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  z-index: 1000;
+  height: 48px; /* 高さを56px→48pxに */
+  box-sizing: border-box;
+}
+
+.site-header .logo {
+  font-size: 20px;
+  font-weight: bold;
+  color: #005bac;
+}
+
+.site-header .top-nav a {
+  margin-left: 20px;
+  text-decoration: none;
+  color: #005bac;
+}
+
+/* law-infoをheader直下・画面上部に固定 */
+.law-info {
+  position: fixed;
+  top: 48px; /* headerの高さに合わせて修正 */
+  left: 0;
+  width: 100vw;
+  background: #fff;
+  border-bottom: 1px solid #ccc;
+  z-index: 999;
+  padding: 12px 20px 8px 20px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  min-height: 44px; /* 高さを44px→36pxに */
+  height: 44px;
+}
+.law-info h2 {
+  font-size: 20px;
+  margin-right: 18px;
+  margin-bottom: 0;
+  color: #222;
+}
+.law-info p {
+  margin-bottom: 0;
+  color: #444;
+  font-size: 15px;
+}
+
+/* メイン構造 */
+.container {
+  display: flex;
+  width: 100vw;
+  height: calc(100vh - 48px - 36px - 40px); /* header(48px)+law-info(36px)+footer(40px) */
+  margin: 84px 0 40px 0; /* header+law-info=84px, footer=40px */
+  padding: 0;
+  overflow: hidden;
+  position: relative;
+  left: 0;
+  right: 0;
+  /* Bootstrap の .container クラスを上書き */
+  max-width: none !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+/* サイドバー */
+.sidebar {
+  width: 15vw;
+  min-width: 180px;
+  max-width: 350px;
+  flex-shrink: 0;
+  background: #f5f7fa;
+  padding: 24px 18px 24px 18px;
+  box-shadow: 1px 0 4px #eee;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  height: 100%;
+  overflow-y: auto;
+  margin: 0;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+}
+
+.sidebar li {
+  margin: 0;
+  padding: 0.2em 0 0.2em 0.5em;
+  position: relative;
+  font-size: 1em;
+}
+
+.sidebar li > a {
+  text-decoration: none;
+  color: #222;
+  display: inline-block;
+  padding-left: 0.5em;
+}
+
+.sidebar li {
+  font-weight: normal;
+}
+
+.sidebar li li {
+  padding-left: 1.5em;
+  font-size: 0.98em;
+}
+
+.sidebar li li li {
+  padding-left: 2.5em;
+  font-size: 0.96em;
+}
+
+.sidebar li li li li {
+  padding-left: 3.5em;
+  font-size: 0.94em;
+}
+
+/* 親項目（子ulを持つli）に三角形アイコンを表示 */
+.sidebar li:has(ul)::before {
+  content: "";
+  /* 疑似要素の三角形は非表示に */
+  display: none;
+}
+
+/* 子を持たないliはアイコンなし */
+.sidebar li:not(:has(ul))::before {
+  content: "";
+  display: none;
+}
+
+/* 三角形アイコン用span */
+.sidebar-toggle {
+  font-size: 0.7em;
+  display: inline-block;
+  width: 1em;
+  margin-left: -1.2em;
+  margin-right: 0.2em;
+  vertical-align: middle;
+  color: #444;
+  cursor: pointer;
+  user-select: none;
+}
+
+/* 最上位（h2相当）は太字 */
+.sidebar > ul > li > a {
+  font-weight: bold;
+}
+
+/* ホバー時の色 */
+.sidebar li > a:hover {
+  color: #1976d2;
+  text-decoration: underline;
+}
+
+
+/* 本文エリア */
+.main-content {
+  width: 85vw;
+  flex: 1 1 0;
+  padding: 30px;
+  background: #fff;
+  height: auto; /* 高さを100%→autoに */
+  overflow-y: auto;
+  box-sizing: border-box;
+  margin: 0;
+  /* 右側の余白を完全に排除 */
+  margin-right: 0 !important;
+  padding-right: 30px !important;
+  max-width: none !important;
+}
+
+.law-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.law-header h1 {
+  font-size: 24px;
+  color: #222;
+}
+
+.tabs button {
+  margin-left: 10px;
+  padding: 5px 12px;
+  background: #eee;
+  border: 1px solid #ccc;
+  cursor: pointer;
+}
+
+.tabs button.active {
+  background: #005bac;
+  color: #fff;
+  border-color: #005bac;
+}
+
+.preamble, .chapter {
+  margin-top: 30px;
+}
+
+.article {
+  margin-top: 20px;
+}
+
+/* 章 (h2) */
+.preamble > h2 {
+  font-size: 22px;
+  font-weight: bold;
+  margin-bottom: 18px;
+  margin-top: 0;
+  padding-left: 14px;
+  color: #222;
+}
+
+/* 章 (h2) */
+.chapter > h2 {
+  font-size: 22px;
+  font-weight: bold;
+  margin-bottom: 18px;
+  margin-top: 0;
+  padding-left: 14px;
+  color: #222;
+}
+
+/* 節 (h3) */
+.chapter > h3 {
+  font-size: 19px;
+  font-weight: bold;
+  margin-bottom: 14px;
+  margin-top: 24px;
+  padding-left: 18px;
+  color: #234;
+}
+
+/* 款 (h4) */
+.chapter > h4 {
+  font-size: 17px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  margin-top: 20px;
+  padding-left: 22px;
+  color: #345;
+}
+
+/* 条 (h5) */
+.article h5 {
+  font-size: 16px;
+  margin-bottom: 5px;
+  border-left: 4px solid #005bac;
+  padding-left: 26px;
+  color: #222;
+}
+
+/* フッター */
+.site-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* 左右に分ける */
+  padding: 0 20px;
+  font-size: 14px;
+  background: #f8f8f8;
+  border-top: 1px solid #ccc;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100vw;
+  z-index: 1000;
+  height: 40px;
+  box-sizing: border-box;
+  line-height: 40px;
+}
+
+.site-footer .footer-left,
+.site-footer .footer-right {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  height: 100%;
+  line-height: 40px;
+}
+
+.site-footer .footer-left {
+  justify-content: flex-start;
+}
+
+.site-footer .footer-right {
+  justify-content: flex-end;
+}
+
+.site-footer p {
+  margin: 0;
+}
+
+.site-footer a {
+  color: #005bac;
+  text-decoration: none;
+  margin-left: 10px;
+  margin-right: 0;
+  /* 右寄せのためmargin-rightは不要 */
+  display: flex;
+  align-items: center;
+  line-height: 40px;
+}
+
+/* law-header内のform-switch配置調整 */
+.law-header .form-switch {
+  margin-left: 20px;
+  font-size: 1em;
+}
+
+/* 非一般参加者条文の「表示」チェックボックスの余白調整 */
+.show-non-general {
+  margin-right: 6px;
+  margin-left: 0.5em;
+  vertical-align: middle;
+}
+.show-non-general-label {
+  margin-right: 1em;
+  vertical-align: middle;
+}
+
+/* バッジのデザイン修正 */
+.badge {
+  display: inline-block;
+  background: #fff;
+  color: #222;
+  border: 1.5px solid #111;
+  border-radius: 4px;
+  padding: 2px 12px;
+  font-size: 14px;
+  font-weight: bold;
+  box-shadow: none;
+  margin-left: 8px;
+  letter-spacing: 0.05em;
+  vertical-align: middle;
+}
+
+/* 印刷用: law-info, main-content, site-footerのみ印刷 */
+@media print {
+  body * {
+    visibility: hidden !important;
+  }
+  .law-info, .main-content, .site-footer,
+  .law-info * , .main-content *, .site-footer * {
+    visibility: visible !important;
+  }
+  .law-info, .main-content, .site-footer {
+    position: static !important;
+    left: 0 !important;
+    top: 0 !important;
+    width: 100vw !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+    background: #fff !important;
+  }
+}

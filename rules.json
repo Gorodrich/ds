@@ -1,0 +1,30 @@
+[
+  {
+    "id": "index",
+    "rule_name": "基本ルール",
+    "enforcement_date": "令和7年6月19日施行",
+    "rule_number": "令和7年ルール第1号",
+    "category": "ルール"
+  },
+  {
+    "id": "R0701002",
+    "rule_name": "禁止事項及び罰則に関するルール",
+    "enforcement_date": "令和7年6月19日施行",
+    "rule_number": "令和7年ルール第2号",
+    "category": "ルール"
+  },
+  {
+    "id": "R0701003",
+    "rule_name": "禁止事項及び罰則に関するルール",
+    "enforcement_date": "令和7年6月19日施行",
+    "rule_number": "令和7年ルール第2号",
+    "category": "ルール"
+  },
+  {
+    "id": "R0704001",
+    "rule_name": "国家に関するルール",
+    "enforcement_date": "令和7年6月19日施行",
+    "rule_number": "令和7年ルール施行令第3号",
+    "category": "ルール施行令"
+  }
+]
