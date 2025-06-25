@@ -198,7 +198,7 @@ document.addEventListener('DOMContentLoaded', function() {
   (function() {
     // ファイル名からIDを取得
     const htmlName = location.pathname.split('/').pop().replace(/\.html$/, '');
-    fetch('https://gorodrich.github.io/ds/rules.json')
+    fetch('rules.json')
       .then(res => {
         if (!res.ok) throw new Error('rules.jsonの取得に失敗しました');
         return res.json();
