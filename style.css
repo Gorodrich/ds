@@ -605,6 +605,18 @@ body {
     margin-left: auto;
   }
 
+  .law-info h2 {
+    font-size: 20px;
+    margin-right: 18px;
+    margin-bottom: 0;
+    color: #222;
+  }
+  .law-info p {
+    margin-bottom: 0;
+    color: #444;
+    font-size: 15px;
+  }
+
   /* サイドバー: デフォルト非表示、open時のみ表示。main-contentを覆うz-index */
   .sidebar {
     display: none;
@@ -631,6 +643,70 @@ body {
 
   .sidebar .toc {
     margin-top: 48px; /* ×ボタンの高さ+余白分 */
+  }
+
+  /* law-info レイアウト変更: 2行構成・高さ増加 */
+  .law-info {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0;
+    min-height: 68px;
+    height: 68px;
+    padding: 10px 10px 8px 10px;
+  }
+  .law-info-row1 {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    width: 100%;
+    margin-bottom: 2px;
+  }
+  .law-info-row1 h2 {
+    font-size: 18px;
+    margin-right: 10px;
+    margin-bottom: 0;
+    color: #222;
+    padding: 0;
+    display: inline-block;
+    vertical-align: middle;
+  }
+  .law-info-row1 .badge {
+    margin-left: 0;
+    margin-right: 0;
+    font-size: 13px;
+    padding: 2px 8px;
+    vertical-align: middle;
+  }
+  .law-info-row2 {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .law-info-row2 p {
+    font-size: 13px;
+    margin-bottom: 0;
+    color: #444;
+    line-height: 1.5;
+    padding: 0;
+    word-break: break-all;
+  }
+
+  /* law-info直下のh2, p, .badgeを非表示（JSでラップするため） */
+  .law-info > h2,
+  .law-info > p,
+  .law-info > .badge {
+    display: none !important;
+  }
+
+  /* main-content/containerの高さ調整: law-info高さ分増やす */
+  .container {
+    height: calc(100vh - 48px - 68px - 40px);
+    margin: 116px 0 40px 0; /* header+law-info=116px, footer=40px */
+  }
+  .main-content {
+    height: calc(100vh - 48px - 68px - 40px);
   }
 }
 
