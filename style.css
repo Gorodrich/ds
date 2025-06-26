@@ -85,8 +85,9 @@ body {
 .container {
   display: flex;
   width: 100vw;
-  height: calc(100vh - 48px - 36px - 40px); /* header(48px)+law-info(36px)+footer(40px) */
-  margin: 84px 0 40px 0; /* header+law-info=84px, footer=40px */
+  /* header:48px + law-info:44px + footer:40px = 132px */
+  height: calc(100vh - 48px - 44px - 40px); /* header(48px)+law-info(44px)+footer(40px) */
+  margin: 92px 0 40px 0; /* header+law-info=92px, footer=40px */
   padding: 0;
   overflow: hidden;
   position: relative;
@@ -200,11 +201,11 @@ body {
   flex: 1 1 0;
   padding: 30px;
   background: #fff;
-  height: auto; /* 高さを100%→autoに */
+  /* 高さをcontainerに合わせて調整 */
+  height: calc(100vh - 48px - 44px - 40px);
   overflow-y: auto;
   box-sizing: border-box;
   margin: 0;
-  /* 右側の余白を完全に排除 */
   margin-right: 0 !important;
   padding-right: 30px !important;
   max-width: none !important;
@@ -394,5 +395,323 @@ body {
     padding: 0 !important;
     box-shadow: none !important;
     background: #fff !important;
+  }
+}
+
+/* ハンバーガーメニューはデフォルト非表示 */
+.hamburger {
+  display: none;
+}
+
+/* sidebarの×ボタンはデフォルト非表示 */
+.sidebar .sidebar-close {
+  display: none;
+  position: absolute;
+  top: 10px;
+  left: 14px;
+  font-size: 2em;
+  color: #888;
+  background: none;
+  border: none;
+  cursor: pointer;
+  z-index: 3300;
+  line-height: 1;
+  width: 36px;
+  height: 36px;
+  text-align: center;
+  padding: 0;
+}
+.sidebar .sidebar-close:active {
+  color: #005bac;
+}
+
+/* sidebar自体はデフォルトでflex（PC用） */
+.sidebar {
+  display: flex;
+}
+
+/* ====== レスポンシブ対応: 768px以下 ====== */
+@media (max-width: 768px) {
+  html, body {
+    width: 100vw;
+    overflow-x: hidden;
+  }
+
+  .site-header {
+    height: 48px;
+    padding: 0 12px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    z-index: 2000;
+  }
+  .site-header .logo {
+    font-size: 16px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 70vw;
+  }
+  .site-header .top-nav {
+    display: none;
+  }
+  /* 目次ボタン */
+  .toc-toggle-btn {
+    display: inline-block;
+    background: #005bac;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-size: 15px;
+    padding: 6px 16px;
+    margin-right: 8px;
+    margin-left: 0;
+    cursor: pointer;
+    height: 36px;
+    line-height: 24px;
+    vertical-align: middle;
+    z-index: 2101;
+  }
+  .toc-toggle-btn:active,
+  .toc-toggle-btn:focus {
+    background: #1976d2;
+    outline: none;
+  }
+
+  /* ハンバーガーメニュー */
+  .hamburger {
+    display: block;
+    width: 36px;
+    height: 36px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    position: relative;
+    z-index: 2100;
+    margin-left: 0;
+    margin-right: 0;
+    padding: 0;
+  }
+  .hamburger span,
+  .hamburger span::before,
+  .hamburger span::after {
+    display: block;
+    position: absolute;
+    left: 8px;
+    width: 20px;
+    height: 3px;
+    background: #005bac;
+    border-radius: 2px;
+    transition: all 0.3s;
+    content: '';
+  }
+  .hamburger span {
+    top: 16px;
+    left: 8px;
+    right: 8px;
+  }
+  .hamburger span::before,
+  .hamburger span::after {
+    position: absolute;
+    left: 0;
+    width: 20px;
+    height: 3px;
+    background: #005bac;
+    border-radius: 2px;
+    content: '';
+  }
+  .hamburger span::before {
+    top: -8px;
+  }
+  .hamburger span::after {
+    top: 8px;
+  }
+
+  /* ドロワーナビゲーション */
+  .drawer-nav {
+    display: none;
+    position: fixed;
+    top: 48px;
+    right: 0;
+    width: 70vw;
+    max-width: 320px;
+    min-width: 180px;
+    height: calc(100vh - 48px);
+    background: #fff;
+    box-shadow: -2px 0 12px rgba(0,0,0,0.18);
+    z-index: 3200;
+    padding: 24px 18px 24px 18px;
+    transition: transform 0.25s;
+    transform: translateX(100%);
+  }
+  .drawer-nav.open {
+    display: block;
+    transform: translateX(0);
+  }
+  .drawer-nav .drawer-close {
+    position: absolute;
+    top: 10px;
+    left: 14px;
+    font-size: 2em;
+    color: #888;
+    background: none;
+    border: none;
+    cursor: pointer;
+    z-index: 3300;
+    line-height: 1;
+    width: 36px;
+    height: 36px;
+    text-align: center;
+    padding: 0;
+  }
+  .drawer-nav .drawer-close:active {
+    color: #005bac;
+  }
+  .drawer-nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 40px 0 0 0;
+  }
+  .drawer-nav li {
+    margin-bottom: 18px;
+  }
+  .drawer-nav a {
+    color: #005bac;
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: bold;
+  }
+  .drawer-nav a:active,
+  .drawer-nav a:focus {
+    color: #1976d2;
+    text-decoration: underline;
+  }
+
+  /* site-headerのボタン配置 */
+  .site-header {
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+  }
+  .site-header .logo {
+    flex: 1 1 auto;
+    margin-right: 8px;
+  }
+  .site-header .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    margin-left: auto;
+  }
+
+  /* サイドバー: デフォルト非表示、open時のみ表示。main-contentを覆うz-index */
+  .sidebar {
+    display: none;
+    position: fixed;
+    top: 48px;
+    left: 0;
+    width: 80vw;
+    max-width: 340px;
+    min-width: 0;
+    height: calc(100vh - 48px);
+    background: #fff;
+    box-shadow: 2px 0 12px rgba(0,0,0,0.18);
+    z-index: 3500;
+    overflow-y: auto;
+    padding: 24px 12px 24px 12px;
+    margin: 0;
+    transition: transform 0.25s;
+    transform: translateX(-100%);
+  }
+  .sidebar.open {
+    display: block;
+    transform: translateX(0);
+  }
+
+  .sidebar .toc {
+    margin-top: 48px; /* ×ボタンの高さ+余白分 */
+  }
+}
+
+/* 769px以上では目次ボタン・ハンバーガー・drawer-navは非表示 */
+@media (min-width: 769px) {
+  .toc-toggle-btn,
+  .hamburger,
+  .drawer-nav {
+    display: none !important;
+  }
+}
+
+/* ドロワーオーバーレイ時の背景ぼかし */
+@media (max-width: 768px) {
+  body.drawer-open {
+    overflow: hidden;
+  }
+  body.drawer-open .main-content::before {
+    content: "";
+    display: block;
+    position: fixed;
+    top: 48px;
+    left: 0;
+    width: 100vw;
+    height: calc(100vh - 48px);
+    background: rgba(0,0,0,0.18);
+    z-index: 3199;
+  }
+}
+  .site-footer {
+    height: 36px;
+    font-size: 12px;
+    padding: 0 10px;
+    line-height: 36px;
+  }
+  .site-footer .footer-left,
+  .site-footer .footer-right {
+    line-height: 36px;
+  }
+  .site-footer a {
+    font-size: 12px;
+    margin-left: 6px;
+  }
+
+
+/* 769px以上ではsidebarはflex、ハンバーガー・×ボタンは非表示 */
+@media (min-width: 769px) {
+  .hamburger {
+    display: none !important;
+  }
+  .sidebar {
+    display: flex !important;
+    position: static !important;
+    width: 15vw !important;
+    min-width: 180px !important;
+    max-width: 350px !important;
+    height: 100% !important;
+    box-shadow: 1px 0 4px #eee !important;
+    transform: none !important;
+    z-index: 1 !important;
+    padding: 24px 18px 24px 18px !important;
+  }
+  .sidebar .sidebar-close {
+    display: none !important;
+  }
+}
+
+/* サイドバーオーバーレイ時の背景ぼかし（オプション） */
+@media (max-width: 768px) {
+  body.sidebar-open {
+    overflow: hidden;
+  }
+  body.sidebar-open .main-content::before {
+    content: "";
+    display: block;
+    position: fixed;
+    top: 48px;
+    left: 0;
+    width: 100vw;
+    height: calc(100vh - 48px);
+    background: rgba(0,0,0,0.18);
+    z-index: 2999;
   }
 }
