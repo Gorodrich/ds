@@ -15,12 +15,29 @@
 
   <!-- ヘッダー -->
   <header class="site-header">
-    <div class="logo">3DS半分こするくらい仲良しクラフト ルールポータル</div>
+    <div class="logo">DSクラフト ルールポータル</div>
+    <div class="header-actions">
+      <!-- 目次ボタン -->
+      <button class="toc-toggle-btn" id="toc-toggle-btn" type="button">目次</button>
+      <!-- ハンバーガーメニュー -->
+      <button class="hamburger" id="drawer-menu-btn" aria-label="メニュー" tabindex="0">
+        <span></span>
+      </button>
+    </div>
     <nav class="top-nav">
-      <a href="#">ホーム</a>
-      <a href="#">DSトップ</a>
+      <a href="index.html">ホーム</a>
+      <a href="https://www.ds2.uk/">DSトップ</a>
     </nav>
   </header>
+
+  <!-- ドロワーナビゲーション -->
+  <nav class="drawer-nav" id="drawer-nav">
+    <button class="drawer-close" id="drawer-close-btn" aria-label="閉じる" tabindex="0">&times;</button>
+    <ul>
+      <li><a href="index.html">ホーム</a></li>
+      <li><a href="https://www.ds2.uk/">DSトップ</a></li>
+    </ul>
+  </nav>
 
   <!-- law-infoをheader直下・sidebar外に移動 -->
   <div class="law-info">
@@ -30,9 +47,9 @@
   <!-- メインラッパー -->
   <div class="container">
 
-    <!-- サイドバー -->
-    <aside class="sidebar">
-      <!-- law-infoをここから削除 -->
+    <!-- サイドバー: ここに×ボタンを追加 -->
+    <aside class="sidebar" id="sidebar">
+      <button class="sidebar-close" id="sidebar-close-btn" aria-label="閉じる" tabindex="0">&times;</button>
       <div class="toc">
         <h3>目次</h3>
         <ul id="toc"></ul>
@@ -85,7 +102,7 @@
         </article>
 
         <article class="article" id="article-3">
-          <h5 data-general="true">第3条（参加者投票）</h5>
+          <h5 data-general="false">第3条（参加者投票）</h5>
           <p>①　参加者の承認は、参加者の秘密投票によります。<br>
 ②　参加者の承認が必要な事象が生じたとき、運営者は、参加者による投票（以下「参加者投票」といいます。）の開始より前にディスコード鯖の会議場フォーラムでその事象に関して協議するための投稿を作成しなければなりません。<br>
 ③　参加者投票は、前項の投稿の作成から24時間が経過したときに運営によって行われ、別段の定めのない限り投票を開始した時から24時間後を期限とします。ただし、3人以上の参加者から協議継続の要求があった場合、または協議が進行中であると運営が判断した場合、運営は投票開始を適当な期間延期しなければなりません。<br>
@@ -93,7 +110,6 @@
 ⑤　参加者の承認には、別段の定めのない限り、棄権した者を除く参加者（以下「参加者投票者」といいます。）の過半数の賛成を必要とします。
           </p>
         </article>
-
         <article class="article" id="article-4">
           <h5 data-general="false">第4条（ワールドデータの取扱い）</h5>
           <p>①　マイクラ鯖の管理者は、運営者でなければなりません。<br>
@@ -215,11 +231,11 @@
           <p>　運営者は、マイクラ鯖で、参加者の公共の利益に資する施設（以下「公共施設」といいます。）をその職権によって建築することができます。</p>
         </article>
         <article class="article" id="article-21">
-          <h5 data-general="false">第21条（特定保護区域を設定する権限）</h5>
+          <h5 data-general="true">第21条（特定保護区域を設定する権限）</h5>
           <p>　運営は、マイクラ鯖で、参加者の一部が建築、採掘その他の利益を独占するおそれがあると判断した領域に対して、運営の承認により特定保護区域を設定することができます。</p>
         </article>
         <article class="article" id="article-22">
-          <h5 data-general="false">第22条（情報の開示義務）</h5>
+          <h5 data-general="true">第22条（情報の開示義務）</h5>
           <p>①　運営は、マイクラ鯖のアドレス、プラグインの概要および地図を参加者に対し公開しなければなりません。<br>
 ②　運営は、前項で定めるもののほかに参加者から開示を求められた情報を開示しなければなりません。ただし、その情報を開示することによってマイクラ鯖、参加者または運営に重大な不利益が及ぶ可能性があると判断した場合は、運営の承認により、当該情報の開示に代わって不開示の旨をその理由とともに参加者に告知することができます。</p>
         </article>
@@ -237,7 +253,7 @@
 五　ルール違反者の行動を調査するために必要である場合</p>
         </article>
         <article class="article" id="article-25">
-          <h5 data-general="false">第25条（ルール違反の調査権）</h5>
+          <h5 data-general="true">第25条（ルール違反の調査権）</h5>
           <p>　技術者は、ルール違反の調査のために、参加者の同意を得ずに各種アイテム及びブロック並びにルール違反が疑われる者のインベントリに関して調査を行うことができます。</p>
         </article>
 
@@ -272,6 +288,7 @@
           <p>このルールは、公布の日から施行します。<br>
 ３ＤＳ半分こするくらい仲良しクラフトルールは廃止します。</p>
         </article>
+
       </section>
       </main>
     </div>
@@ -477,6 +494,125 @@ document.addEventListener('DOMContentLoaded', function() {
     printWindow.print();
     printWindow.close();
   });
+
+  // ===== レスポンシブ: ドロワーナビゲーション・目次ボタン・サイドバー制御 =====
+  const sidebar = document.getElementById('sidebar');
+  const sidebarMenuBtn = document.getElementById('drawer-menu-btn');
+  const sidebarCloseBtn = document.getElementById('sidebar-close-btn');
+  const tocToggleBtn = document.getElementById('toc-toggle-btn');
+  const drawerNav = document.getElementById('drawer-nav');
+  const drawerCloseBtn = document.getElementById('drawer-close-btn');
+
+  // ドロワーナビゲーション開閉
+  function openDrawer() {
+    drawerNav.classList.add('open');
+    document.body.classList.add('drawer-open');
+    drawerCloseBtn.focus();
+  }
+  function closeDrawer() {
+    drawerNav.classList.remove('open');
+    document.body.classList.remove('drawer-open');
+    sidebarMenuBtn.focus();
+  }
+  sidebarMenuBtn.addEventListener('click', function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    if (drawerNav.classList.contains('open')) {
+      closeDrawer();
+    } else {
+      openDrawer();
+    }
+  });
+  drawerCloseBtn.addEventListener('click', function(e) {
+    e.preventDefault();
+    closeDrawer();
+  });
+  // ESCキーでdrawer閉じる
+  document.addEventListener('keydown', function(e) {
+    if (drawerNav.classList.contains('open') && (e.key === 'Escape' || e.key === 'Esc')) {
+      closeDrawer();
+    }
+  });
+  // ドロワー外クリックで閉じる
+  document.addEventListener('click', function(e) {
+    if (window.innerWidth <= 768 && drawerNav.classList.contains('open')) {
+      if (!drawerNav.contains(e.target) && e.target !== sidebarMenuBtn) {
+        closeDrawer();
+      }
+    }
+  });
+  // ドロワー内リンククリックで閉じる
+  drawerNav.addEventListener('click', function(e) {
+    if (e.target.tagName === 'A' && window.innerWidth <= 768) {
+      closeDrawer();
+    }
+  });
+
+  // 目次ボタンでsidebar開閉（再クリックで閉じる）
+  tocToggleBtn.addEventListener('click', function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    if (window.innerWidth <= 768) {
+      if (sidebar.classList.contains('open')) {
+        sidebar.classList.remove('open');
+        document.body.classList.remove('sidebar-open');
+        sidebarCloseBtn.style.display = 'none';
+        tocToggleBtn.focus();
+      } else {
+        sidebar.classList.add('open');
+        document.body.classList.add('sidebar-open');
+        sidebarCloseBtn.style.display = 'block';
+        sidebarCloseBtn.focus();
+      }
+    }
+  });
+  sidebarCloseBtn.addEventListener('click', function(e) {
+    e.preventDefault();
+    if (window.innerWidth <= 768) {
+      sidebar.classList.remove('open');
+      document.body.classList.remove('sidebar-open');
+      sidebarCloseBtn.style.display = 'none';
+      tocToggleBtn.focus();
+    }
+  });
+  // ESCキーでsidebar閉じる
+  document.addEventListener('keydown', function(e) {
+    if (window.innerWidth <= 768 && sidebar.classList.contains('open') && (e.key === 'Escape' || e.key === 'Esc')) {
+      sidebar.classList.remove('open');
+      document.body.classList.remove('sidebar-open');
+      sidebarCloseBtn.style.display = 'none';
+      tocToggleBtn.focus();
+    }
+  });
+  // サイドバー外クリックで閉じる
+  document.addEventListener('click', function(e) {
+    if (window.innerWidth <= 768 && sidebar.classList.contains('open')) {
+      if (!sidebar.contains(e.target) && e.target !== tocToggleBtn) {
+        sidebar.classList.remove('open');
+        document.body.classList.remove('sidebar-open');
+        sidebarCloseBtn.style.display = 'none';
+      }
+    }
+  });
+  // 目次リンククリックでsidebar閉じる
+  document.getElementById('toc').addEventListener('click', function(e) {
+    if (window.innerWidth <= 768 && e.target.tagName === 'A') {
+      sidebar.classList.remove('open');
+      document.body.classList.remove('sidebar-open');
+      sidebarCloseBtn.style.display = 'none';
+    }
+  });
+
+  // 768px以上ではsidebar常時表示
+  function updateSidebarDisplay() {
+    if (window.innerWidth > 768) {
+      sidebar.classList.remove('open');
+      document.body.classList.remove('sidebar-open');
+      sidebarCloseBtn.style.display = 'none';
+    }
+  }
+  window.addEventListener('resize', updateSidebarDisplay);
+  updateSidebarDisplay();
 });
 </script>
   <!-- フッター -->
