@@ -313,12 +313,30 @@ document.addEventListener('DOMContentLoaded', function() {
           }
           return;
         }
-        lawInfo.innerHTML = `
-          <h2>${rule.rule_name}</h2>
-          <p>${rule.enforcement_date}</p>
-          <p>${rule.rule_number}</p>
-          <span class="badge">${rule.category}</span>
-        `;
+        // 画面幅でレイアウトを切り替え
+        function renderLawInfo() {
+          if (window.innerWidth <= 768) {
+            lawInfo.innerHTML = `
+              <div class="law-info-row1">
+                <h2>${rule.rule_name}</h2>
+                <span class="badge">${rule.category}</span>
+              </div>
+              <div class="law-info-row2">
+                <p>${rule.enforcement_date}</p>
+                <p>${rule.rule_number}</p>
+              </div>
+            `;
+          } else {
+            lawInfo.innerHTML = `
+              <h2>${rule.rule_name}</h2>
+              <p>${rule.enforcement_date}</p>
+              <p>${rule.rule_number}</p>
+              <span class="badge">${rule.category}</span>
+            `;
+          }
+        }
+        renderLawInfo();
+        window.addEventListener('resize', renderLawInfo);
       })
       .catch(err => {
         const lawInfo = document.querySelector('.law-info');
@@ -622,7 +640,7 @@ document.addEventListener('DOMContentLoaded', function() {
       <p>©2025 3DS半分こするくらい仲良しクラフト中央委員会</p>
     </div>
     <div class="footer-right">
-      <a href="#" id="print-btn">このページを印刷する</a>
+      <a href="#" id="print-btn">印刷</a>
     </div>
   </footer>
 
