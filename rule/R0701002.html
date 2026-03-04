@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <link rel="manifest" href="manifest.json" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>禁止事項及び罰則に関するルール | DSルールポータル</title>
+  <!-- Bootstrap 5 CDN追加 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+  <meta http-equiv="Cache-Control" content="no-store">
+  <meta property="og:site_name" content="DSクラフト ルールポータル" />
+  <meta property="og:url" content="https://www.ds2.uk/rule/R0701002.html" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="禁止事項及び処罰に関するルール" />
+  <meta property="og:description" content="禁止事項及び処罰に関するルール(令和7年ルール第2号)" />
+  <meta property="og:image" content="https://www.ds2.uk/ds_logo_3.png" />
+  <meta property="og:locale" content="ja_JP" />
+
+</head>
+<body>
+
+  <!-- ヘッダー -->
+  <header class="site-header">
+    <div class="logo">DSクラフト ルールポータル</div>
+    <div class="header-actions">
+      <!-- 目次ボタン -->
+      <button class="toc-toggle-btn" id="toc-toggle-btn" type="button">目次</button>
+      <!-- ハンバーガーメニュー -->
+      <button class="hamburger" id="drawer-menu-btn" aria-label="メニュー" tabindex="0">
+        <span></span>
+      </button>
+    </div>
+    <nav class="top-nav">
+      <a href="index.html">ホーム</a>
+      <a href="https://www.ds2.uk/">DSトップ</a>
+    </nav>
+  </header>
+
+  <!-- ドロワーナビゲーション -->
+  <nav class="drawer-nav" id="drawer-nav">
+    <button class="drawer-close" id="drawer-close-btn" aria-label="閉じる" tabindex="0">&times;</button>
+    <ul>
+      <li><a href="index.html">ホーム</a></li>
+      <li><a href="https://www.ds2.uk/">DSトップ</a></li>
+    </ul>
+  </nav>
+
+  <!-- law-infoをheader直下・sidebar外に移動 -->
+  <div class="law-info">
+    <!-- JSで内容を挿入 -->
+  </div>
+
+  <!-- メインラッパー -->
+  <div class="container">
+
+    <!-- サイドバー: ここに×ボタンを追加 -->
+    <aside class="sidebar" id="sidebar">
+      <button class="sidebar-close" id="sidebar-close-btn" aria-label="閉じる" tabindex="0">&times;</button>
+      <div class="toc">
+        <h3>目次</h3>
+        <ul id="toc"></ul>
+      </div>
+    </aside>
+
+    <!-- 本文表示 -->
+    <main class="main-content">
+      <div class="law-header">
+        <h1>禁止事項及び罰則に関するルール</h1>
+        <div class="form-check form-switch">
+          <input class="form-check-input" type="checkbox" id="generalOnlySwitch" checked>
+          <label class="form-check-label" for="generalOnlySwitch">一般参加者が参照すべき条文のみを表示</label>
+        </div>
+      </div>
+      <section class="preamble">
+        <h2>前文</h2>
+        <p>
+          　3DS半分こするくらい仲良しクラフトに関係するいかなる者も、このルールおよびその他のルールに違反する行動をしてはなりません。違反した場合、ルールに基づき処罰および緊急措置による制限が科されます。
+        </p>
+      </section>
+
+      <section class="chapter">
+        <h2>第1章 禁止事項</h2>
+        <h3>第1節 ディスコード鯖・マイクラ鯖共通</h3>
+        <article class="article" id="article-1">
+          <h5 data-general="true">第1条（参加者以外の参加禁止）</h5>
+          <p>
+            ①　参加者でない者は、別段の定めのない限りディスコード鯖およびマイクラ鯖に参加してはなりません。<br>
+            ②　この規定を知ってディスコード鯖またはマイクラ鯖に参加した参加者以外の者は、永久にマイクラ鯖とディスコード鯖の両方からBANします。<br>
+            ③　この規定を知らずにディスコード鯖またはマイクラ鯖に参加した参加者以外の者は、緊急措置により当該鯖からキックします。ただし、ディスコード鯖、マイクラ鯖または参加者に危害を加える目的でディスコード鯖またはマイクラ鯖に参加した参加者以外の者は、この規定を知っていたものとみなし前項を適用します。<br>
+            ④　参加者以外の者をディスコード鯖またはマイクラ鯖に故意に参加させた参加者は、永久にマイクラ鯖とディスコード鯖の両方からBANします。
+          </p>
+        </article>
+        <article class="article" id="article-2">
+          <h5 data-general="true">第2条（情報漏洩の禁止）</h5>
+          <p>
+            ①　マイクラ鯖およびディスコード鯖での自身以外の一切の情報を、参加者でない者が容易に閲覧できる状態にしてはなりません。ただし、次の各号に定める場合はこの限りでありません。<br>
+            一　その情報に含まれる参加者から許可を得た場合。<br>
+            二　雑談鯖または各国家のDiscordサーバーに掲載する場合。<br>
+            ②　この規定に違反した者は、永久にまたは7日以上、マイクラ鯖もしくはディスコード鯖またはその両方からBANします。
+          </p>
+        </article>
+        <article class="article" id="article-3">
+          <h5 data-general="true">第3条（侮辱の禁止）</h5>
+          <p>
+            ①　公然と他の参加者を侮辱してはなりません。<br>
+            ②　この規定に違反した者は、永久にまたは1時間以上、マイクラ鯖もしくはディスコード鯖もしくはその両方からBAN、またはディスコード鯖からタイムアウトします。
+          </p>
+        </article>
+        <article class="article" id="article-4">
+          <h5 data-general="true">第4条（チート及びハッキングの禁止）</h5>
+          <p>
+            ①　マイクラ鯖またはディスコード鯖で不正な入力を行い、その者に付与された権限を超越する行為をしてはなりません。<br>
+            ②　この規定に違反した者は、永久にまたは30日以上、マイクラ鯖とディスコード鯖の両方からBANします。
+          </p>
+        </article>
+
+        <h3>第2節 マイクラ鯖</h3>
+        <article class="article" id="article-5">
+          <h5 data-general="true">第5条（戦争目的の行為の禁止）</h5>
+          <p>
+            ①　国家に関するルールに違反する戦争を行う目的で、害意をもって他の参加者又は建築物に危害を加える行為をしてはなりません。<br>
+            ②　この規定に違反した者は、永久にまたは30日以上、マイクラ鯖とディスコード鯖の両方からBANします。
+          </p>
+        </article>
+        <article class="article" id="article-6">
+          <h5 data-general="true">第6条（無断破壊の禁止）</h5>
+          <p>
+            ①　他の参加者が設置した看板および建築物を、設置者の許可を得ずに破壊してはなりません。<br>
+            ②　この規定に違反した者は、7日以内の期間を定めてマイクラ鯖からBAN、または運営が定める監獄に収容します。
+          </p>
+        </article>
+        <article class="article" id="article-7">
+          <h5 data-general="true">第7条（他の参加者の妨害の禁止）</h5>
+          <p>
+            ①　他の参加者の活動を妨害する目的で建築または採掘を行ってはなりません。<br>
+            ②　この規定に違反した者は、7日以内の期間を定めてマイクラ鯖からBAN、または運営が定める監獄に収容します。
+          </p>
+        </article>
+        <article class="article" id="article-8">
+          <h5 data-general="true">第8条（窃盗の禁止）</h5>
+          <p>
+            ①　参加者やその集団の財物を盗んではなりません。<br>
+            ②　この規定に違反した者は、7日以内の期間を定めてマイクラ鯖からBAN、または運営が定める監獄に収容し、盗まれたアイテムを没収します。
+          </p>
+        </article>
+        <article class="article" id="article-9">
+          <h5 data-general="true">第9条（過剰な負荷をかける行為の禁止）</h5>
+          <p>
+            ①　マイクラ鯖に対し過剰な負荷をかけることにより、参加者が正常に参加できない状態にしてはなりません。<br>
+            ②　他の参加者の活動またはマイクラ鯖の正常な運営を妨害する目的でこの規定に違反した者は、30日以内の期間を定めてマイクラ鯖からBANします。<br>
+            ③　前項の規定に基づき7日以上のマイクラ鯖からのBANの処罰を3回以上受けた者は、永久にマイクラ鯖からBANします。
+          </p>
+        </article>
+        <article class="article" id="article-10">
+          <h5 data-general="true">第10条（緊急停止コマンドの乱用の禁止）</h5>
+          <p>
+            ①　stopコマンドを、ルールに定める目的以外で使用してはなりません。<br>
+            ②　この規定に違反した者は、7日以内の期間を定めてマイクラ鯖からBANします。
+          </p>
+        </article>
+        <article class="article" id="article-11">
+          <h5 data-general="true">第11条（海の無断埋立ての禁止）</h5>
+          <p>
+            ①　海を埋め立てるときは、2人以上の運営者の許可を得なければなりません。<br>
+            ②　この規定に違反した者は、7日以内の期間を定めてマイクラ鯖からBAN、または運営が定める監獄に収容します。
+          </p>
+        </article>
+        <article class="article" id="article-12">
+          <h5 data-general="true">第12条（特定保護区域での無断建築等の禁止）</h5>
+          <p>
+            ①　特定保護区域内で建築または採掘を行うときは、運営の承認を得なければなりません。<br>
+            ②　この規定に違反した者は、7日以内の期間を定めてマイクラ鯖からBAN、または運営が定める監獄に収容します。
+          </p>
+        </article>
+        <article class="article" id="article-13">
+          <h5 data-general="true">第13条（アイテムの不正な保持および使用の禁止）</h5>
+          <p>
+            ①　ルールに規定がある場合または運営の正当な職権の行使によるものを除き、コマンドまたはクリエイティブモードの操作によって得たアイテムを保持し、または使用してはなりません。<br>
+            ②　この規定に違反した者は、7日以内の期間を定めてマイクラ鯖からBAN、または運営が定める監獄に収容し、保持または使用されたアイテムを没収します。
+          </p>
+        </article>
+      </section>
+
+      <section class="chapter">
+        <h2>第2章 共犯</h2>
+        <article class="article" id="article-14">
+          <h5 data-general="true">第14条（共同正犯）</h5>
+          <p>
+            　二人以上で共同してルールに違反する行為を行った者は、その行為につき全員を実行者として処罰します。
+          </p>
+        </article>
+        <article class="article" id="article-15">
+          <h5 data-general="true">第15条（教唆及びほう助）</h5>
+          <p>
+            　別段の定めのない限り、他の者にルールに違反する行為をするようそそのかし、または他の者のルールに違反する行為の実行を容易にした者は、その行為につき全員を実行者として処罰します。
+          </p>
+        </article>
+      </section>
+
+      <section class="chapter">
+        <h2>第3章 処罰</h2>
+        <article class="article" id="article-16">
+          <h5 data-general="true">第16条（処罰の決定及び執行）</h5>
+          <p>
+            　ルールに違反した者に対する処罰は、運営が運営の承認によってその内容を決定し、執行します。
+          </p>
+        </article>
+        <article class="article" id="article-17">
+          <h5 data-general="true">第17条（異議申立て）</h5>
+          <p>
+            　運営によって処罰の決定を受けた者は、ルールで定めるところにより、その決定に対し裁判所に異議を申し立てることができます。ただし、この場合でも裁判所が判決するまで運営が決定した処罰が執行されます。
+          </p>
+        </article>
+        <article class="article" id="article-18">
+          <h5 data-general="false">第18条（期間計算）</h5>
+          <p>
+            ①　期限の定めのある処罰の執行期間は、運営が処罰を決定した時から起算します。<br>
+            ②　運営によって処罰の決定を受けた者がその決定に対し異議を申し立て、その後裁判所がその決定と異なる期限の定めのある処罰を行う判決をしたときは、その処罰の執行期間は、運営が従来の処罰を決定した時から起算します。
+          </p>
+        </article>
+        <article class="article" id="article-19">
+          <h5 data-general="false">第19条（併合罪）</h5>
+          <p>
+            ①　刑罰が確定していないルール違反行為が2個以上ある場合は、一度に処罰を決定し、同時にこれを執行します。<br>
+            ②　ルールに違反する2個以上の行為に対する処罰の上限は、各条文で定める処罰の上限を合計したものとします。
+          </p>
+        </article>
+        <article class="article" id="article-20">
+          <h5 data-general="false">第20条（一個の行為が二個以上の条文に違反する場合の処理）</h5>
+          <p>
+            　1個の行為が2個以上の条文に違反する場合は、処罰の上限が最も重い条文によって処罰します。
+          </p>
+        </article>
+        <article class="article" id="article-21">
+          <h5 data-general="false">第21条（減刑）</h5>
+          <p>
+            　ルールに違反する行為をした者であっても、その行為につき真にやむを得ない事情がある場合は、運営がその裁量によって処罰を行わず、または処罰の内容を軽減することがあります。
+          </p>
+        </article>
+        <article class="article" id="article-22">
+          <h5 data-general="false">第22条（恩赦）</h5>
+          <p>
+            　運営は、運営の承認によって処罰の決定した者に恩赦を行うことができます。
+          </p>
+        </article>
+      </section>
+
+      <section class="chapter">
+        <h2>第4章 運営の措置</h2>
+        <article class="article" id="article-23">
+          <h5 data-general="true">第23条（緊急措置）</h5>
+          <p>
+            ①　運営は、ルール違反が疑われる者に対して、処罰を確定するまでの間、必要に応じて次の緊急措置を行うことができます。<br>
+            一　ディスコード鯖からBAN、キックまたはタイムアウトする。<br>
+            二　マイクラ鯖からBANまたはキックする。<br>
+            三　マイクラ鯖で運営が定める監獄に収容する。<br>
+            四　マイクラ鯖での所持品を一時的に没収する。<br>
+            ②　運営は、緊急措置を行った時から7日以内に処罰を決定しなければなりません。<br>
+            ③　運営は、処罰の決定、ルール違反の疑いの解消その他の理由により緊急措置を行う必要性がなくなったときは、速やかにこれを終了しなければなりません。
+          </p>
+        </article>
+        <article class="article" id="article-24">
+          <h5 data-general="true">第24条（ロールバック及び補償）</h5>
+          <p>
+            ①　ルールに違反する形で建築、採掘または破壊が行われた場合、運営は、その行為が行われる前の状態にロールバックしなければなりません。<br>
+            ②　ルールに違反する行為により参加者がアイテムを使用できなくなった場合、運営は、その参加者の求めに応じて損害分のアイテムを補償しなければなりません。
+          </p>
+        </article>
+      </section>
+
+      <section class="chapter">
+        <h2>附則</h2>
+        <article class="article" id="article-supplementary">
+          <h5 data-general="false">附則</h5>
+          <p>
+            　このルールは、公布の日から施行します。<br>
+            　３ＤＳ半分こするくらい仲良しクラフトルール第6章の規定に基づいて処罰を受けている者の処罰は、このルールの施行時からは、このルールの対応する規定に基づいて行われるものとします。
+          </p>
+        </article>
+      </section>
+    </main>
+    </div>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // law-infoをrules.jsonから動的に生成
+  (function() {
+    // ファイル名からIDを取得
+    const htmlName = location.pathname.split('/').pop().replace(/\.html$/, '');
+    fetch('rules.json')
+      .then(res => {
+        if (!res.ok) throw new Error('rules.jsonの取得に失敗しました');
+        return res.json();
+      })
+      .then(rules => {
+        const rule = rules.find(r => r.id === htmlName);
+        const lawInfo = document.querySelector('.law-info');
+        if (!rule) {
+          if (lawInfo) {
+            lawInfo.innerHTML = `<span style="color:red;">データベースに該当するルールの情報がありません</span>`;
+          }
+          return;
+        }
+        // 画面幅でレイアウトを切り替え
+        function renderLawInfo() {
+          if (window.innerWidth <= 768) {
+            lawInfo.innerHTML = `
+              <div class="law-info-row1">
+                <h2>${rule.rule_name}</h2>
+                <span class="badge">${rule.category}</span>
+              </div>
+              <div class="law-info-row2">
+                <p>${rule.enforcement_date}</p>
+                <p>${rule.rule_number}</p>
+              </div>
+            `;
+          } else {
+            lawInfo.innerHTML = `
+              <h2>${rule.rule_name}</h2>
+              <p>${rule.enforcement_date}</p>
+              <p>${rule.rule_number}</p>
+              <span class="badge">${rule.category}</span>
+            `;
+          }
+        }
+        renderLawInfo();
+        window.addEventListener('resize', renderLawInfo);
+      })
+      .catch(err => {
+        const lawInfo = document.querySelector('.law-info');
+        if (lawInfo) {
+          lawInfo.innerHTML = `<span style="color:red;">ルール情報の取得に失敗しました: ${err.message}</span>`;
+        }
+        // デバッグ用にコンソールにも出力
+        console.error(err);
+      });
+  })();
+
+  const toc = document.getElementById('toc');
+  const headings = document.querySelectorAll('main h2, main h3, main h4, main h5');
+  let lastLevel = 2;
+  let parents = [toc];
+
+  headings.forEach(heading => {
+    // idがなければ自動生成
+    if (!heading.id) {
+      heading.id = heading.textContent.trim().replace(/\s+/g, '-');
+    }
+    const level = parseInt(heading.tagName[1]);
+    const li = document.createElement('li');
+    const a = document.createElement('a');
+    a.href = '#' + heading.id;
+    a.textContent = heading.textContent;
+    li.appendChild(a);
+
+    // 階層構造を作る
+    if (level > lastLevel) {
+      let ul = document.createElement('ul');
+      parents[parents.length - 1].lastElementChild.appendChild(ul);
+      parents.push(ul);
+    } else if (level < lastLevel) {
+      parents.splice(level - 2 + 1);
+    }
+    parents[parents.length - 1].appendChild(li);
+    lastLevel = level;
+  });
+
+  // ▼▶トグル機能追加
+  function setupSidebarToggle() {
+    // サイドバーの目次リスト内の親liを取得
+    document.querySelectorAll('.sidebar li:has(ul)').forEach(function(li) {
+      // 既存の三角形を消して、spanでラップ
+      let firstChild = li.firstChild;
+      // 既にspanがある場合はスキップ
+      if (li.querySelector('.sidebar-toggle')) return;
+      // 三角形アイコン用spanを作成
+      let toggle = document.createElement('span');
+      toggle.className = 'sidebar-toggle';
+      toggle.textContent = '▼';
+      toggle.style.cursor = 'pointer';
+      toggle.style.marginLeft = '-1.2em';
+      toggle.style.marginRight = '0.2em';
+      toggle.style.display = 'inline-block';
+      toggle.style.width = '1em';
+      toggle.style.verticalAlign = 'middle';
+      // 最初のa要素の前に挿入
+      li.insertBefore(toggle, li.firstElementChild);
+
+      // クリックで子ulの表示/非表示切り替え
+      toggle.addEventListener('click', function(e) {
+        e.stopPropagation();
+        let childUl = li.querySelector('ul');
+        if (!childUl) return;
+        if (childUl.style.display === 'none') {
+          childUl.style.display = '';
+          toggle.textContent = '▼';
+        } else {
+          childUl.style.display = 'none';
+          toggle.textContent = '▶';
+        }
+      });
+    });
+  }
+
+  // 目次生成後にトグルセットアップ
+  setupSidebarToggle();
+
+  // 一般参加者スイッチのロジック
+  const switchInput = document.getElementById('generalOnlySwitch');
+  function updateArticles() {
+    document.querySelectorAll('.article').forEach(article => {
+      const h5 = article.querySelector('h5');
+      const p = article.querySelector('p');
+      const isGeneral = h5 && h5.dataset.general === "true";
+      let showBox = article.querySelector('.show-non-general');
+      let label = article.querySelector('.show-non-general-label');
+
+      if (!isGeneral) {
+        if (!showBox) {
+          // チェックボックスがなければ生成
+          showBox = document.createElement('input');
+          showBox.type = 'checkbox';
+          showBox.className = 'form-check-input show-non-general';
+          showBox.id = 'show-' + article.id;
+          label = document.createElement('label');
+          label.className = 'form-check-label show-non-general-label';
+          label.htmlFor = showBox.id;
+          label.textContent = '表示';
+          // pの直前に挿入
+          p.parentNode.insertBefore(showBox, p);
+          p.parentNode.insertBefore(label, p);
+          // チェック時にpを表示
+          showBox.addEventListener('change', function() {
+            p.style.display = this.checked ? '' : 'none';
+          });
+        }
+        if (switchInput.checked) {
+          // スイッチON: チェックボックス表示、pはチェック時のみ
+          showBox.style.display = '';
+          label.style.display = '';
+          p.style.display = showBox.checked ? '' : 'none';
+        } else {
+          // スイッチOFF: チェックボックス非表示、p常に表示
+          showBox.style.display = 'none';
+          label.style.display = 'none';
+          p.style.display = '';
+        }
+      } else {
+        // 一般参加者向け条文は常にp表示、チェックボックス非表示
+        if (showBox) showBox.style.display = 'none';
+        if (label) label.style.display = 'none';
+        if (p) p.style.display = '';
+      }
+    });
+  }
+  switchInput.addEventListener('change', updateArticles);
+  updateArticles();
+
+  // 印刷ボタンでlaw-info, main-content, site-footerを印刷
+  document.getElementById('print-btn').addEventListener('click', function(e) {
+    e.preventDefault();
+    const lawInfo = document.querySelector('.law-info');
+    const main = document.querySelector('.main-content');
+    const footer = document.querySelector('.site-footer');
+    if (!main || !lawInfo || !footer) return;
+    const printWindow = window.open('', '', 'width=900,height=700');
+    printWindow.document.write(`
+      <html>
+        <head>
+          <title>印刷</title>
+          <link rel="stylesheet" href="style.css">
+          <style>
+            body { background: #fff; margin: 0; }
+            .law-info, .main-content, .site-footer {
+              visibility: visible !important;
+              position: static !important;
+              width: 100% !important;
+              margin: 0 !important;
+              box-shadow: none !important;
+              background: #fff !important;
+            }
+            .law-info { border-bottom: 1px solid #ccc; }
+            .site-footer { border-top: 1px solid #ccc; }
+          </style>
+        </head>
+        <body>
+          <div class="law-info">
+            ${lawInfo.innerHTML}
+          </div>
+          <div class="main-content">
+            ${main.innerHTML}
+          </div>
+          <footer class="site-footer">
+            ${footer.innerHTML}
+          </footer>
+        </body>
+      </html>
+    `);
+    printWindow.document.close();
+    printWindow.focus();
+    printWindow.print();
+    printWindow.close();
+  });
+
+  // ===== レスポンシブ: ドロワーナビゲーション・目次ボタン・サイドバー制御 =====
+  const sidebar = document.getElementById('sidebar');
+  const sidebarMenuBtn = document.getElementById('drawer-menu-btn');
+  const sidebarCloseBtn = document.getElementById('sidebar-close-btn');
+  const tocToggleBtn = document.getElementById('toc-toggle-btn');
+  const drawerNav = document.getElementById('drawer-nav');
+  const drawerCloseBtn = document.getElementById('drawer-close-btn');
+
+  // ドロワーナビゲーション開閉
+  function openDrawer() {
+    drawerNav.classList.add('open');
+    document.body.classList.add('drawer-open');
+    drawerCloseBtn.focus();
+  }
+  function closeDrawer() {
+    drawerNav.classList.remove('open');
+    document.body.classList.remove('drawer-open');
+    sidebarMenuBtn.focus();
+  }
+  sidebarMenuBtn.addEventListener('click', function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    if (drawerNav.classList.contains('open')) {
+      closeDrawer();
+    } else {
+      openDrawer();
+    }
+  });
+  drawerCloseBtn.addEventListener('click', function(e) {
+    e.preventDefault();
+    closeDrawer();
+  });
+  // ESCキーでdrawer閉じる
+  document.addEventListener('keydown', function(e) {
+    if (drawerNav.classList.contains('open') && (e.key === 'Escape' || e.key === 'Esc')) {
+      closeDrawer();
+    }
+  });
+  // ドロワー外クリックで閉じる
+  document.addEventListener('click', function(e) {
+    if (window.innerWidth <= 768 && drawerNav.classList.contains('open')) {
+      if (!drawerNav.contains(e.target) && e.target !== sidebarMenuBtn) {
+        closeDrawer();
+      }
+    }
+  });
+  // ドロワー内リンククリックで閉じる
+  drawerNav.addEventListener('click', function(e) {
+    if (e.target.tagName === 'A' && window.innerWidth <= 768) {
+      closeDrawer();
+    }
+  });
+
+  // 目次ボタンでsidebar開閉（再クリックで閉じる）
+  tocToggleBtn.addEventListener('click', function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    if (window.innerWidth <= 768) {
+      if (sidebar.classList.contains('open')) {
+        sidebar.classList.remove('open');
+        document.body.classList.remove('sidebar-open');
+        sidebarCloseBtn.style.display = 'none';
+        tocToggleBtn.focus();
+      } else {
+        sidebar.classList.add('open');
+        document.body.classList.add('sidebar-open');
+        sidebarCloseBtn.style.display = 'block';
+        sidebarCloseBtn.focus();
+      }
+    }
+  });
+  sidebarCloseBtn.addEventListener('click', function(e) {
+    e.preventDefault();
+    if (window.innerWidth <= 768) {
+      sidebar.classList.remove('open');
+      document.body.classList.remove('sidebar-open');
+      sidebarCloseBtn.style.display = 'none';
+      tocToggleBtn.focus();
+    }
+  });
+  // ESCキーでsidebar閉じる
+  document.addEventListener('keydown', function(e) {
+    if (window.innerWidth <= 768 && sidebar.classList.contains('open') && (e.key === 'Escape' || e.key === 'Esc')) {
+      sidebar.classList.remove('open');
+      document.body.classList.remove('sidebar-open');
+      sidebarCloseBtn.style.display = 'none';
+      tocToggleBtn.focus();
+    }
+  });
+  // サイドバー外クリックで閉じる
+  document.addEventListener('click', function(e) {
+    if (window.innerWidth <= 768 && sidebar.classList.contains('open')) {
+      if (!sidebar.contains(e.target) && e.target !== tocToggleBtn) {
+        sidebar.classList.remove('open');
+        document.body.classList.remove('sidebar-open');
+        sidebarCloseBtn.style.display = 'none';
+      }
+    }
+  });
+  // 目次リンククリックでsidebar閉じる
+  document.getElementById('toc').addEventListener('click', function(e) {
+    if (window.innerWidth <= 768 && e.target.tagName === 'A') {
+      sidebar.classList.remove('open');
+      document.body.classList.remove('sidebar-open');
+      sidebarCloseBtn.style.display = 'none';
+    }
+  });
+
+  // 768px以上ではsidebar常時表示
+  function updateSidebarDisplay() {
+    if (window.innerWidth > 768) {
+      sidebar.classList.remove('open');
+      document.body.classList.remove('sidebar-open');
+      sidebarCloseBtn.style.display = 'none';
+    }
+  }
+  window.addEventListener('resize', updateSidebarDisplay);
+  updateSidebarDisplay();
+});
+</script>
+  <!-- フッター -->
+  <footer class="site-footer">
+    <div class="footer-left">
+      <p>©2025 3DS半分こするくらい仲良しクラフト中央委員会</p>
+    </div>
+    <div class="footer-right">
+      <a href="#" id="print-btn">印刷</a>
+    </div>
+  </footer>
+
+</body>
+</html>
