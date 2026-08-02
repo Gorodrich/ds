@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ようこそ、3DS半分こするくらい仲良しクラフトへ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=DotGothic16&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#182720;
+    --bg-deep:#101a15;
+    --panel:#f4ead0;
+    --panel-ink:#2c2214;
+    --panel-ink-soft:#5a4b34;
+    --wood:#8a5a30;
+    --wood-dark:#5c3c1e;
+    --gold:#dcab3f;
+    --gold-soft:#e9c876;
+    --leaf:#6f9a56;
+    --leaf-dark:#3f5c31;
+    --danger:#b23a2e;
+    --cream:#efe6d3;
+    --line: rgba(239,230,211,0.14);
+  }
+  *{box-sizing:border-box;}
+  html,body{height:100%;}
+  body{
+    margin:0;
+    background:
+      radial-gradient(1200px 700px at 15% -10%, rgba(111,154,86,0.14), transparent 60%),
+      radial-gradient(900px 600px at 110% 20%, rgba(220,171,63,0.10), transparent 55%),
+      var(--bg);
+    color:var(--cream);
+    font-family:'Zen Kaku Gothic New', sans-serif;
+    display:flex;
+    flex-direction:column;
+    min-height:100vh;
+    overflow-x:hidden;
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:0.001s !important; transition-duration:0.001s !important;}
+  }
+
+  /* ---------- header / path progress ---------- */
+  header{
+    padding: 22px clamp(16px,4vw,48px) 8px;
+  }
+  .brand{
+    display:flex;
+    align-items:baseline;
+    gap:10px;
+    margin-bottom:18px;
+  }
+  .brand .mark{
+    width:14px;height:14px;
+    background:var(--gold);
+    box-shadow: 3px 3px 0 var(--wood-dark);
+    flex:none;
+  }
+  .brand h1{
+    font-family:'DotGothic16', monospace;
+    font-size:13px;
+    letter-spacing:.12em;
+    margin:0;
+    color:var(--gold-soft);
+    text-transform:uppercase;
+  }
+
+  .path-wrap{
+    display:flex;
+    align-items:center;
+    gap:4px;
+    overflow-x:auto;
+    padding-bottom:6px;
+    scrollbar-width:none;
+  }
+  .path-wrap::-webkit-scrollbar{display:none;}
+  .path-seg{
+    display:flex;
+    align-items:center;
+    flex:none;
+  }
+  .block{
+    width:22px;height:22px;
+    background: #2a3a2e;
+    border:2px solid var(--bg-deep);
+    box-shadow: inset -3px -3px 0 rgba(0,0,0,0.28), inset 2px 2px 0 rgba(255,255,255,0.04);
+    position:relative;
+    flex:none;
+    cursor:pointer;
+    transition: background .25s ease, transform .2s ease;
+  }
+  .block:hover{ transform: translateY(-2px); }
+  .block.visited{ background: var(--leaf-dark); }
+  .block.current{
+    background: var(--gold);
+    box-shadow: inset -3px -3px 0 rgba(0,0,0,0.25), inset 2px 2px 0 rgba(255,255,255,0.35), 0 0 0 2px var(--gold-soft);
+  }
+  .block.current::after{
+    content:"";
+    position:absolute;
+    left:50%; top:-11px;
+    transform:translateX(-50%);
+    width:3px; height:9px;
+    background: var(--gold-soft);
+    box-shadow: 0 0 8px 2px rgba(233,200,118,0.9);
+  }
+  .rail{
+    width:14px; height:3px;
+    background: var(--wood-dark);
+    flex:none;
+  }
+
+  /* ---------- main slide area ---------- */
+  main{
+    flex:1;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding: 12px clamp(16px,4vw,48px) 8px;
+    position:relative;
+  }
+  .stage{
+    width:100%;
+    max-width:760px;
+    position:relative;
+    min-height: 430px;
+  }
+  .slide{
+    position:absolute;
+    inset:0;
+    background: var(--panel);
+    color: var(--panel-ink);
+    border-radius:2px;
+    box-shadow: 0 22px 50px rgba(0,0,0,0.38), 0 2px 0 var(--wood-dark);
+    padding: clamp(24px,4vw,46px);
+    opacity:0;
+    transform: translateX(24px);
+    pointer-events:none;
+    transition: opacity .38s ease, transform .38s ease;
+    display:flex;
+    flex-direction:column;
+    overflow-y:auto;
+  }
+  .slide.active{
+    opacity:1;
+    transform: translateX(0);
+    pointer-events:auto;
+    position:relative;
+  }
+  .slide::before{
+    content:"";
+    position:absolute;
+    left:0; top:0; bottom:0;
+    width:8px;
+    background: var(--wood);
+  }
+  .eyebrow{
+    font-family:'DotGothic16', monospace;
+    font-size:12px;
+    letter-spacing:.14em;
+    color: var(--wood);
+    text-transform:uppercase;
+    margin-bottom:10px;
+  }
+  .slide h2{
+    font-family:'Shippori Mincho', serif;
+    font-size: clamp(24px, 3.6vw, 32px);
+    line-height:1.35;
+    margin:0 0 18px;
+    color: var(--panel-ink);
+  }
+  .slide p{
+    font-size:15.5px;
+    line-height:1.9;
+    margin:0 0 14px;
+    color: var(--panel-ink-soft);
+  }
+  .slide strong{ color:var(--panel-ink); }
+  .cite{
+    display:inline-block;
+    font-family:'DotGothic16', monospace;
+    font-size:11px;
+    color:var(--wood);
+    border:1px solid var(--wood);
+    border-radius:2px;
+    padding:2px 6px;
+    margin-top:2px;
+  }
+
+  /* checklist */
+  ul.rules{
+    list-style:none;
+    padding:0; margin:6px 0 8px;
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap:8px 14px;
+  }
+  ul.rules li{
+    font-size:14.5px;
+    color:var(--panel-ink-soft);
+    display:flex;
+    align-items:flex-start;
+    gap:8px;
+    line-height:1.5;
+  }
+  ul.rules li::before{
+    content:"";
+    width:9px;height:9px;
+    background: var(--danger);
+    margin-top:5px;
+    flex:none;
+  }
+
+  .callout{
+    border-left:4px solid var(--leaf-dark);
+    background: rgba(111,154,86,0.13);
+    padding:12px 14px;
+    font-size:14px;
+    line-height:1.8;
+    color: var(--panel-ink-soft);
+    margin: 6px 0 14px;
+  }
+  .warn{
+    border-left:4px solid var(--danger);
+    background: rgba(178,58,46,0.10);
+    padding:12px 14px;
+    font-size:14px;
+    line-height:1.8;
+    color: var(--panel-ink-soft);
+    margin: 6px 0 14px;
+  }
+
+  /* confirm checkbox gate */
+  .confirm{
+    margin-top:auto;
+    padding-top:14px;
+    border-top:1px dashed rgba(44,34,20,0.25);
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-size:13.5px;
+    color: var(--panel-ink-soft);
+  }
+  .confirm input{
+    width:17px;height:17px;
+    accent-color: var(--wood);
+    cursor:pointer;
+  }
+  .confirm label{ cursor:pointer; }
+
+  /* diagram: flow steps */
+  .flow{
+    display:flex;
+    align-items:center;
+    gap:2px;
+    margin: 8px 0 18px;
+    flex-wrap:wrap;
+  }
+  .flow .node{
+    background: var(--wood);
+    color:#fff8ea;
+    font-family:'DotGothic16', monospace;
+    font-size:12px;
+    padding:10px 12px;
+    text-align:center;
+    line-height:1.5;
+    min-width:100px;
+    box-shadow: 3px 3px 0 var(--wood-dark);
+  }
+  .flow .arrow{
+    color: var(--wood);
+    font-size:18px;
+    padding:0 4px;
+  }
+
+  /* skyline decoration for atmosphere slide */
+  .skyline{
+    display:flex;
+    align-items:flex-end;
+    gap:4px;
+    height:86px;
+    margin: 4px 0 16px;
+  }
+  .skyline .bar{ flex:none; box-shadow: 2px 0 0 rgba(0,0,0,0.12) inset; }
+  .skyline .b1{width:16px;height:40%;background:var(--wood);}
+  .skyline .b2{width:12px;height:70%;background:var(--leaf-dark);}
+  .skyline .b3{width:20px;height:95%;background:var(--gold);}
+  .skyline .b4{width:14px;height:55%;background:var(--wood-dark);}
+  .skyline .b5{width:10px;height:35%;background:var(--danger);}
+  .skyline .b6{width:22px;height:80%;background:var(--leaf);}
+  .skyline .b7{width:13px;height:60%;background:var(--wood);}
+  .skyline .b8{width:17px;height:100%;background:var(--gold-soft);}
+  .skyline .b9{width:11px;height:44%;background:var(--wood-dark);}
+
+  .title-slide{
+    align-items:flex-start;
+    justify-content:center;
+  }
+  .title-slide .badge{
+    font-family:'DotGothic16', monospace;
+    font-size:12px;
+    letter-spacing:.1em;
+    color:#fff8ea;
+    background: var(--leaf-dark);
+    padding:5px 10px;
+    margin-bottom:16px;
+  }
+  .title-slide h2{ font-size: clamp(28px,4.6vw,40px); }
+
+  .final-badge{
+    font-family:'DotGothic16', monospace;
+    font-size:12px;
+    color:var(--wood);
+  }
+
+  /* ---------- footer nav ---------- */
+  footer{
+    padding: 10px clamp(16px,4vw,48px) 26px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:14px;
+  }
+  .navbtn{
+    font-family:'Zen Kaku Gothic New', sans-serif;
+    font-weight:700;
+    font-size:14px;
+    padding:12px 22px;
+    border:none;
+    cursor:pointer;
+    border-radius:2px;
+    transition: transform .15s ease, opacity .2s ease;
+  }
+  .navbtn:active{ transform: translateY(2px); }
+  .navbtn.prev{
+    background: transparent;
+    color: var(--cream);
+    border:1px solid rgba(239,230,211,0.3);
+  }
+  .navbtn.next{
+    background: var(--gold);
+    color: #2c2214;
+    box-shadow: 0 3px 0 var(--wood-dark);
+  }
+  .navbtn.next:disabled{
+    opacity:.35;
+    cursor:not-allowed;
+    box-shadow: 0 3px 0 rgba(92,60,30,0.4);
+  }
+  .step-count{
+    font-family:'DotGothic16', monospace;
+    font-size:12px;
+    color: rgba(239,230,211,0.55);
+    min-width:56px;
+    text-align:center;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <span class="mark"></span>
+    <h1>3DS半分こするくらい仲良しクラフト &mdash; 新規参加案内</h1>
+  </div>
+  <div class="path-wrap" id="pathWrap"></div>
+</header>
+
+<main>
+  <div class="stage" id="stage">
+
+    <section class="slide title-slide" data-idx="0">
+      <span class="badge">WELCOME</span>
+      <h2>ようこそ、<br>3DS半分こするくらい仲良しクラフトへ</h2>
+      <p>これから、参加までの流れと、サーバーで気をつけていただきたいことをご案内します。<br>
+      それぞれのスライドを最後まで確認したら、下の「次へ」ボタンで進んでください。</p>
+      <p style="font-family:'DotGothic16',monospace; font-size:12px; color:var(--wood);">全 11 ステップ ・ 所要時間の目安 5〜7 分</p>
+    </section>
+
+    <section class="slide" data-idx="1">
+      <div class="eyebrow">Step 1 &mdash; 全体の流れ</div>
+      <h2>参加までの4つのステップ</h2>
+      <div class="flow">
+        <div class="node">① 面接<br>・審査</div><div class="arrow">→</div>
+        <div class="node">② 仮参加<br>承認〜30日間</div><div class="arrow">→</div>
+        <div class="node">③ 異議<br>申立て期間<br>承認〜37日間</div><div class="arrow">→</div>
+        <div class="node">④ 本参加</div>
+      </div>
+      <p>まず運営による審査を行い、仮参加を認めるかどうかを決定します。仮参加が承認されると、実際にサーバーへ参加していただく<strong>仮参加期間（30日間）</strong>が始まります。</p>
+      <p>これと並行して、承認日から<strong>37日間の異議申立て期間</strong>が進みます。この期間に異議が出ず、または異議が却下・棄却された場合、正式な参加者（本参加）となります。仮参加期間が30日で終わっても、異議申立て期間や審査が続いている間は、引き続き仮参加者として活動できます。</p>
+    </section>
+
+    <section class="slide" data-idx="2">
+      <div class="eyebrow">Step 2 &mdash; 仮参加期間中にできること</div>
+      <h2>仮参加中もほとんど普通の参加者と同じ</h2>
+      <p>仮参加期間中は、国家に所属したり、建築や採掘をしたりと、基本的には他の参加者と同じように自由に活動できます。</p>
+      <div class="callout">唯一の制限は、<strong>ルール改正など参加者投票への参加ができない</strong>ことだけです。それ以外の日常的な活動はすべて可能です。</div>
+    </section>
+
+    <section class="slide" data-idx="3">
+      <div class="eyebrow">Step 3 &mdash; 異議申立て制度</div>
+      <h2>異議申立てについて</h2>
+      <p>「異議」と聞くと少し身構えてしまうかもしれませんが、次のような異議は却下される仕組みになっています。</p>
+      <ul class="rules" style="grid-template-columns:1fr;">
+        <li>具体的な言動が特定されていないもの</li>
+        <li>文脈から切り離された、単発・偶発的な言動だけを根拠にするもの</li>
+        <li>言動の内容ではなく、話し方や趣味・価値観など個人的な性質への不快感だけを根拠にするもの</li>
+      </ul>
+      <div class="callout">万が一、本参加を認めない決定がされる可能性がある場合でも、決定の前に<strong>必ずご本人から意見を聞く場</strong>が設けられます。安心して仮参加期間を過ごしてください。</div>
+    </section>
+
+    <section class="slide" data-idx="4">
+      <div class="eyebrow">Step 4 &mdash; サーバーでできること</div>
+      <h2>建築・採掘は基本的に自由</h2>
+      <p>このサーバーは、生活鯖として建築や採掘を自由に楽しめます。ただし、サーバー内には「国家」の領土や「個人開発領」と呼ばれる私有地があり、それぞれ独自のルールが定められている場合があります。</p>
+      <div class="callout">最初のうちは、活動する前に周囲の参加者へ「ここで建築・採掘しても大丈夫？」と一声かけるのがおすすめです。<br>
+      まずはご自身が参加する国の中で、国内法を確認しながら遊んでみるのが一番馴染みやすいでしょう。<br>
+      なお、<strong>大カワムーラ連邦・ディープステート</strong>の領土内では、他人の建築を壊さない限り完全に自由に活動できます。</div>
+    </section>
+
+    <section class="slide" data-idx="5">
+      <div class="eyebrow">Step 5 &mdash; やってはいけないこと</div>
+      <h2>禁止されている行為</h2>
+      <ul class="rules">
+        <li>他人の建築を無断で壊す</li>
+        <li>窃盗（チェストやアイテムを盗む）</li>
+        <li>妨害目的の建築・採掘</li>
+        <li>無断での海の埋め立て</li>
+        <li>stopコマンドの乱用</li>
+        <li>情報漏洩・暴言や侮辱</li>
+        <li>チートやハッキング</li>
+        <li>参加資格のない人を無断で招待すること</li>
+      </ul>
+      <p>基本的には、他の多くのサーバーでも禁止されているような内容です。</p>
+      <div class="confirm">
+        <input type="checkbox" id="chk5">
+        <label for="chk5">禁止事項を確認しました</label>
+      </div>
+    </section>
+
+    <section class="slide" data-idx="6">
+      <div class="eyebrow">Step 6 &mdash; このサーバー独自の重要ルール</div>
+      <h2>このサーバー独自のルールとして知っておきたい2点</h2>
+      <div class="warn">
+        <strong>① 戦争行為</strong><br>
+        内戦を含む戦争行為は、関わった国家が公認取消（国家としての資格を失うこと）になるほど厳しく禁止されています。
+        <div class="cite">国家に関するルール 第12条・第17条</div>
+      </div>
+      <div class="warn">
+        <strong>② 海の無断埋立て</strong><br>
+        海を埋め立てる場合は、事前に<strong>2人以上の運営の許可</strong>を得る必要があります。
+        <div class="cite">禁止事項及び罰則に関するルール 第11条</div>
+      </div>
+      <div class="confirm">
+        <input type="checkbox" id="chk6">
+        <label for="chk6">2つの重要ルールを確認しました</label>
+      </div>
+    </section>
+
+    <section class="slide" data-idx="7">
+      <div class="eyebrow">Step 7 &mdash; stopコマンド</div>
+      <h2>stopコマンドの取り扱い</h2>
+      <p>過去に荒らし行為が発生した経験から、参加者全員にサーバー緊急停止用の <code>stop</code> コマンドの実行権限を付与しています。</p>
+      <div class="warn">このコマンドは、<strong>ルール違反（荒らし等）を止めるための緊急停止専用</strong>です。それ以外の目的でみだりに実行しないでください。
+        <div class="cite">禁止事項及び罰則に関するルール 第10条</div>
+      </div>
+    </section>
+
+    <section class="slide" data-idx="8">
+      <div class="eyebrow">Step 8 &mdash; 仮参加期間中の責任</div>
+      <h2>仮参加期間中は特に注意してください</h2>
+      <p>仮参加期間（30日間）中にルール違反行為があった場合、ご本人だけでなく、招待してくれた参加者（招待者）も連帯して処罰を受ける可能性があります。</p>
+      <div class="callout">
+        参加が承認された後も、今回ご案内した内容を意識しながら活動していただけると安心です。
+        <div class="cite">基本ルール 第5条の5</div>
+      </div>
+      <div class="confirm">
+        <input type="checkbox" id="chk8">
+        <label for="chk8">責任について理解しました</label>
+      </div>
+    </section>
+
+    <section class="slide" data-idx="9">
+      <div class="eyebrow">Step 9 &mdash; サーバーの雰囲気</div>
+      <h2>国ごとに好き勝手やっている生活鯖</h2>
+      <div class="skyline">
+        <div class="bar b1"></div><div class="bar b2"></div><div class="bar b3"></div>
+        <div class="bar b4"></div><div class="bar b5"></div><div class="bar b6"></div>
+        <div class="bar b7"></div><div class="bar b8"></div><div class="bar b9"></div>
+      </div>
+      <p>前身サーバーから続くいくつかの国家に分かれて活動していて、高層ビルの摩天楼から昔ながらの街並みまで、国や地域ごとにさまざまな景観が広がっています。</p>
+      <p>建築の内容にも特に縛りはなく、まじめな街づくりからネタ建築まで、最低限のルールを守っていれば何でもありです。戦争行為は最も重いルール違反として禁じられているので、争いを気にせず他国との交流を楽しめます。</p>
+    </section>
+
+    <section class="slide" data-idx="10">
+      <div class="eyebrow">Step 10 &mdash; さいごに</div>
+      <h2>参加後もぜひ楽しんでください</h2>
+      <p>マイクラでの活動はもちろん、Discordでの雑談や別ゲームでの交流など、コミュニティの中にはいろいろな楽しみ方があります。</p>
+      <p>各国のコミュニティでの活動が参考になると思うので、仮参加が始まったら、ぜひそういった交流もあわせて楽しんでみてください。</p>
+      <p class="final-badge">ご説明は以上です。ご参加をお待ちしています。</p>
+    </section>
+
+  </div>
+</main>
+
+<footer>
+  <button class="navbtn prev" id="btnPrev">← 前へ</button>
+  <span class="step-count" id="stepCount">1 / 11</span>
+  <button class="navbtn next" id="btnNext">次へ →</button>
+</footer>
+
+<script>
+(function(){
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  const total = slides.length;
+  const pathWrap = document.getElementById('pathWrap');
+  const btnPrev = document.getElementById('btnPrev');
+  const btnNext = document.getElementById('btnNext');
+  const stepCount = document.getElementById('stepCount');
+
+  let current = 0;
+  let maxVisited = 0;
+
+  // build block-path progress markers
+  const blocks = [];
+  for(let i=0;i<total;i++){
+    const b = document.createElement('div');
+    b.className = 'block';
+    b.dataset.idx = i;
+    b.addEventListener('click', ()=>{
+      if(i <= maxVisited) goTo(i);
+    });
+    pathWrap.appendChild(b);
+    blocks.push(b);
+    if(i < total-1){
+      const rail = document.createElement('div');
+      rail.className = 'rail';
+      pathWrap.appendChild(rail);
+    }
+  }
+
+  function gateFor(idx){
+    const slide = slides[idx];
+    const chk = slide.querySelector('.confirm input[type=checkbox]');
+    return chk;
+  }
+
+  function updateNextState(){
+    const chk = gateFor(current);
+    btnNext.disabled = !!(chk && !chk.checked && current !== total-1);
+    if(current === total-1){
+      btnNext.textContent = '完了';
+    } else {
+      btnNext.textContent = '次へ →';
+    }
+  }
+
+  function render(){
+    slides.forEach((s,i)=>{
+      s.classList.toggle('active', i===current);
+    });
+    blocks.forEach((b,i)=>{
+      b.classList.toggle('current', i===current);
+      b.classList.toggle('visited', i<=maxVisited && i!==current);
+    });
+    btnPrev.disabled = current===0;
+    btnPrev.style.opacity = current===0 ? 0.35 : 1;
+    stepCount.textContent = (current+1) + ' / ' + total;
+    updateNextState();
+
+    const chk = gateFor(current);
+    if(chk) chk.onchange = updateNextState;
+  }
+
+  function goTo(i){
+    current = Math.max(0, Math.min(total-1, i));
+    maxVisited = Math.max(maxVisited, current);
+    render();
+  }
+
+  btnNext.addEventListener('click', ()=>{
+    if(btnNext.disabled) return;
+    if(current === total-1){
+      goTo(0);
+      return;
+    }
+    goTo(current+1);
+  });
+  btnPrev.addEventListener('click', ()=> goTo(current-1));
+
+  document.addEventListener('keydown', (e)=>{
+    if(e.key === 'ArrowRight') btnNext.click();
+    if(e.key === 'ArrowLeft') btnPrev.click();
+  });
+
+  render();
+})();
+</script>
+
+</body>
+</html>
