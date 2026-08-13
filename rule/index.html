@@ -1,3 +1,5 @@
+---
+---
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -8,6 +10,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/dads/tokens.css" />
+  <link rel="stylesheet" href="assets/dads/base.css" />
+  <link rel="stylesheet" href="assets/dads/components.css" />
   <link rel="stylesheet" href="style_index.css" />
   <meta http-equiv="Cache-Control" content="no-store">
   <meta property="og:site_name" content="DSクラフト ルールポータル" />
@@ -22,11 +27,12 @@
 
   <!-- ヘッダー -->
   <header class="site-header">
-    <div class="logo">DSクラフト ルールポータル</div>
-    <nav class="top-nav">
-      <a href="index.html">ホーム</a>
-      <a href="https://www.ds2.uk/">DSトップ</a>
-    </nav>
+    <div class="site-header__inner">
+      <a class="site-header__logo" href="index.html">DSクラフト ルールポータル</a>
+      <nav class="top-nav" aria-label="サイトナビゲーション">
+        <a class="dads-link" href="https://www.ds2.uk/">DSトップ</a>
+      </nav>
+    </div>
   </header>
 
   <!-- メインコンテンツ -->
@@ -44,17 +50,24 @@
         <div class="rules-sort">
           <div class="rules-sort-inner">
             <label for="rules-sort-select">並び替え</label>
-            <select id="rules-sort-select">
-              <option value="default">デフォルト</option>
-              <option value="id">ルール番号順</option>
-              <option value="category">種類順</option>
-            </select>
+            <span class="dads-select">
+              <span class="dads-select__control">
+                <select class="dads-select__select" id="rules-sort-select" data-size="md">
+                  <option value="default">デフォルト</option>
+                  <option value="id">ルール番号順</option>
+                  <option value="category">種類順</option>
+                </select>
+                <svg class="dads-select__chevron" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M12 17L3 8L4 7L12 15L20 7L21 8L12 17Z" fill="currentcolor"/>
+                </svg>
+              </span>
+            </span>
           </div>
         </div>
       </div>
-      <div class="rules-list" id="rules-list">
+      <ul class="rules-list" id="rules-list">
         <!-- JavaScriptで動的に生成 -->
-      </div>
+      </ul>
       <p class="rules-count">（表示件数/全件数）</p>
     </div>
   </main>
@@ -65,14 +78,26 @@
       <p>©2025 3DS半分こするくらい仲良しクラフト中央委員会</p>
     </div>
     <div class="footer-right">
-      <a href="#" id="print-btn">印刷</a>
     </div>
   </footer>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-  let rulesOriginal = [];
-  let rulesCurrent = [];
+  // ルール一覧はビルド時に_rules配下の各ページのfront matterから生成する
+  // (rules.jsonへの実行時fetchは行わない。一覧の並び順はfront matterのorderに従う)
+  let rulesOriginal = [
+    {% assign sorted_rules = site.rules | sort: "order" -%}
+    {%- for rule in sorted_rules -%}
+    {
+      id: {{ rule.url | split: '/' | last | jsonify }},
+      rule_name: {{ rule.rule_name | jsonify }},
+      rule_number: {{ rule.rule_number | jsonify }},
+      enforcement_date: {{ rule.enforcement_date | jsonify }},
+      category: {{ rule.category | jsonify }}
+    }{% unless forloop.last %},{% endunless %}
+    {% endfor -%}
+  ];
+  let rulesCurrent = rulesOriginal.slice();
   const categoryOrder = { "ルール": 0, "ルール施行令": 1, "国内法": 2 };
 
   function renderRules(rules) {
@@ -80,44 +105,27 @@ document.addEventListener('DOMContentLoaded', function() {
     const rulesCount = document.querySelector('.rules-count');
     rulesList.innerHTML = '';
     if (!rules || rules.length === 0) {
-      rulesList.innerHTML = '<p>現在掲載中のルールはありません。</p>';
+      rulesList.innerHTML = '<li><p>現在掲載中のルールはありません。</p></li>';
       rulesCount.textContent = '（表示0件/全0件）';
       return;
     }
     rules.forEach(rule => {
-      const ruleItem = document.createElement('div');
-      ruleItem.className = 'rule-item';
-      ruleItem.innerHTML = `
-        <div class="rule-icon">📄</div>
-        <div class="rule-content">
-          <h3><a href="${rule.id}.html">${rule.rule_name}</a></h3>
+      const li = document.createElement('li');
+      const numberText = rule.rule_number ? `<span class="rule-item__number">（${rule.rule_number}）</span>` : '';
+      li.innerHTML = `
+        <a class="rule-item" href="${rule.id}">
+          <div class="rule-item__row1"><svg class="rule-item__icon" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 2h9l5 5v15H6V2Z" stroke="currentColor" stroke-width="1.6"/><path d="M15 2v5h5" stroke="currentColor" stroke-width="1.6"/></svg><span class="rule-item__title">${rule.rule_name}</span>${numberText}<span class="dads-chip-label rule-item__category" data-style="outlined" data-color="gray">${rule.category}</span></div>
           <div class="rule-meta">
-            <span class="badge">${rule.category}</span>
-            <span class="rule-date">${rule.enforcement_date}</span>
-            <span class="rule-number">${rule.rule_number}</span>
+            <span class="rule-date">${rule.enforcement_date} 施行</span>
           </div>
-        </div>
+        </a>
       `;
-      rulesList.appendChild(ruleItem);
+      rulesList.appendChild(li);
     });
     rulesCount.textContent = `（表示${rules.length}件/全${rulesOriginal.length}件）`;
   }
 
-  fetch('rules.json')
-    .then(res => {
-      if (!res.ok) throw new Error('rules.jsonの取得に失敗しました');
-      return res.json();
-    })
-    .then(rules => {
-      rulesOriginal = rules.slice();
-      rulesCurrent = rules.slice();
-      renderRules(rulesCurrent);
-    })
-    .catch(err => {
-      const rulesList = document.getElementById('rules-list');
-      rulesList.innerHTML = `<p style="color:red;">ルール一覧の取得に失敗しました: ${err.message}</p>`;
-      console.error(err);
-    });
+  renderRules(rulesCurrent);
 
   document.getElementById('rules-sort-select').addEventListener('change', function() {
     let sorted;
@@ -147,76 +155,6 @@ document.addEventListener('DOMContentLoaded', function() {
     renderRules(rulesCurrent);
   });
 
-  // 印刷機能: ヘッダー・メイン・フッターのみ印刷、見切れ防止
-  document.getElementById('print-btn').addEventListener('click', function(e) {
-    e.preventDefault();
-    const header = document.querySelector('.site-header');
-    const main = document.querySelector('.main-content');
-    const footer = document.querySelector('.site-footer');
-    if (!header || !main || !footer) return;
-    const printWindow = window.open('', '', 'width=900,height=700');
-    // スクロール用にmain-contentの高さ・overflowを解除
-    printWindow.document.write(`
-      <html>
-        <head>
-          <title>印刷</title>
-          <link rel="stylesheet" href="style_index.css">
-          <style>
-            body, html {
-              background: #fff !important;
-              margin: 0 !important;
-              padding: 0 !important;
-              width: 100vw !important;
-              height: auto !important;
-              overflow: visible !important;
-            }
-            .site-header, .main-content, .site-footer {
-              position: static !important;
-              width: 100vw !important;
-              margin: 0 !important;
-              box-shadow: none !important;
-              background: #fff !important;
-              z-index: 1 !important;
-            }
-            .main-content {
-              height: auto !important;
-              min-height: unset !important;
-              overflow: visible !important;
-              max-width: 100vw !important;
-              padding-bottom: 0 !important;
-            }
-            @media print {
-              .site-header, .main-content, .site-footer {
-                position: static !important;
-                box-shadow: none !important;
-              }
-              .main-content {
-                height: auto !important;
-                min-height: unset !important;
-                overflow: visible !important;
-                max-width: 100vw !important;
-              }
-            }
-          </style>
-        </head>
-        <body>
-          <div class="site-header">
-            ${header.innerHTML}
-          </div>
-          <main class="main-content">
-            ${main.innerHTML}
-          </main>
-          <footer class="site-footer">
-            ${footer.innerHTML}
-          </footer>
-        </body>
-      </html>
-    `);
-    printWindow.document.close();
-    printWindow.focus();
-    printWindow.print();
-    printWindow.close();
-  });
 });
 </script>
 

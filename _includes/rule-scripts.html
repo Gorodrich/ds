@@ -1,0 +1,261 @@
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // law-infoの実際の高さをCSS変数--law-info-hに反映する
+  // (ルール名や条文番号が長く2行以上に折り返すと、固定値では
+  //  main-content等の高さが合わず下部が見切れるため)
+  const lawInfoEl = document.querySelector('.law-info');
+  if (lawInfoEl) {
+    const updateLawInfoHeight = function() {
+      document.documentElement.style.setProperty('--law-info-h', lawInfoEl.offsetHeight + 'px');
+    };
+    if (window.ResizeObserver) {
+      new ResizeObserver(updateLawInfoHeight).observe(lawInfoEl);
+    } else {
+      window.addEventListener('resize', updateLawInfoHeight);
+    }
+    updateLawInfoHeight();
+  }
+
+  const toc = document.getElementById('toc');
+  const headings = document.querySelectorAll('main h2, main h3, main h4, main h5');
+  let lastLevel = 2;
+  let parents = [toc];
+
+  headings.forEach(heading => {
+    // idがなければ自動生成
+    if (!heading.id) {
+      heading.id = heading.textContent.trim().replace(/\s+/g, '-');
+    }
+    const level = parseInt(heading.tagName[1]);
+    const li = document.createElement('li');
+    const a = document.createElement('a');
+    a.href = '#' + heading.id;
+    a.textContent = heading.textContent;
+    a.className = 'dads-link';
+    li.appendChild(a);
+
+    // 階層構造を作る
+    if (level > lastLevel) {
+      let ul = document.createElement('ul');
+      ul.className = 'dads-list';
+      ul.dataset.spacing = '8';
+      parents[parents.length - 1].lastElementChild.appendChild(ul);
+      parents.push(ul);
+    } else if (level < lastLevel) {
+      parents.splice(level - 2 + 1);
+    }
+    parents[parents.length - 1].appendChild(li);
+    lastLevel = level;
+  });
+
+  // ▼▶トグル機能追加
+  function setupSidebarToggle() {
+    // サイドバーの目次リスト内の親liを取得
+    document.querySelectorAll('.sidebar li:has(ul)').forEach(function(li) {
+      // 既存の三角形を消して、spanでラップ
+      let firstChild = li.firstChild;
+      // 既にspanがある場合はスキップ
+      if (li.querySelector('.sidebar-toggle')) return;
+      // 三角形アイコン用spanを作成
+      let toggle = document.createElement('span');
+      toggle.className = 'sidebar-toggle';
+      toggle.textContent = '▼';
+      toggle.style.cursor = 'pointer';
+      toggle.style.marginLeft = '-1.2em';
+      toggle.style.marginRight = '0.2em';
+      toggle.style.display = 'inline-block';
+      toggle.style.width = '1em';
+      toggle.style.verticalAlign = 'middle';
+      // 最初のa要素の前に挿入
+      li.insertBefore(toggle, li.firstElementChild);
+
+      // クリックで子ulの表示/非表示切り替え
+      toggle.addEventListener('click', function(e) {
+        e.stopPropagation();
+        let childUl = li.querySelector('ul');
+        if (!childUl) return;
+        if (childUl.style.display === 'none') {
+          childUl.style.display = '';
+          toggle.textContent = '▼';
+        } else {
+          childUl.style.display = 'none';
+          toggle.textContent = '▶';
+        }
+      });
+    });
+  }
+
+  // 目次生成後にトグルセットアップ
+  setupSidebarToggle();
+
+  // 一般参加者スイッチのロジック
+  const switchInput = document.getElementById('generalOnlySwitch');
+  function isSwitchOn() {
+    return switchInput.getAttribute('aria-checked') === 'true';
+  }
+  function updateArticles() {
+    document.querySelectorAll('.article').forEach(article => {
+      const h5 = article.querySelector('h5');
+      const p = article.querySelector('p');
+      const isGeneral = h5 && h5.dataset.general === "true";
+      let showBox = article.querySelector('.show-non-general');
+      let input = showBox ? showBox.querySelector('.dads-checkbox__input') : null;
+
+      if (!isGeneral) {
+        if (!showBox) {
+          // チェックボックスがなければ生成
+          showBox = document.createElement('label');
+          showBox.className = 'dads-checkbox show-non-general';
+          showBox.dataset.size = 'sm';
+          showBox.id = 'show-' + article.id;
+          const checkboxSpan = document.createElement('span');
+          checkboxSpan.className = 'dads-checkbox__checkbox';
+          input = document.createElement('input');
+          input.type = 'checkbox';
+          input.className = 'dads-checkbox__input';
+          checkboxSpan.appendChild(input);
+          const labelSpan = document.createElement('span');
+          labelSpan.className = 'dads-checkbox__label';
+          labelSpan.textContent = '表示';
+          showBox.appendChild(checkboxSpan);
+          showBox.appendChild(labelSpan);
+          // pの直前に挿入
+          p.parentNode.insertBefore(showBox, p);
+          // チェック時にpを表示
+          input.addEventListener('change', function() {
+            p.style.display = this.checked ? '' : 'none';
+          });
+        }
+        if (isSwitchOn()) {
+          // スイッチON: チェックボックス表示、pはチェック時のみ
+          showBox.style.display = '';
+          p.style.display = input.checked ? '' : 'none';
+        } else {
+          // スイッチOFF: チェックボックス非表示、p常に表示
+          showBox.style.display = 'none';
+          p.style.display = '';
+        }
+      } else {
+        // 一般参加者向け条文は常にp表示、チェックボックス非表示
+        if (showBox) showBox.style.display = 'none';
+        if (p) p.style.display = '';
+      }
+    });
+  }
+  switchInput.addEventListener('change', updateArticles);
+  updateArticles();
+
+
+  // ===== レスポンシブ: ドロワーナビゲーション・目次ボタン・サイドバー制御 =====
+  const sidebar = document.getElementById('sidebar');
+  const sidebarMenuBtn = document.getElementById('drawer-menu-btn');
+  const sidebarCloseBtn = document.getElementById('sidebar-close-btn');
+  const tocToggleBtn = document.getElementById('toc-toggle-btn');
+  const siteDrawer = document.getElementById('site-drawer');
+  const drawerCloseBtn = document.getElementById('drawer-close-btn');
+
+  // サイトナビゲーションドロワー開閉(ネイティブdialogに委譲: ESC・背景クリックは自動処理される)
+  sidebarMenuBtn.addEventListener('click', function(e) {
+    e.preventDefault();
+    siteDrawer.showModal();
+  });
+  drawerCloseBtn.addEventListener('click', function(e) {
+    e.preventDefault();
+    siteDrawer.close();
+  });
+  siteDrawer.addEventListener('click', function(e) {
+    if (e.target === siteDrawer) siteDrawer.close();
+  });
+  siteDrawer.addEventListener('click', function(e) {
+    if (e.target.closest('a') && window.innerWidth <= 768) {
+      siteDrawer.close();
+    }
+  });
+
+  // 目次ボタンでsidebar開閉（再クリックで閉じる）
+  tocToggleBtn.addEventListener('click', function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    if (window.innerWidth <= 768) {
+      if (sidebar.classList.contains('open')) {
+        sidebar.classList.remove('open');
+        document.body.classList.remove('sidebar-open');
+        tocToggleBtn.focus();
+      } else {
+        sidebar.classList.add('open');
+        document.body.classList.add('sidebar-open');
+        sidebarCloseBtn.focus();
+      }
+    }
+  });
+  sidebarCloseBtn.addEventListener('click', function(e) {
+    e.preventDefault();
+    if (window.innerWidth <= 768) {
+      sidebar.classList.remove('open');
+      document.body.classList.remove('sidebar-open');
+      tocToggleBtn.focus();
+    }
+  });
+  // ESCキーでsidebar閉じる
+  document.addEventListener('keydown', function(e) {
+    if (window.innerWidth <= 768 && sidebar.classList.contains('open') && (e.key === 'Escape' || e.key === 'Esc')) {
+      sidebar.classList.remove('open');
+      document.body.classList.remove('sidebar-open');
+      tocToggleBtn.focus();
+    }
+  });
+  // サイドバー外クリックで閉じる
+  document.addEventListener('click', function(e) {
+    if (window.innerWidth <= 768 && sidebar.classList.contains('open')) {
+      if (!sidebar.contains(e.target) && e.target !== tocToggleBtn) {
+        sidebar.classList.remove('open');
+        document.body.classList.remove('sidebar-open');
+      }
+    }
+  });
+  // 目次リンククリックでsidebar閉じる
+  document.getElementById('toc').addEventListener('click', function(e) {
+    if (window.innerWidth <= 768 && e.target.tagName === 'A') {
+      sidebar.classList.remove('open');
+      document.body.classList.remove('sidebar-open');
+    }
+  });
+
+  // 768px以上ではsidebar常時表示
+  function updateSidebarDisplay() {
+    if (window.innerWidth > 768) {
+      sidebar.classList.remove('open');
+      document.body.classList.remove('sidebar-open');
+    }
+  }
+  window.addEventListener('resize', updateSidebarDisplay);
+  updateSidebarDisplay();
+
+  // ===== 印刷 =====
+  const printBtn = document.getElementById('print-btn');
+  if (printBtn) {
+    printBtn.addEventListener('click', function(e) {
+      e.preventDefault();
+      window.print();
+    });
+  }
+
+  // 印刷時は「一般向け条文のみ表示」を一時的にOFFにし、全条文を印刷する
+  // (印刷後は元の表示状態に戻す)
+  let switchStateBeforePrint = null;
+  window.addEventListener('beforeprint', function() {
+    switchStateBeforePrint = switchInput.getAttribute('aria-checked');
+    if (switchStateBeforePrint === 'true') {
+      switchInput.setAttribute('aria-checked', 'false');
+      updateArticles();
+    }
+  });
+  window.addEventListener('afterprint', function() {
+    if (switchStateBeforePrint === 'true') {
+      switchInput.setAttribute('aria-checked', 'true');
+      updateArticles();
+    }
+    switchStateBeforePrint = null;
+  });
+});
+</script>

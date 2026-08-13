@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>新規参加者ガイド | 3DS半分こするくらい仲良しクラフト</title>
+<link rel="icon" href="/favicon.ico">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon-180x180.png">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="3DS半分こするくらい仲良しクラフトの新規参加者向けガイド。生活する上で知っておくべきルールを、章ごとにわかりやすくまとめています。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Audiowide&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/@phosphor-icons/web" defer></script>
+<style>
+  :root{
+    --bg:#10141b;
+    --bg-elevated:#171d27;
+    --bg-elevated-2:#1e2531;
+    --line: rgba(244,239,228,0.10);
+    --text:#f4efe4;
+    --text-soft:#b7bfcc;
+    --text-faint:#7c8494;
+    --accent:#e6b73d;
+    --accent-soft:#f2cc6b;
+    --accent-ink:#211705;
+    --tip-bg: rgba(127,178,213,0.10);
+    --tip-border: rgba(127,178,213,0.38);
+    --tip-ink:#9fcaea;
+    --warn-bg: rgba(230,138,61,0.10);
+    --warn-border: rgba(230,138,61,0.4);
+    --warn-ink:#eba468;
+    --danger-bg: rgba(214,69,69,0.10);
+    --danger-border: rgba(214,69,69,0.42);
+    --danger-ink:#ec8f8f;
+    --radius: 14px;
+    --header-h: 64px;
+    --toc-w: 268px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+    *,*::before,*::after{animation-duration:0.001s !important; transition-duration:0.001s !important;}
+  }
+  html,body{margin:0;padding:0;}
+  body{
+    background: var(--bg);
+    color: var(--text);
+    font-family:"Noto Sans JP", sans-serif;
+    line-height:1.75;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit;}
+  img{max-width:100%;display:block;}
+  ul, ol{padding-left:1.3em;}
+  li{margin:0.35em 0;}
+
+  .skip-link{
+    position:fixed; top:-3em; left:1em; z-index:200;
+    background:var(--accent); color:var(--accent-ink); font-weight:700;
+    padding:0.6em 1em; border-radius:0 0 8px 8px; transition:top .2s ease;
+  }
+  .skip-link:focus{top:0;}
+  a:focus-visible, button:focus-visible, summary:focus-visible{
+    outline:3px solid var(--accent); outline-offset:2px;
+  }
+
+  /* ---------- progress bar ---------- */
+  .progress-track{
+    position:fixed; top:0; left:0; right:0; height:3px; z-index:120;
+    background:rgba(244,239,228,0.06);
+  }
+  .progress-fill{
+    height:100%; width:0%;
+    background:linear-gradient(90deg, var(--accent), var(--accent-soft));
+    transition:width .08s linear;
+  }
+
+  /* ---------- header ---------- */
+  .doc-header{
+    position:sticky; top:0; z-index:110; height:var(--header-h);
+    display:flex; align-items:center;
+    background:rgba(16,20,27,0.82);
+    backdrop-filter:blur(14px) saturate(140%);
+    -webkit-backdrop-filter:blur(14px) saturate(140%);
+    border-bottom:1px solid var(--line);
+    margin-top:3px;
+  }
+  .doc-header-inner{
+    width:100%; max-width:1320px; margin:0 auto;
+    padding:0 clamp(14px,3vw,32px);
+    display:flex; align-items:center; justify-content:space-between; gap:1rem;
+  }
+  .home-link{
+    display:flex; align-items:center; gap:0.5em;
+    text-decoration:none; color:var(--text-soft); font-size:0.86rem; font-weight:500;
+    padding:0.5em 0.7em; border-radius:8px; transition:color .2s ease, background-color .2s ease;
+    white-space:nowrap;
+  }
+  .home-link:hover{color:var(--text); background:var(--bg-elevated);}
+  .doc-title{
+    font-size:0.9rem; font-weight:700; color:var(--text);
+    overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+    text-align:center; flex:1; padding:0 0.5rem;
+  }
+  .toc-toggle{
+    display:none; align-items:center; gap:0.4em;
+    background:var(--bg-elevated); border:1px solid var(--line); color:var(--text);
+    border-radius:8px; padding:0.5em 0.8em; font-size:0.82rem; font-weight:700; cursor:pointer;
+  }
+
+  /* ---------- shell / toc ---------- */
+  .doc-shell{
+    max-width:1320px; margin:0 auto;
+    display:grid; grid-template-columns:var(--toc-w) minmax(0,1fr);
+    gap:clamp(24px,4vw,56px);
+    padding:0 clamp(14px,3vw,32px);
+  }
+  .toc{
+    position:sticky; top:calc(var(--header-h) + 3px + 24px);
+    align-self:start;
+    max-height:calc(100dvh - var(--header-h) - 3px - 48px);
+    overflow-y:auto;
+    padding:1.2rem 0 2rem;
+  }
+  .toc-label{
+    font-size:0.72rem; letter-spacing:0.14em; color:var(--text-faint);
+    font-weight:700; margin:0 0 0.8rem;
+  }
+  .toc ol{list-style:none; margin:0; padding:0; counter-reset:toc;}
+  .toc li{margin:0;}
+  .toc a{
+    counter-increment:toc;
+    display:flex; align-items:baseline; gap:0.55em;
+    text-decoration:none; color:var(--text-soft); font-size:0.86rem;
+    padding:0.5em 0.6em; border-radius:8px; border-left:2px solid transparent;
+    transition:color .2s ease, background-color .2s ease, border-color .2s ease;
+  }
+  .toc a::before{
+    content:counter(toc); font-family:"Audiowide", sans-serif; font-size:0.7rem;
+    color:var(--text-faint); min-width:1.4em;
+  }
+  .toc a:hover{color:var(--text); background:var(--bg-elevated);}
+  .toc a.active{color:var(--accent-soft); border-left-color:var(--accent); background:var(--bg-elevated);}
+  .toc a.active::before{color:var(--accent);}
+
+  .toc-overlay{
+    display:none; position:fixed; inset:0; z-index:130;
+    background:rgba(8,10,14,0.6);
+  }
+  .toc-overlay.open{display:block;}
+
+  /* ---------- main / hero ---------- */
+  main{min-width:0;}
+  .hero{padding:clamp(28px,5vw,56px) 0 clamp(20px,4vw,32px);}
+  .hero-eyebrow{
+    font-family:"Audiowide", sans-serif; font-size:0.7rem; letter-spacing:0.2em;
+    color:var(--accent-soft); margin:0 0 0.9em;
+  }
+  .hero h1{
+    font-size:clamp(1.7rem, 4vw, 2.6rem); margin:0 0 0.6em; line-height:1.3;
+    text-wrap:balance;
+  }
+  .hero p{color:var(--text-soft); margin:0.7em 0; font-size:0.98rem;}
+  .hero blockquote{
+    margin:1.4em 0 0; padding:0.9em 1.1em; border-left:3px solid var(--accent);
+    background:var(--bg-elevated); border-radius:0 10px 10px 0;
+    color:var(--text-soft); font-size:0.9rem;
+  }
+
+  /* ---------- quick nav ---------- */
+  .quicknav{padding:0.5rem 0 clamp(32px,5vw,56px);}
+  .quicknav h2{font-size:1.2rem; margin:0 0 1rem;}
+  .quicknav-grid{
+    display:grid; grid-template-columns:repeat(2,1fr); gap:0.8rem;
+  }
+  .quicknav-card{
+    display:flex; align-items:center; gap:0.9rem;
+    text-decoration:none; color:var(--text);
+    background:var(--bg-elevated); border:1px solid var(--line);
+    border-radius:var(--radius); padding:0.95rem 1.1rem;
+    transition:border-color .2s ease, background-color .2s ease, transform .2s cubic-bezier(.16,1,.3,1);
+  }
+  .quicknav-card:hover{border-color:rgba(230,183,61,0.4); background:var(--bg-elevated-2); transform:translateY(-2px);}
+  .quicknav-card i.q-icon{font-size:1.35rem; color:var(--accent); flex:none;}
+  .quicknav-card span{font-size:0.88rem; font-weight:500; line-height:1.4;}
+  .quicknav-card i.q-arrow{margin-left:auto; color:var(--text-faint); transition:transform .2s ease, color .2s ease; flex:none;}
+  .quicknav-card:hover i.q-arrow{transform:translateX(3px); color:var(--accent);}
+
+  /* ---------- reveal ---------- */
+  .reveal{opacity:0; transform:translateY(20px); transition:opacity .6s ease, transform .6s cubic-bezier(.16,1,.3,1);}
+  .reveal.in-view{opacity:1; transform:translateY(0);}
+
+  /* ---------- chapters ---------- */
+  .chapter{padding:clamp(40px,6vw,64px) 0; border-top:1px solid var(--line); scroll-margin-top:calc(var(--header-h) + 20px);}
+  .chapter:first-of-type{border-top:1px solid var(--line);}
+  .chapter-head{display:flex; align-items:center; gap:1rem; margin-bottom:1.1rem;}
+  .chapter-num{
+    font-family:"Audiowide", sans-serif; font-size:1.5rem; color:var(--accent);
+    flex:none; width:2.4rem;
+  }
+  .chapter-icon{
+    flex:none; width:44px; height:44px; border-radius:11px;
+    display:flex; align-items:center; justify-content:center;
+    background:var(--bg-elevated); border:1px solid var(--line); font-size:1.25rem; color:var(--accent-soft);
+  }
+  .chapter h2{font-size:clamp(1.25rem,2.4vw,1.55rem); margin:0; line-height:1.4;}
+  .chapter > p{color:var(--text-soft);}
+  .chapter h3{font-size:1.05rem; margin:1.8em 0 0.6em;}
+
+  /* ---------- callouts ---------- */
+  .callout{
+    display:flex; gap:0.8rem; padding:1rem 1.15rem; border-radius:12px;
+    border:1px solid var(--line); margin:1.4em 0;
+  }
+  .callout i{flex:none; font-size:1.2rem; margin-top:0.1em;}
+  .callout p, .callout div{margin:0; font-size:0.92rem; color:var(--text-soft);}
+  .callout.tip{background:var(--tip-bg); border-color:var(--tip-border);}
+  .callout.tip i{color:var(--tip-ink);}
+  .callout.warn{background:var(--warn-bg); border-color:var(--warn-border);}
+  .callout.warn i{color:var(--warn-ink);}
+  .callout.danger{background:var(--danger-bg); border-color:var(--danger-border);}
+  .callout.danger i{color:var(--danger-ink);}
+
+  /* ---------- key points (chapter 2) ---------- */
+  .keypoints{
+    display:grid; grid-template-columns:repeat(2,1fr); gap:1rem; margin-top:1.4rem;
+  }
+  .keypoint{
+    display:flex; gap:0.9rem; padding:1.1rem;
+    background:var(--bg-elevated); border:1px solid var(--line); border-radius:var(--radius);
+  }
+  .keypoint-num{
+    flex:none; width:2rem; height:2rem; border-radius:50%;
+    background:var(--accent); color:var(--accent-ink); font-weight:900;
+    display:flex; align-items:center; justify-content:center; font-size:0.95rem;
+  }
+  .keypoint p{margin:0; font-size:0.92rem; color:var(--text);}
+
+  /* ---------- lists with icons ---------- */
+  .icon-list{list-style:none; padding:0; margin:1.2em 0; display:flex; flex-direction:column; gap:0.6rem;}
+  .icon-list li{
+    display:flex; gap:0.7em; align-items:flex-start; margin:0;
+    color:var(--text-soft); font-size:0.94rem;
+  }
+  .icon-list i{flex:none; color:var(--accent); font-size:1.05rem; margin-top:0.2em;}
+
+  /* ---------- definition grid (glossary) ---------- */
+  .def-grid{
+    display:grid; grid-template-columns:repeat(2,1fr); gap:0.7rem; margin:1.2em 0;
+  }
+  .def-item{
+    padding:0.85rem 1rem; background:var(--bg-elevated); border:1px solid var(--line); border-radius:10px;
+  }
+  .def-term{font-weight:700; color:var(--accent-soft); font-size:0.88rem; margin:0 0 0.35em;}
+  .def-desc{font-size:0.86rem; color:var(--text-soft); margin:0;}
+
+  /* ---------- prohibited grid (chapter 6) ---------- */
+  .rule-grid{
+    display:grid; grid-template-columns:repeat(3,1fr); gap:0.75rem; margin:1.4em 0;
+  }
+  .rule-card{
+    padding:1rem; background:var(--bg-elevated); border:1px solid var(--line); border-radius:var(--radius);
+    display:flex; flex-direction:column; gap:0.5rem;
+  }
+  .rule-card-top{display:flex; align-items:center; gap:0.6em;}
+  .rule-card-top i{color:var(--danger-ink); font-size:1.15rem;}
+  .rule-card-top strong{font-size:0.92rem;}
+  .rule-card small{color:var(--text-faint); font-size:0.74rem; letter-spacing:0.04em;}
+  .rule-card p{margin:0; font-size:0.84rem; color:var(--text-soft); line-height:1.55;}
+
+  /* ---------- stepper (chapter 5, 7) ---------- */
+  .stepper{list-style:none; margin:1.3em 0; padding:0;}
+  .stepper > li{
+    position:relative; padding:0 0 1.4rem 2.2rem; margin:0;
+    border-left:2px solid var(--line);
+  }
+  .stepper > li:last-child{border-color:transparent; padding-bottom:0;}
+  .stepper > li::before{
+    content:attr(data-step);
+    position:absolute; left:-0.85rem; top:0;
+    width:1.7rem; height:1.7rem; border-radius:50%;
+    background:var(--bg-elevated-2); border:1px solid var(--accent);
+    color:var(--accent-soft); font-size:0.78rem; font-weight:700;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .stepper p, .stepper .step-sub{margin:0; font-size:0.92rem; color:var(--text-soft);}
+  .stepper .step-sub{list-style:disc; margin-top:0.4em; padding-left:1.1em;}
+
+  /* ---------- table ---------- */
+  .table-wrap{overflow-x:auto; margin:1.3em 0; border:1px solid var(--line); border-radius:var(--radius);}
+  table{width:100%; border-collapse:collapse; font-size:0.88rem; min-width:480px;}
+  thead th{
+    text-align:left; padding:0.75em 1em; background:var(--bg-elevated-2);
+    color:var(--accent-soft); font-weight:700; border-bottom:1px solid var(--line);
+    white-space:nowrap;
+  }
+  tbody td{padding:0.75em 1em; border-bottom:1px solid var(--line); color:var(--text-soft); vertical-align:top;}
+  tbody tr:last-child td{border-bottom:none;}
+  tbody tr:hover td{background:rgba(244,239,228,0.02);}
+
+  /* ---------- accordion (details) ---------- */
+  details.accordion{
+    border:1px solid var(--line); border-radius:var(--radius); margin:0.8em 0;
+    background:var(--bg-elevated); overflow:hidden;
+  }
+  details.accordion summary{
+    list-style:none; cursor:pointer; padding:1rem 1.15rem;
+    display:flex; align-items:center; justify-content:space-between; gap:1rem;
+    font-weight:700; font-size:0.96rem;
+  }
+  details.accordion summary::-webkit-details-marker{display:none;}
+  details.accordion summary .caret{
+    flex:none; color:var(--text-faint); transition:transform .2s ease;
+  }
+  details.accordion[open] summary .caret{transform:rotate(180deg);}
+  details.accordion .accordion-body{
+    padding:0 1.15rem 1.15rem; color:var(--text-soft); font-size:0.92rem;
+  }
+  details.accordion .accordion-body p{margin:0.7em 0;}
+
+  /* ---------- final notice ---------- */
+  .final-notice{
+    margin:clamp(40px,6vw,64px) 0 0; padding:1.4rem 1.5rem;
+    border:1px solid var(--warn-border); background:var(--warn-bg);
+    border-radius:var(--radius); display:flex; gap:1rem;
+  }
+  .final-notice i{flex:none; font-size:1.4rem; color:var(--warn-ink); margin-top:0.1em;}
+  .final-notice strong{display:block; margin-bottom:0.4em; font-size:0.98rem;}
+  .final-notice p{margin:0; font-size:0.9rem; color:var(--text-soft);}
+
+  /* ---------- footer ---------- */
+  .site-footer{
+    border-top:1px solid var(--line); margin-top:clamp(40px,6vw,64px);
+    padding:1.6rem clamp(14px,3vw,32px) 3rem;
+  }
+  .footer-inner{
+    max-width:1320px; margin:0 auto;
+    display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:1rem;
+    color:var(--text-faint); font-size:0.8rem;
+  }
+  .footer-inner a{color:var(--text-soft); text-decoration:none;}
+  .footer-inner a:hover{color:var(--accent-soft);}
+
+  /* ---------- back to top ---------- */
+  .back-to-top{
+    position:fixed; right:clamp(14px,3vw,32px); bottom:clamp(14px,3vw,32px); z-index:90;
+    width:46px; height:46px; border-radius:50%;
+    background:var(--accent); color:var(--accent-ink); border:none;
+    display:flex; align-items:center; justify-content:center; font-size:1.15rem;
+    cursor:pointer; opacity:0; pointer-events:none; transform:translateY(10px);
+    transition:opacity .25s ease, transform .25s ease, background-color .2s ease;
+    box-shadow:0 10px 26px -10px rgba(230,183,61,0.6);
+  }
+  .back-to-top.visible{opacity:1; pointer-events:auto; transform:translateY(0);}
+  .back-to-top:hover{background:var(--accent-soft);}
+
+  /* ---------- responsive ---------- */
+  @media (max-width: 1000px){
+    .doc-shell{grid-template-columns:1fr;}
+    .toc-toggle{display:inline-flex;}
+    .toc{
+      position:fixed; top:0; bottom:0; left:0; z-index:140;
+      width:min(84vw, 320px); max-height:none;
+      background:var(--bg); border-right:1px solid var(--line);
+      padding:1.4rem 1.2rem 2rem;
+      transform:translateX(-100%);
+      transition:transform .25s ease;
+    }
+    .toc.open{transform:translateX(0);}
+    .quicknav-grid{grid-template-columns:1fr;}
+    .rule-grid{grid-template-columns:repeat(2,1fr);}
+    .keypoints{grid-template-columns:1fr;}
+    .def-grid{grid-template-columns:1fr;}
+  }
+  @media (max-width: 620px){
+    .rule-grid{grid-template-columns:1fr;}
+    .chapter-head{align-items:flex-start;}
+    table{min-width:420px;}
+  }
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main-content">本文へスキップ</a>
+
+<div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+
+<header class="doc-header">
+  <div class="doc-header-inner">
+    <a class="home-link" href="index.html"><i class="ph ph-arrow-left" aria-hidden="true"></i>ホームへ</a>
+    <span class="doc-title">新規参加者ガイド</span>
+    <button class="toc-toggle" id="tocToggle" aria-expanded="false" aria-controls="toc">
+      <i class="ph ph-list" aria-hidden="true"></i>目次
+    </button>
+  </div>
+</header>
+
+<div class="toc-overlay" id="tocOverlay"></div>
+
+<div class="doc-shell">
+  <aside class="toc" id="toc" aria-label="目次">
+    <p class="toc-label">目次</p>
+    <ol>
+      <li><a href="#s1">サーバーの前提</a></li>
+      <li><a href="#s2">要点だけ先に</a></li>
+      <li><a href="#s3">普段の生活でできること</a></li>
+      <li><a href="#s4">国について知っておくべきこと</a></li>
+      <li><a href="#s5">個人開発領（旧ボーダー外）</a></li>
+      <li><a href="#s6">禁止事項一覧</a></li>
+      <li><a href="#s7">ルール違反した場合の流れ</a></li>
+      <li><a href="#s8">ディスコード鯖での注意点</a></li>
+      <li><a href="#s9">国家の運営に関わる場合</a></li>
+      <li><a href="#s10">ルール改正・運営制度について</a></li>
+      <li><a href="#s11">困ったときは</a></li>
+    </ol>
+  </aside>
+
+  <main id="main-content">
+    <section class="hero reveal">
+      <p class="hero-eyebrow">NEW MEMBER GUIDE</p>
+      <h1>3DS半分こするくらい仲良しクラフト<br>新規参加者ガイド</h1>
+      <p>このガイドは、すでに参加者（または仮参加者）になった人向けに、サーバーで生活するうえで知っておくべきルールをまとめたものです。参加手続きについてはすでに終わっている前提のため、ここでは扱いません。</p>
+      <p>ルールは全部で複数の文書に分かれていて、条文の数もそれなりにあります。とはいえ、実際に生活する中で意識する場面はそこまで多くありません。まずは下の早見表から気になるところを読んでもらえれば十分です。</p>
+      <blockquote>正確な条文を確認したいときのために、根拠となるルール名・条文番号もあわせて記載しています。</blockquote>
+    </section>
+
+    <section class="quicknav reveal" aria-labelledby="quicknav-heading">
+      <h2 id="quicknav-heading">早見表：知りたいことから読む</h2>
+      <div class="quicknav-grid">
+        <a class="quicknav-card" href="#s3"><i class="ph ph-hammer q-icon" aria-hidden="true"></i><span>建築や採掘は自由にしていいのか</span><i class="ph ph-arrow-right q-arrow" aria-hidden="true"></i></a>
+        <a class="quicknav-card" href="#s4"><i class="ph ph-flag-banner q-icon" aria-hidden="true"></i><span>他の国の領土に入るとどうなるのか</span><i class="ph ph-arrow-right q-arrow" aria-hidden="true"></i></a>
+        <a class="quicknav-card" href="#s5"><i class="ph ph-map-pin q-icon" aria-hidden="true"></i><span>旧ボーダー外で自分の土地を確保したい</span><i class="ph ph-arrow-right q-arrow" aria-hidden="true"></i></a>
+        <a class="quicknav-card" href="#s6"><i class="ph ph-warning-octagon q-icon" aria-hidden="true"></i><span>何をしたら処罰されるのか</span><i class="ph ph-arrow-right q-arrow" aria-hidden="true"></i></a>
+        <a class="quicknav-card" href="#s7"><i class="ph ph-gavel q-icon" aria-hidden="true"></i><span>処罰や緊急措置の仕組み</span><i class="ph ph-arrow-right q-arrow" aria-hidden="true"></i></a>
+        <a class="quicknav-card" href="#s8"><i class="ph ph-chat-circle-text q-icon" aria-hidden="true"></i><span>Discordでの注意点</span><i class="ph ph-arrow-right q-arrow" aria-hidden="true"></i></a>
+        <a class="quicknav-card" href="#s9"><i class="ph ph-crown-simple q-icon" aria-hidden="true"></i><span>自分で国の運営に関わる</span><i class="ph ph-arrow-right q-arrow" aria-hidden="true"></i></a>
+        <a class="quicknav-card" href="#s11"><i class="ph ph-lifebuoy q-icon" aria-hidden="true"></i><span>処罰に納得できないとき</span><i class="ph ph-arrow-right q-arrow" aria-hidden="true"></i></a>
+      </div>
+    </section>
+
+    <article>
+      <!-- 1 -->
+      <section class="chapter reveal" id="s1">
+        <div class="chapter-head">
+          <span class="chapter-num">01</span>
+          <span class="chapter-icon"><i class="ph ph-info" aria-hidden="true"></i></span>
+          <h2>サーバーの前提</h2>
+        </div>
+        <p>このサーバーは、以前の「国クラ」「成れ果てクラフト」で土地や国をめぐる対立・戦争・荒らし行為が発生した反省から作られています（基本ルール前文）。対立を避け、参加者同士が気持ちよくプレイできることを目的としたルール設計になっている点は、覚えておくとルールの意図が理解しやすくなります。</p>
+
+        <h3>ルールは主に以下の文書に分かれています</h3>
+        <ul class="icon-list">
+          <li><i class="ph ph-file-text" aria-hidden="true"></i>基本ルール（全体の土台になるルール）</li>
+          <li><i class="ph ph-file-text" aria-hidden="true"></i>国家に関するルール（国家についての規定）</li>
+          <li><i class="ph ph-file-text" aria-hidden="true"></i>禁止事項及び罰則に関するルール（禁止行為と罰則）</li>
+          <li><i class="ph ph-file-text" aria-hidden="true"></i>ディープステート基本法（国家に属さない土地についての規定）</li>
+          <li><i class="ph ph-file-text" aria-hidden="true"></i>旧ボーダー外の個人開発領に関するルール特例（旧ボーダー外での個人開発について）</li>
+          <li><i class="ph ph-file-text" aria-hidden="true"></i>そのほか、特定のテーマに関する特例ルール</li>
+        </ul>
+
+        <p>ルール同士が矛盾しているように見える場合は、「より具体的な規定が優先される」「後から制定されたルールが優先されうる」といった一般的な考え方で整理されます。最終的な適用判断は運営や裁判所に委ねられます。</p>
+
+        <h3>基本用語（基本ルール第1条）</h3>
+        <div class="def-grid">
+          <div class="def-item"><p class="def-term">ディスコード鯖</p><p class="def-desc">Discordサーバー「3DS半分こするくらい仲良しクラフト中央委員会」</p></div>
+          <div class="def-item"><p class="def-term">マイクラ鯖</p><p class="def-desc">運営が公認しているJava版マインクラフトのマルチプレイサーバー</p></div>
+          <div class="def-item"><p class="def-term">参加者</p><p class="def-desc">ディスコード鯖で「人民」ロールを持つ人</p></div>
+          <div class="def-item"><p class="def-term">運営者</p><p class="def-desc">ディスコード鯖で「運営」ロールを持つ人</p></div>
+          <div class="def-item"><p class="def-term">旧ボーダー内</p><p class="def-desc">座標(±1024, ±1024)で囲まれた正方形の領域</p></div>
+          <div class="def-item"><p class="def-term">旧ボーダー外</p><p class="def-desc">旧ボーダー内を除く、ワールド境界内の領域</p></div>
+          <div class="def-item"><p class="def-term">海</p><p class="def-desc">y=63で水または水没した水草・昆布ブロックに覆われた自然の領域（人工的なものは除く）</p></div>
+        </div>
+      </section>
+
+      <!-- 2 -->
+      <section class="chapter reveal" id="s2">
+        <div class="chapter-head">
+          <span class="chapter-num">02</span>
+          <span class="chapter-icon"><i class="ph ph-check-circle" aria-hidden="true"></i></span>
+          <h2>要点だけ先に</h2>
+        </div>
+        <p>日常生活でトラブルを避けるうえで重要なのは、次の4点です。</p>
+        <div class="keypoints">
+          <div class="keypoint"><span class="keypoint-num">1</span><p>自分の土地や共有地では、建築・採掘はおおむね自由にできる（3章）</p></div>
+          <div class="keypoint"><span class="keypoint-num">2</span><p>他国の領土に入るときは、その国の国内法を確認しておくと安全（4章）</p></div>
+          <div class="keypoint"><span class="keypoint-num">3</span><p>旧ボーダー外で自分の開発エリアを確保したいときは「個人開発領」を届け出る（5章）</p></div>
+          <div class="keypoint"><span class="keypoint-num">4</span><p>他人の建築物やアイテムを無断で壊す・盗む・妨害するのは重大な違反になる（6章）</p></div>
+        </div>
+        <p style="margin-top:1.4rem;">この4点さえ押さえておけば、あとは必要になったときに該当章を辞書のように参照してもらえれば問題ありません。</p>
+      </section>
+
+      <!-- 3 -->
+      <section class="chapter reveal" id="s3">
+        <div class="chapter-head">
+          <span class="chapter-num">03</span>
+          <span class="chapter-icon"><i class="ph ph-hammer" aria-hidden="true"></i></span>
+          <h2>普段の生活でできること</h2>
+        </div>
+        <ul class="icon-list">
+          <li><i class="ph ph-check" aria-hidden="true"></i>特に定めがない限り、建築・採掘は自由に行えます（基本ルール第8条①）。</li>
+          <li><i class="ph ph-check" aria-hidden="true"></i>ルールに違反しない範囲で、アイテムを自由に所有・使用できます（同条②）。</li>
+          <li><i class="ph ph-check" aria-hidden="true"></i>地図、他の参加者の行動履歴、プラグインの仕様といった情報の開示を運営に求める権利があります（同条③）。</li>
+          <li><i class="ph ph-check" aria-hidden="true"></i>基本的にはいつでもマイクラ鯖に参加できます。ただし、処罰や緊急措置で参加が禁止されている場合、またはメンテナンス・不具合等でサーバーが停止している場合は例外です（第7条）。</li>
+          <li><i class="ph ph-check" aria-hidden="true"></i>ルール違反を見つけた場合は、stopコマンドで鯖を緊急に閉鎖するよう努めることが求められています（第9条）。これは義務ではなく努力義務です。</li>
+        </ul>
+      </section>
+
+      <!-- 4 -->
+      <section class="chapter reveal" id="s4">
+        <div class="chapter-head">
+          <span class="chapter-num">04</span>
+          <span class="chapter-icon"><i class="ph ph-flag-banner" aria-hidden="true"></i></span>
+          <h2>国について知っておくべきこと</h2>
+        </div>
+        <p>旧ボーダー内の土地の多くは、いずれかの国家の領土になっています。国家運営に関わる予定がなくても、自分が今どの土地にいるかによって適用ルールが変わることがあるため、以下は知っておく必要があります。</p>
+
+        <h3>4-1. 土地は「国家の領土」か「ディープステート」のどちらか</h3>
+        <p>旧ボーダー内の土地は、どこかの国の領土か、どの国にも属さない「ディープステート」のいずれかです（国家に関するルール第2条、第6条②）。</p>
+
+        <h3>4-2. 他国の領土では、その国の国内法に注意する</h3>
+        <p>国家は、自分の領土内でのみ効力を持つ独自の国内法を制定できます（第7条①）。この国内法は国民に限らず、その領土に入った参加者全般に及びうるものです。たとえば、次のような国内法が定められている可能性があります。</p>
+        <ul class="icon-list">
+          <li><i class="ph ph-dot" aria-hidden="true"></i>国民以外の採掘を禁止する（第9条：排他的採掘権）</li>
+          <li><i class="ph ph-dot" aria-hidden="true"></i>国民以外が建築する際は、事前に国の承認を得ることを義務づける（第10条：優先的建築権。ただし正当な理由が必要）</li>
+        </ul>
+        <p>つまり、他国の領土内で無断で採掘・建築を行うと、その国の国内法違反として扱われる可能性があります。</p>
+        <div class="callout tip">
+          <i class="ph ph-lightbulb" aria-hidden="true"></i>
+          <p>国内法は、諸国法チャンネルに全文が掲載されていなければ無効です（第7条②③）。見慣れない国の領土に立ち入る前に、そのチャンネルを確認しておくと安全です。</p>
+        </div>
+        <p>国内法に違反すると、次のような罰則を受ける場合があります（第8条①）。</p>
+        <ul class="icon-list">
+          <li><i class="ph ph-lock" aria-hidden="true"></i>拘禁：国が定める監獄に収容される（最長7日間。それ以上の拘束は認められません）</li>
+          <li><i class="ph ph-bag" aria-hidden="true"></i>没収：所持品を没収される</li>
+        </ul>
+        <p>国はこの処罰を科した場合、24時間以内に運営へ報告する義務を負います（同条②）。</p>
+
+        <h3>4-3. 通行の自由は例外なく保障される</h3>
+        <p>国家がどれほど強い権限を持っていても、参加者の通行を妨げることだけは認められていません（第13条）。他国の領土を単に通過するだけであれば、足止めされることはありません。</p>
+
+        <h3>4-4. 国家の権限にも歯止めがある</h3>
+        <ul class="icon-list">
+          <li><i class="ph ph-scales" aria-hidden="true"></i>国家は、国民や他の参加者の権利を不当に侵害する形で権限を行使してはなりません（第11条：権利の濫用の禁止）。</li>
+          <li><i class="ph ph-scales" aria-hidden="true"></i>諸国法チャンネルに正しく掲載されていない、無効な国内法を適用して参加者の権利を侵害することも禁止されています（第15条）。</li>
+        </ul>
+        <p>理不尽な扱いを受けたと感じた場合は、まずその国内法が正しく公布されているかを確認し、必要であれば運営に相談する余地があります。</p>
+
+        <h3>4-5. 戦争は禁止されている</h3>
+        <div class="callout danger">
+          <i class="ph ph-shield-warning" aria-hidden="true"></i>
+          <p>国家同士の武力による威嚇や行使、すなわち戦争行為は絶対的に禁止されています（第12条①）。これに違反した国家は、警告の段階を経ずに即座に公認取消の処分を受けます（第17条①）。これはルール全体の中でも最も重い部類の違反です。</p>
+        </div>
+      </section>
+
+      <!-- 5 -->
+      <section class="chapter reveal" id="s5">
+        <div class="chapter-head">
+          <span class="chapter-num">05</span>
+          <span class="chapter-icon"><i class="ph ph-map-pin" aria-hidden="true"></i></span>
+          <h2>旧ボーダー外で開発したいときは（個人開発領）</h2>
+        </div>
+        <p>旧ボーダー内と違い、旧ボーダー外の土地はどの国家の領土にもなりません（国家に関するルール第2条）。その代わり、参加者は「個人開発領」を届け出ることで、旧ボーダー外の一定の範囲を個人の開発エリアとして確保できます（旧ボーダー外の個人開発領に関するルール特例）。国家の運営に関わっていなくても、誰でも利用できる制度です。旧ボーダー外で家を建てたい、資源を採りたいという場合は、この章の内容を知っておくと安心です。</p>
+        <p>なお、この制度はもともと期間限定の特例（令和4年ルール第3号）として始まりましたが、現在は恒常的な手続きとして整備されています。旧特例に基づいて設定されていた個人開発領や開発権者の地位は、そのまま新しいルールのもとで有効なものとして引き継がれています。</p>
+
+        <h3>5-1. 個人開発領とは</h3>
+        <p>参加者が届出によって設定する、旧ボーダー外における個人の開発範囲のことです。設定した参加者は「開発権者」と呼ばれます（第1条）。個人開発領として設定されていない旧ボーダー外の土地は、参加者にも国家にも属さない「無主地」として扱われます（第11条）。</p>
+
+        <h3>5-2. 開発権者にできること</h3>
+        <p>自分の個人開発領内では、原則として排他的に建築・採掘を行えます（第9条）。つまり、他の参加者は開発権者の許可なくその範囲で建築・採掘を行うことができません。</p>
+
+        <h3>5-3. 開発権者以外の参加者にできること</h3>
+        <p>個人開発領は開発権者の独占エリアですが、次の行為は開発権者の許可がなくても行えます（第10条①）。</p>
+        <ul class="icon-list">
+          <li><i class="ph ph-train" aria-hidden="true"></i>鉄道やネザーゲートなど、公共の利益になる建築物で相当の必要性が認められるものの建築</li>
+          <li><i class="ph ph-flashlight" aria-hidden="true"></i>松明・ランタン・グロウストーンなど、光源となるブロックの設置</li>
+        </ul>
+        <p>ただし、無許可で作られたこれらの建築物は、開発権者が許可なく破壊することができます（同条②）。また、宝の地図を使って個人開発領内の宝箱を収集する場合、開発権者はその採掘を妨げることができません（同条③）。</p>
+
+        <h3>5-4. 個人開発領を設定するには</h3>
+        <ol class="stepper">
+          <li data-step="1"><p>ディスコード鯖の専用チャンネルに、希望する範囲を届け出ます（第2条①）。</p></li>
+          <li data-step="2">
+            <p>届出は次の要件を満たす必要があります（第3条）。</p>
+            <ul class="step-sub">
+              <li>面積が25万平方ブロックを超えないこと</li>
+              <li>特定保護区域内の土地を含まないこと</li>
+              <li>既に設定されている他の個人開発領と重複しないこと</li>
+            </ul>
+          </li>
+          <li data-step="3"><p>運営が要件を満たすか審査し、満たしていれば設定が認められ、満たしていなければ理由とともに却下されます（第4条）。</p></li>
+          <li data-step="4"><p>同じ範囲に複数の届出が重なった場合は、届出の順序に従って審査され、要件を満たす最初の届出が認められます。却下された届出を修正して再度届け出た場合は、再届出の時点を基準に扱われます（第5条）。</p></li>
+        </ol>
+
+        <h3>5-5. 変更・削除・譲渡</h3>
+        <p>範囲の変更・削除・他の参加者への譲渡も可能です。変更は設定と同様の手続きで届け出ます（第6条）。削除は専用チャンネルへの届出だけで完了します（第7条）。譲渡する場合は、譲渡人の削除届と譲受人の設定届を同時に行う必要があります（第8条）。</p>
+
+        <div class="callout tip">
+          <i class="ph ph-lightbulb" aria-hidden="true"></i>
+          <p>「瑠莉学術公国」については別の個別の特例（令和5年ルール第2号）により、通常の「国家の領土は旧ボーダー内」という原則（国家に関するルール第2条）の適用が除外され、旧ボーダー外に独自の領土を持つことが認められています。こちらは個人開発領制度とは別の、特定の国家に関する例外です。</p>
+        </div>
+      </section>
+
+      <!-- 6 -->
+      <section class="chapter reveal" id="s6">
+        <div class="chapter-head">
+          <span class="chapter-num">06</span>
+          <span class="chapter-icon"><i class="ph ph-warning-octagon" aria-hidden="true"></i></span>
+          <h2>禁止事項一覧</h2>
+        </div>
+        <p>以下は「行うと処罰対象になる行為」の一覧です（禁止事項及び罰則に関するルール 第1章）。違反すると、BANや監獄への収容といった処罰が科されます。処罰が確定する前でも、緊急措置としてキックや所持品の一時没収が行われることがあります。</p>
+
+        <div class="rule-grid">
+          <div class="rule-card"><div class="rule-card-top"><i class="ph ph-door" aria-hidden="true"></i><strong>部外者の参加</strong></div><small>第1条</small><p>参加者以外を鯖に参加させる／自ら不正に参加する</p></div>
+          <div class="rule-card"><div class="rule-card-top"><i class="ph ph-lock-open" aria-hidden="true"></i><strong>情報漏洩</strong></div><small>第2条</small><p>参加者の情報を、参加者以外が見られる状態にしない</p></div>
+          <div class="rule-card"><div class="rule-card-top"><i class="ph ph-chat-slash" aria-hidden="true"></i><strong>侮辱</strong></div><small>第3条</small><p>公然と他の参加者を侮辱しない</p></div>
+          <div class="rule-card"><div class="rule-card-top"><i class="ph ph-bug" aria-hidden="true"></i><strong>チート・不正な権限行使</strong></div><small>第4条</small><p>付与された権限を超える不正操作の禁止</p></div>
+          <div class="rule-card"><div class="rule-card-top"><i class="ph ph-shield-warning" aria-hidden="true"></i><strong>戦争目的の加害行為</strong></div><small>第5条</small><p>国家に関するルールに違反する戦争目的での加害禁止</p></div>
+          <div class="rule-card"><div class="rule-card-top"><i class="ph ph-hammer" aria-hidden="true"></i><strong>無断破壊</strong></div><small>第6条</small><p>他人の看板・建築物を許可なく破壊しない</p></div>
+          <div class="rule-card"><div class="rule-card-top"><i class="ph ph-prohibit" aria-hidden="true"></i><strong>妨害目的の建築・採掘</strong></div><small>第7条</small><p>他人の活動を妨害する意図での行為の禁止</p></div>
+          <div class="rule-card"><div class="rule-card-top"><i class="ph ph-bag" aria-hidden="true"></i><strong>窃盗</strong></div><small>第8条</small><p>他人の財物を盗まない</p></div>
+          <div class="rule-card"><div class="rule-card-top"><i class="ph ph-gauge" aria-hidden="true"></i><strong>サーバーへの過剰な負荷</strong></div><small>第9条</small><p>意図的にサーバーへ負荷をかける行為の禁止</p></div>
+          <div class="rule-card"><div class="rule-card-top"><i class="ph ph-hand-palm" aria-hidden="true"></i><strong>stopコマンドの乱用</strong></div><small>第10条</small><p>定められた目的以外での使用禁止</p></div>
+          <div class="rule-card"><div class="rule-card-top"><i class="ph ph-waves" aria-hidden="true"></i><strong>海の無断埋立て</strong></div><small>第11条</small><p>埋立てには運営2人以上の許可が必要</p></div>
+          <div class="rule-card"><div class="rule-card-top"><i class="ph ph-tree" aria-hidden="true"></i><strong>特定保護区域での無断建築・採掘</strong></div><small>第12条</small><p>運営の承認が必要</p></div>
+          <div class="rule-card"><div class="rule-card-top"><i class="ph ph-package" aria-hidden="true"></i><strong>不正アイテムの保持・使用</strong></div><small>第13条</small><p>コマンド／クリエイティブ由来アイテムを、ルールや正当な職権行使による場合を除き不正に保持・使用しない</p></div>
+        </div>
+
+        <div class="callout warn">
+          <i class="ph ph-warning" aria-hidden="true"></i>
+          <p>共犯についての規定もあります。2人以上で共同してルール違反を行った場合は、全員が実行者として処罰されます（第14条）。そそのかしや幇助を行った者も同様に処罰対象です（第15条）。「主導したわけではない」「手伝っただけ」であっても、原則として「一緒に違反行為をした」と判断され処罰を受けるので、注意が必要です。</p>
+        </div>
+      </section>
+
+      <!-- 7 -->
+      <section class="chapter reveal" id="s7">
+        <div class="chapter-head">
+          <span class="chapter-num">07</span>
+          <span class="chapter-icon"><i class="ph ph-gavel" aria-hidden="true"></i></span>
+          <h2>ルール違反した場合の流れ</h2>
+        </div>
+        <ol class="stepper">
+          <li data-step="1"><p>処罰は運営の承認によって決定・執行されます（第16条）。決定に異議がある場合は裁判所に異議申立てが可能ですが、判決が出るまでは運営が決定した処罰が先に執行されます（第17条）。</p></li>
+          <li data-step="2"><p>処罰が確定する前でも、運営は違反が疑われる者に対してBAN・キック・監獄収容・所持品の一時没収などの緊急措置を取ることができます（第23条）。緊急措置を行った場合、原則として7日以内に処罰を決定しなければなりません。</p></li>
+          <li data-step="3"><p>ルール違反によって建築・採掘・破壊が行われた場合、運営は違反前の状態にロールバックする義務を負います。アイテムが失われた場合は補償の対象になります（第24条）。</p></li>
+          <li data-step="4"><p>1つの行為が複数の条文に違反する場合は、処罰の上限が最も重い条文が適用されます（第20条）。複数の違反行為がある場合は、まとめて処罰が決定・執行されます（第19条）。</p></li>
+          <li data-step="5"><p>やむを得ない事情がある場合の減刑（第21条）、運営による恩赦（第22条）の制度もあります。</p></li>
+        </ol>
+      </section>
+
+      <!-- 8 -->
+      <section class="chapter reveal" id="s8">
+        <div class="chapter-head">
+          <span class="chapter-num">08</span>
+          <span class="chapter-icon"><i class="ph ph-chat-circle-text" aria-hidden="true"></i></span>
+          <h2>ディスコード鯖での注意点</h2>
+        </div>
+        <ul class="icon-list">
+          <li><i class="ph ph-user-plus" aria-hidden="true"></i>サブアカウントを鯖に参加させたい場合は、運営に申請できます。ただし、不正利用のおそれがあると判断された場合は拒否されることがあります。サブアカウントはいかなる投票にも参加できません（基本ルール第6条）。</li>
+          <li><i class="ph ph-trash" aria-hidden="true"></i>チャンネルの追加・非表示化・メッセージの削除は運営者の職権で行われます（基本ルール第16〜18条）。ルールや法令に違反し、参加者の権利を著しく損なうと判断されたメッセージは削除の対象になります。</li>
+        </ul>
+      </section>
+
+      <!-- 9 -->
+      <section class="chapter reveal" id="s9">
+        <div class="chapter-head">
+          <span class="chapter-num">09</span>
+          <span class="chapter-icon"><i class="ph ph-crown-simple" aria-hidden="true"></i></span>
+          <h2>国家の運営に関わる場合</h2>
+        </div>
+        <p>国家運営や外交に深く関わる場合に関係してくる制度です。日常生活では必須の知識ではありませんが、このサーバーで国家が重要な要素になっている以上、概要だけでも把握しておくと役立ちます。以下は必要になったときに開いて読んでください。</p>
+
+        <details class="accordion">
+          <summary>9-1. 国家として認められる条件<i class="ph ph-caret-down caret" aria-hidden="true"></i></summary>
+          <div class="accordion-body">
+            <p>国家として認められるには、領域・国民・主権を有する団体であり、かつ「国家の公認に係る国家に関するルール施行令」に明記されている必要があります（国家に関するルール第1条）。現在公認されている国家は、エメラルド連邦共和国、鰹節共和国、ジストリオ国、大カワムーラ連邦、大クォーツ帝国、ヘルヴェティア中立同盟、瑠莉学術公国、瑠璃国の8か国です。</p>
+            <p>国家の領土は、原則として旧ボーダー内の陸でなければなりません（第2条）。ただし、瑠莉学術公国に関する個別特例（5章参照）など例外もあります。</p>
+          </div>
+        </details>
+
+        <details class="accordion">
+          <summary>9-2. 国家の権限と義務<i class="ph ph-caret-down caret" aria-hidden="true"></i></summary>
+          <div class="accordion-body">
+            <p>国家は独自の国内法を制定でき（第7条）、違反者に対して拘禁（最長7日）や没収の刑罰を科すことができます（第8条）。ただし、国内法は諸国法チャンネルへの掲載が有効要件です。</p>
+            <p>一方で国家には、戦争の絶対的禁止（第12条）、通行の自由の保障義務（第13条）、国民の同意なき搾取の禁止（第14条）といった義務も課されています。国家がルールに違反した場合、まず「警告」が行われ、それでも改善しない場合に公認取消の処分が科されます（第16条）。ただし戦争行為（第12条違反）は警告を経ずに即座に公認取消となります（第17条）。</p>
+          </div>
+        </details>
+
+        <details class="accordion">
+          <summary>9-3. ディープステート（国家非所属地域）<i class="ph ph-caret-down caret" aria-hidden="true"></i></summary>
+          <div class="accordion-body">
+            <p>旧ボーダー内で、どの国家も領有していない陸地は「ディープステート」として運営が直接統治します（国家に関するルール第6条）。</p>
+            <p>ディープステート内では、別段の定めがない限り自由に建築・採掘できますが、建造物やチェスト内のアイテムはディープステートに帰属し、無断持ち出しは窃盗として処罰対象になります（ディープステート基本法第2〜3条）。既存の建造物の破壊には運営2名以上の許可が必要です（同法第4条）。</p>
+          </div>
+        </details>
+      </section>
+
+      <!-- 10 -->
+      <section class="chapter reveal" id="s10">
+        <div class="chapter-head">
+          <span class="chapter-num">10</span>
+          <span class="chapter-icon"><i class="ph ph-notebook" aria-hidden="true"></i></span>
+          <h2>ルール改正・運営制度について</h2>
+        </div>
+        <ul class="icon-list">
+          <li><i class="ph ph-dot" aria-hidden="true"></i>ルールの制定・改正には、運営投票者の3分の2以上の賛成による運営の承認、および参加者の承認の両方が必要です（基本ルール第28条①）。</li>
+          <li><i class="ph ph-dot" aria-hidden="true"></i>ルール同士が矛盾する場合は、特別規定が一般規定に優先する、後から制定されたルールが優先されうるといった解釈原則によって整理されますが、最終的な適用判断は運営・裁判所に委ねられます。</li>
+        </ul>
+      </section>
+
+      <!-- 11 -->
+      <section class="chapter reveal" id="s11">
+        <div class="chapter-head">
+          <span class="chapter-num">11</span>
+          <span class="chapter-icon"><i class="ph ph-lifebuoy" aria-hidden="true"></i></span>
+          <h2>困ったときは</h2>
+        </div>
+        <ul class="icon-list">
+          <li><i class="ph ph-question" aria-hidden="true"></i>「これはルール的に問題ないだろうか」と迷う行為があれば、まずは控えるのが無難です。</li>
+          <li><i class="ph ph-scales" aria-hidden="true"></i>処罰や運営の判断に納得できない場合は、裁判所への異議申立てという正式な手段が用意されています（基本ルール第27条、国家に関するルール第18条等）。</li>
+          <li><i class="ph ph-chats" aria-hidden="true"></i>個別の状況の適法性を自己判断だけで決めるのではなく、疑問があれば運営に確認することをおすすめします。</li>
+        </ul>
+      </section>
+
+      <div class="final-notice reveal">
+        <i class="ph ph-seal-warning" aria-hidden="true"></i>
+        <div>
+          <strong>注意書き</strong>
+          <p>本ガイドは新規参加者の理解を助けるための参考資料であり、条文の要約・簡略化を含みます。個別具体的な事案における最終的なルール運用・処分判断は、サーバー運営および裁判所等の正式な判断に委ねられます。正確な内容は必ず各ルール原文をご確認ください。</p>
+        </div>
+      </div>
+    </article>
+  </main>
+</div>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <span>© 2025 3DS半分こするくらい仲良しクラフト中央委員会</span>
+    <a href="index.html"><i class="ph ph-arrow-left" aria-hidden="true"></i> ホームに戻る</a>
+  </div>
+</footer>
+
+<button class="back-to-top" id="backToTop" aria-label="ページの先頭に戻る">
+  <i class="ph ph-arrow-up" aria-hidden="true"></i>
+</button>
+
+<script>
+  /* progress bar */
+  var progressFill = document.getElementById('progressFill');
+  var ticking = false;
+  function updateProgress() {
+    var doc = document.documentElement;
+    var scrollTop = window.scrollY || doc.scrollTop;
+    var height = doc.scrollHeight - doc.clientHeight;
+    var pct = height > 0 ? (scrollTop / height) * 100 : 0;
+    progressFill.style.width = pct + '%';
+    ticking = false;
+  }
+  window.addEventListener('scroll', function () {
+    if (!ticking) {
+      requestAnimationFrame(updateProgress);
+      ticking = true;
+    }
+  }, { passive: true });
+  updateProgress();
+
+  /* back to top */
+  var backToTop = document.getElementById('backToTop');
+  function updateBackToTop() {
+    if (window.scrollY > 480) backToTop.classList.add('visible');
+    else backToTop.classList.remove('visible');
+  }
+  window.addEventListener('scroll', function () {
+    requestAnimationFrame(updateBackToTop);
+  }, { passive: true });
+  backToTop.addEventListener('click', function () {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+  updateBackToTop();
+
+  /* mobile toc drawer */
+  var toc = document.getElementById('toc');
+  var tocToggle = document.getElementById('tocToggle');
+  var tocOverlay = document.getElementById('tocOverlay');
+  function closeToc() {
+    toc.classList.remove('open');
+    tocOverlay.classList.remove('open');
+    tocToggle.setAttribute('aria-expanded', 'false');
+  }
+  tocToggle.addEventListener('click', function () {
+    var open = toc.classList.toggle('open');
+    tocOverlay.classList.toggle('open', open);
+    tocToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+  tocOverlay.addEventListener('click', closeToc);
+  toc.addEventListener('click', function (e) {
+    if (e.target.closest('a')) closeToc();
+  });
+
+  /* scrollspy */
+  var tocLinks = Array.prototype.slice.call(toc.querySelectorAll('a'));
+  var sections = tocLinks.map(function (a) {
+    return document.getElementById(a.getAttribute('href').slice(1));
+  });
+  if ('IntersectionObserver' in window) {
+    var spy = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        var link = tocLinks[sections.indexOf(entry.target)];
+        if (!link) return;
+        if (entry.isIntersecting) {
+          tocLinks.forEach(function (l) { l.classList.remove('active'); });
+          link.classList.add('active');
+        }
+      });
+    }, { rootMargin: '-20% 0px -70% 0px', threshold: 0 });
+    sections.forEach(function (s) { if (s) spy.observe(s); });
+  }
+
+  /* reveal on scroll */
+  if ('IntersectionObserver' in window) {
+    var reveal = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in-view');
+          reveal.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.reveal').forEach(function (el) { reveal.observe(el); });
+  } else {
+    document.querySelectorAll('.reveal').forEach(function (el) { el.classList.add('in-view'); });
+  }
+</script>
+</body>
+</html>

@@ -1,4 +1,9 @@
-/* 基本リセット */
+/*
+ * rule/style_index.css
+ * デジタル庁デザインシステム(DADS)のトークン・コンポーネントCSSを前提としたレイアウトCSS(index.html用)
+ * e-Gov法令検索の検索結果一覧(https://laws.e-gov.go.jp/result)のプレーンな行リスト表示に準拠。
+ */
+
 *, *::before, *::after {
   margin: 0;
   padding: 0;
@@ -9,391 +14,347 @@ html, body {
   margin: 0;
   padding: 0;
   width: 100%;
-  height: 100%;
-  overflow: hidden;
 }
 
-/* フォントとカラー */
+/* スクロールバー分の余白(scrollbar-gutter)を常時確保するとスクロール不要時にも
+   右端が空いて見えるため、実際にスクロールバーが必要な時だけ余白ができる挙動に戻す */
+html {
+  scrollbar-gutter: auto;
+}
+
 body {
-  font-family: "Noto Sans JP", sans-serif;
-  font-optical-sizing: auto;
+  font-family: var(--font-family-sans);
   font-weight: 400;
   font-style: normal;
   line-height: 1.7;
-  background: #ffffff;
-  color: #222;
+  background: var(--color-neutral-white);
+  color: var(--color-neutral-solid-gray-900);
 }
 
-/* ヘッダー */
+/* ===== ヘッダー ===== */
 .site-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: #f0f2f5;
-  padding: 12px 20px;
-  border-bottom: 1px solid #ccc;
   position: fixed;
   top: 0;
   left: 0;
-  width: 100vw;
+  right: 0;
+  height: 44px;
   z-index: 1000;
-  height: 48px;
+  background: var(--color-neutral-white);
+  border-bottom: 1px solid var(--color-neutral-solid-gray-200);
   box-sizing: border-box;
 }
 
-.site-header .logo {
-  font-size: 20px;
+.site-header__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  height: 100%;
+  padding: 0 20px;
+}
+
+.site-header__logo {
+  font-size: 18px;
   font-weight: bold;
-  color: #005bac;
-}
-
-.site-header .top-nav a {
-  margin-left: 20px;
+  color: var(--color-primitive-light-blue-900);
   text-decoration: none;
-  color: #005bac;
 }
 
-.site-header .top-nav a:hover {
-  text-decoration: underline;
+.top-nav {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-left: auto;
+}
+.top-nav .dads-link {
+  font-size: 13px;
 }
 
-/* メインコンテンツ */
+/* ===== メインコンテンツ =====
+   固定ヘッダー/フッターの下でmain-contentだけがスクロールする構成をやめ、
+   ページ全体(html/body)が自然にスクロールするようにする。ヘッダー/フッターは
+   position:fixedのままなので、それぞれの高さ分だけmain-contentに余白を取って
+   内容が隠れないようにしている。この構成では高さをvh/dvhで計算する必要がなく、
+   モバイルのアドレスバー変動による見切れ・二段階スクロールも発生しない。 */
 .main-content {
-  width: 100vw;
-  margin: 48px auto 40px auto;
-  padding: 40px 20px;
-  background: #fff;
-  min-height: calc(100vh - 88px);
+  width: 100%;
+  margin: 44px auto 0 auto;
+  padding: 40px 24px calc(40px + 40px);
+  background: var(--color-neutral-white);
   box-sizing: border-box;
-  height: calc(100vh - 48px - 40px);
-  overflow-y: auto;
 }
 
 /* ヒーローセクション */
 .hero-section {
   text-align: center;
-  margin-bottom: 60px;
-  padding: 40px 20px;
+  margin-bottom: 40px;
+  padding: 8px 20px;
 }
 
 .hero-section h1 {
-  font-size: 32px;
-  color: #005bac;
-  margin-bottom: 20px;
+  font-size: calc(24 / 16 * 1rem);
+  font-weight: bold;
+  color: var(--color-primitive-light-blue-900);
+  margin-bottom: 12px;
   line-height: 1.4;
 }
 
 .hero-section p {
-  font-size: 18px;
-  color: #444;
+  font-size: calc(14 / 16 * 1rem);
+  color: var(--color-neutral-solid-gray-700);
   margin: 0 auto;
 }
 
 /* ルール一覧セクション */
 .rules-section {
-  margin-top: 40px;
-}
-
-.rules-section h2 {
-  font-size: 24px;
-  color: #222;
-  margin-bottom: 30px;
-  text-align: center;
-}
-
-.rules-list {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  margin-bottom: 20px;
-  max-width: 1200px;
+  margin-top: 24px;
+  max-width: 900px;
   margin-left: auto;
   margin-right: auto;
 }
 
+.rules-section h2 {
+  font-size: calc(16 / 16 * 1rem);
+  font-weight: bold;
+  color: var(--color-neutral-solid-gray-900);
+  margin-bottom: 8px;
+  text-align: left;
+}
+
+/* e-Govの検索結果リストに準じたプレーンな行リスト(区切り線なし) */
+.rules-list {
+  list-style: none;
+}
+
 .rule-item {
   display: flex;
-  align-items: flex-start;
-  gap: 15px;
-  padding: 20px;
-  background: #fff;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  transition: box-shadow 0.3s;
+  flex-direction: column;
+  row-gap: 4px;
+  padding: 12px 8px;
+  text-decoration: none;
+  color: inherit;
 }
 
-.rule-item:hover {
-  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+@media (hover: hover) {
+  .rule-item:hover {
+    background: var(--color-neutral-solid-gray-50);
+  }
 }
 
-.rule-icon {
-  font-size: 24px;
-  flex-shrink: 0;
-  margin-top: 2px;
+/* 1行目: アイコン・ルール名・ルール番号・区分タグ
+   アイコンをガター(padding-left)内に絶対配置し、折り返し時は常にルール名の開始位置
+   (インデント位置)から続くようにする(アイコン位置に文字を回り込ませない)。 */
+.rule-item__row1 {
+  position: relative;
+  padding-left: 24px;
+  line-height: 1.5;
 }
 
-.rule-content {
-  flex: 1;
+.rule-item__icon {
+  position: absolute;
+  left: 0;
+  top: 0.3em;
+  color: var(--color-neutral-solid-gray-500);
 }
 
-.rule-content h3 {
-  margin: 0 0 10px 0;
-  font-size: 18px;
-}
-
-.rule-content h3 a {
-  color: #005bac;
+.rule-item__title {
+  font-size: calc(16 / 16 * 1rem);
+  font-weight: bold;
+  color: var(--color-neutral-solid-gray-900);
   text-decoration: none;
 }
 
-.rule-content h3 a:hover {
-  text-decoration: underline;
+.rule-item__number {
+  font-size: calc(16 / 16 * 1rem);
+  color: var(--color-neutral-solid-gray-900);
+  margin-left: 0.4em;
 }
 
+/* ルール区分タグ: 角丸なし・余白最小限のコンパクトな長方形。行内改行のみ禁止する対象。 */
+.rule-item__category.dads-chip-label {
+  border-radius: 0;
+  min-height: auto;
+  padding: 1px 5px;
+  font-size: calc(11 / 16 * 1rem);
+  line-height: 1.4;
+  margin-left: 0.5em;
+  white-space: nowrap;
+}
+
+/* 2行目: 施行日 */
 .rule-meta {
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 10px;
   flex-wrap: wrap;
+  width: 100%;
+  padding-left: 24px;
 }
 
-.badge {
-  display: inline-block;
-  background: #fff;
-  color: #222;
-  border: 1.5px solid #111;
-  border-radius: 4px;
-  padding: 2px 12px;
-  font-size: 14px;
-  font-weight: bold;
-  letter-spacing: 0.05em;
-}
-
-.rule-date,
-.rule-number {
-  font-size: 14px;
-  color: #666;
+.rule-date {
+  font-size: calc(16 / 16 * 1rem);
+  color: var(--color-neutral-solid-gray-900);
 }
 
 .rules-count {
-  text-align: center;
-  color: #666;
-  font-size: 14px;
-  margin-top: 20px;
+  text-align: left;
+  padding-left: 24px;
+  font-size: calc(16 / 16 * 1rem);
+
+  color: var(--color-neutral-solid-gray-900);
+  margin-top: 12px;
 }
 
-/* ルール一覧セクション - 並び替えメニュー */
+/* 並び替えメニュー: タイトルの下に改行して左揃えで配置し、リストとの間に区切り線を引く */
 .rules-section-header {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 0;
-  margin-bottom: 30px;
-  max-width: 1200px;
+  align-items: flex-start;
+  padding-bottom: 16px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid var(--color-neutral-solid-gray-200);
+  max-width: 900px;
   margin-left: auto;
   margin-right: auto;
 }
 
 .rules-section-title {
-  width: 100%;
   display: flex;
-  justify-content: center;
 }
 
 .rules-section-title h2 {
   margin-bottom: 0;
-  text-align: center;
-  width: 100%;
 }
 
 .rules-sort {
-  width: 100%;
-  max-width: none;
   display: flex;
-  justify-content: flex-end;
   align-items: center;
-  margin-top: 8px;
+  justify-content: flex-start;
+  margin-top: 12px;
 }
 
 .rules-sort-inner {
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-size: 15px;
+  gap: 4px;
+  font-size: calc(13 / 16 * 1rem);
 }
 
 .rules-sort label {
   font-weight: normal;
-  color: #222;
+  color: var(--color-neutral-solid-gray-700);
 }
 
-.rules-sort select {
-  font-size: 15px;
-  padding: 3px 10px;
-  border-radius: 4px;
-  border: 1px solid #bbb;
-  background: #fff;
-  color: #222;
+.rules-sort .dads-select {
+  min-width: 130px;
 }
 
-/* フッター */
+/* DADSデフォルトの余白・角丸は大きすぎるため、並び替えセレクトのみ縮小する */
+.rules-sort .dads-select__select {
+  height: calc(30 / 16 * 1rem);
+  padding-left: calc(8 / 16 * 1rem);
+  padding-right: calc(22 / 16 * 1rem);
+  border-radius: calc(4 / 16 * 1rem);
+  font-size: calc(13 / 16 * 1rem);
+}
+
+.rules-sort .dads-select__chevron {
+  right: calc(6 / 16 * 1rem);
+  width: calc(12 / 16 * 1rem);
+  height: calc(12 / 16 * 1rem);
+}
+
+/* ===== フッター ===== */
 .site-footer {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0 20px;
-  font-size: 14px;
-  background: #f8f8f8;
-  border-top: 1px solid #ccc;
+  font-size: 13px;
+  background: var(--color-neutral-white);
+  border-top: 1px solid var(--color-neutral-solid-gray-200);
   position: fixed;
   bottom: 0;
   left: 0;
-  width: 100vw;
+  right: 0;
   z-index: 1000;
   height: 40px;
   box-sizing: border-box;
-  line-height: 40px;
 }
 
 .site-footer .footer-left,
 .site-footer .footer-right {
   display: flex;
   align-items: center;
-  height: 100%;
-  line-height: 40px;
-}
-
-.site-footer .footer-left {
-  justify-content: flex-start;
-}
-
-.site-footer .footer-right {
-  justify-content: flex-end;
+  gap: 16px;
 }
 
 .site-footer p {
   margin: 0;
+  color: var(--color-neutral-solid-gray-600);
 }
 
-.site-footer a {
-  color: #005bac;
-  text-decoration: none;
-  margin-left: 10px;
-  display: flex;
-  align-items: center;
-  line-height: 40px;
-}
-
-.site-footer a:hover {
-  text-decoration: underline;
-}
-
-/* レスポンシブ対応 */
+/* ===== レスポンシブ対応: 768px以下 ===== */
 @media (max-width: 768px) {
   .site-header {
+    height: 48px;
+  }
+  .site-header__inner {
     padding: 0 12px;
   }
-  
-  .site-header .logo {
+  .site-header__logo {
     font-size: 16px;
   }
-  
-  .site-header .top-nav a {
+  .top-nav a {
     margin-left: 12px;
-    font-size: 14px;
+    font-size: 13px;
   }
-  
+
   .main-content {
-    padding: 20px 12px;
-    height: calc(100vh - 48px - 36px);
-    min-height: unset;
-    width: 100vw;
+    margin: 48px auto 0 auto;
+    padding: 20px 12px calc(20px + 40px);
+    width: 100%;
   }
-  
+
   .hero-section {
-    padding: 20px 0;
-    margin-bottom: 40px;
+    padding: 8px 0;
+    margin-bottom: 28px;
   }
-  
   .hero-section h1 {
-    font-size: 24px;
+    font-size: calc(19 / 16 * 1rem);
   }
-  
   .hero-section p {
-    font-size: 16px;
+    font-size: calc(13 / 16 * 1rem);
   }
-  
+
   .rules-section h2 {
-    font-size: 20px;
+    font-size: calc(15 / 16 * 1rem);
   }
-  
-  .rule-item {
-    padding: 15px;
-  }
-  
-  .rule-content h3 {
-    font-size: 16px;
-  }
-  
-  .rule-meta {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 8px;
-  }
-  
+
   .site-footer {
-    height: 36px;
+    height: 40px;
     font-size: 12px;
-    padding: 0 10px;
-    line-height: 36px;
+    padding: 0 12px;
   }
-  
-  .site-footer .footer-left,
-  .site-footer .footer-right {
-    line-height: 36px;
-  }
-  
-  .site-footer a {
-    font-size: 12px;
-    margin-left: 6px;
-  }
-  
-  .rules-list {
-    max-width: 100%;
-  }
-  
+
   .rules-section-header {
-    margin-bottom: 18px;
-    gap: 0;
-    max-width: 100%;
-  }
-  .rules-section-title h2 {
-    font-size: 20px;
+    margin-bottom: 12px;
   }
   .rules-sort {
     font-size: 13px;
-    margin-top: 6px;
-    max-width: 100%;
-    width: 100%;
   }
   .rules-sort-inner {
     font-size: 13px;
-    gap: 8px;
-  }
-  .rules-sort select {
-    font-size: 13px;
-    padding: 2px 8px;
+    gap: 4px;
   }
 }
 
-/* 印刷用スタイル */
+/* ===== 印刷用スタイル ===== */
 @media print {
   .site-header,
   .site-footer {
     position: static !important;
   }
-  
   .main-content {
     margin: 0 !important;
     box-shadow: none !important;

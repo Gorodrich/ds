@@ -1,8 +1,22 @@
-/* 基本リセット */
+/*
+ * rule/style.css
+ * デジタル庁デザインシステム(DADS)のトークン・コンポーネントCSS
+ * (assets/dads/tokens.css, base.css, components.css) を前提としたレイアウトCSS。
+ * e-Gov法令検索の条文表示画面(https://laws.e-gov.go.jp/law/...)のレイアウト・配色・
+ * タイポグラフィに準拠。レスポンシブブレークポイント(768px)は既存サイトの挙動を維持。
+ */
+
 *, *::before, *::after {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+
+/* law-infoの実測高さ。ルール名や条文番号が長く2行以上に折り返す場合に
+   main-content等のクリッピングを防ぐため、JS(ResizeObserver)が実際の
+   高さに書き換える。JS実行前/非対応環境向けの初期値として72pxを設定する。 */
+:root {
+  --law-info-h: 72px;
 }
 
 html, body {
@@ -12,782 +26,601 @@ html, body {
   overflow-x: hidden;
 }
 
-/* フォントとカラー */
 body {
-  font-family: "Noto Sans JP", sans-serif;
-  font-optical-sizing: auto;
+  font-family: var(--font-family-sans);
   font-weight: 400;
   font-style: normal;
   line-height: 1.7;
-  background: #fafafa;
-  color: #222;
+  background: var(--color-neutral-white);
+  color: var(--color-neutral-solid-gray-900);
 }
 
-/* ヘッダー */
+/* ===== ヘッダー(e-Govに準じた薄い白ヘッダー) ===== */
 .site-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: #f0f2f5;
-  padding: 12px 20px;
-  border-bottom: 1px solid #ccc;
   position: fixed;
   top: 0;
   left: 0;
-  width: 100vw;
+  right: 0;
+  height: 44px;
   z-index: 1000;
-  height: 48px; /* 高さを56px→48pxに */
+  background: var(--color-neutral-white);
+  border-bottom: 1px solid var(--color-neutral-solid-gray-200);
   box-sizing: border-box;
 }
 
-.site-header .logo {
-  font-size: 20px;
+.site-header__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  height: 100%;
+  padding: 0 20px;
+}
+
+.site-header__logo {
+  font-size: 18px;
   font-weight: bold;
-  color: #005bac;
-}
-
-.site-header .top-nav a {
-  margin-left: 20px;
+  color: var(--color-primitive-light-blue-900);
   text-decoration: none;
-  color: #005bac;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-/* law-infoをheader直下・画面上部に固定 */
+.top-nav {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-left: auto;
+}
+.top-nav .dads-link {
+  font-size: 13px;
+}
+
+/* デスクトップではheader-actions自体を非表示にする(空のflexアイテムとして
+   gapの余白だけが残ってしまうため、子要素だけでなく親ごと隠す) */
+.header-actions {
+  display: none;
+  align-items: center;
+  gap: 4px;
+}
+
+/* ===== law-info(e-Govの「施行日・現行」メタバー相当) ===== */
 .law-info {
   position: fixed;
-  top: 48px; /* headerの高さに合わせて修正 */
+  top: 44px;
   left: 0;
-  width: 100vw;
-  background: #fff;
-  border-bottom: 1px solid #ccc;
+  right: 0;
+  background: var(--color-neutral-white);
+  border-bottom: 1px solid var(--color-neutral-solid-gray-200);
   z-index: 999;
-  padding: 12px 20px 8px 20px;
+  padding: 0 20px;
   box-sizing: border-box;
   display: flex;
   align-items: center;
-  gap: 18px;
-  min-height: 44px; /* 高さを44px→36pxに */
-  height: 44px;
+  gap: 14px;
+  min-height: 36px;
+  height: 36px;
+  font-size: 13px;
 }
-.law-info h2 {
-  font-size: 20px;
-  margin-right: 18px;
-  margin-bottom: 0;
-  color: #222;
+.law-info .law-info-icon {
+  flex-shrink: 0;
+  color: var(--color-neutral-solid-gray-600);
 }
 .law-info p {
-  margin-bottom: 0;
-  color: #444;
-  font-size: 15px;
+  margin: 0;
+  color: var(--color-neutral-solid-gray-700);
+}
+.law-info .dads-chip-label {
+  min-height: auto;
+  padding: 1px 8px;
+  font-size: 12px;
+}
+.law-info .law-info-error {
+  width: 100%;
 }
 
-/* メイン構造 */
+/* =====================================================================
+   law-info: index.htmlのルール一覧行(.rule-item)と全く同じ書式に揃えたバリエーション
+   (body.law-info-v2 が付いたページにのみ適用。展開は段階的に行うため、まずは
+   R0701001.htmlにのみ適用する) */
+body.law-info-v2 .law-info {
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  height: auto;
+  min-height: 72px;
+  padding: 8px 20px;
+  gap: 4px;
+}
+.law-info .rule-item__row1 {
+  position: relative;
+  padding-left: 24px;
+  line-height: 1.5;
+}
+.law-info .rule-item__icon {
+  position: absolute;
+  left: 0;
+  top: 0.3em;
+  color: var(--color-neutral-solid-gray-500);
+}
+.law-info .rule-item__title {
+  font-size: calc(16 / 16 * 1rem);
+  font-weight: bold;
+  color: var(--color-neutral-solid-gray-900);
+}
+.law-info .rule-item__number {
+  font-size: calc(16 / 16 * 1rem);
+  color: var(--color-neutral-solid-gray-900);
+  margin-left: 0.4em;
+}
+.law-info .rule-item__category.dads-chip-label {
+  border-radius: 0;
+  min-height: auto;
+  padding: 1px 5px;
+  font-size: calc(11 / 16 * 1rem);
+  line-height: 1.4;
+  margin-left: 0.5em;
+  white-space: nowrap;
+}
+.law-info .rule-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  width: 100%;
+  padding-left: 24px;
+}
+.law-info .rule-date {
+  font-size: calc(16 / 16 * 1rem);
+  color: var(--color-neutral-solid-gray-900);
+}
+
+body.law-info-v2 .container {
+  height: calc(100vh - 44px - var(--law-info-h) - 40px);
+  height: calc(100dvh - 44px - var(--law-info-h) - 40px);
+  margin-top: calc(44px + var(--law-info-h)); /* header(44px) + law-info(実測) */
+}
+
+/* ===== メイン構造 ===== */
 .container {
   display: flex;
-  width: 100vw;
-  /* header:48px + law-info:44px + footer:40px = 132px */
-  height: calc(100vh - 48px - 44px - 40px); /* header(48px)+law-info(44px)+footer(40px) */
-  margin: 92px 0 40px 0; /* header+law-info=92px, footer=40px */
+  width: 100%;
+  /* モバイルではアドレスバーの表示/非表示で100vhが変動し、固定ヘッダー/フッターと
+     ズレて2段階スクロールや下部の見切れが起きるため、動的ビューポート単位(dvh)を使う。
+     dvh未対応ブラウザ向けにvh版を先に書いて上書きさせるフォールバックにしている。 */
+  height: calc(100vh - 44px - 36px - 40px);
+  height: calc(100dvh - 44px - 36px - 40px);
+  margin: 80px 0 40px 0;
   padding: 0;
   overflow: hidden;
   position: relative;
-  left: 0;
-  right: 0;
-  /* Bootstrap の .container クラスを上書き */
-  max-width: none !important;
-  padding-left: 0 !important;
-  padding-right: 0 !important;
-  margin-left: 0 !important;
-  margin-right: 0 !important;
 }
 
-/* サイドバー */
+/* ===== サイドバー(目次) ===== */
 .sidebar {
-  width: 15vw;
-  min-width: 180px;
-  max-width: 350px;
-  flex-shrink: 0;
-  background: #f5f7fa;
-  padding: 24px 18px 24px 18px;
-  box-shadow: 1px 0 4px #eee;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
+  width: 15vw;
+  min-width: 210px;
+  max-width: 340px;
+  flex-shrink: 0;
+  background: var(--color-neutral-white);
+  border-right: 1px solid var(--color-neutral-solid-gray-200);
+  padding: 18px 16px;
   height: 100%;
   overflow-y: auto;
-  margin: 0;
 }
 
-.sidebar ul {
-  list-style: none;
-  padding-left: 0;
-  margin: 0;
+.dads-toc__heading {
+  margin-bottom: 10px;
+  font-size: 14px;
+  color: var(--color-neutral-solid-gray-700);
 }
 
-.sidebar li {
-  margin: 0;
-  padding: 0.2em 0 0.2em 0.5em;
+.sidebar .dads-list {
+  font-size: 13.5px;
+}
+.sidebar .dads-list li {
   position: relative;
-  font-size: 1em;
 }
 
-.sidebar li > a {
+/* e-Govの目次はネスト階層に関わらずマーカー(・/◦)を表示しない */
+.sidebar .dads-list,
+.sidebar .dads-list .dads-list {
+  list-style: none !important;
+}
+
+.sidebar__footer {
+  display: none;
+}
+
+/* e-Govの目次は黒文字・ホバー時のみ青(dads-linkの常時青色を上書き) */
+.sidebar a.dads-link:any-link {
+  color: var(--color-neutral-solid-gray-900);
   text-decoration: none;
-  color: #222;
-  display: inline-block;
-  padding-left: 0.5em;
+}
+.sidebar a.dads-link:visited {
+  color: var(--color-neutral-solid-gray-900);
+}
+@media (hover: hover) {
+  .sidebar a.dads-link:hover {
+    color: var(--color-key-900);
+    text-decoration: underline;
+  }
+}
+.sidebar > .dads-toc > .dads-list > li > a.dads-link {
+  font-weight: bold;
 }
 
-.sidebar li {
-  font-weight: normal;
-}
-
-.sidebar li li {
-  padding-left: 1.5em;
-  font-size: 0.98em;
-}
-
-.sidebar li li li {
-  padding-left: 2.5em;
-  font-size: 0.96em;
-}
-
-.sidebar li li li li {
-  padding-left: 3.5em;
-  font-size: 0.94em;
-}
-
-/* 親項目（子ulを持つli）に三角形アイコンを表示 */
-.sidebar li:has(ul)::before {
-  content: "";
-  /* 疑似要素の三角形は非表示に */
-  display: none;
-}
-
-/* 子を持たないliはアイコンなし */
-.sidebar li:not(:has(ul))::before {
-  content: "";
-  display: none;
-}
-
-/* 三角形アイコン用span */
+/* 親項目(子ulを持つli)の三角形トグル */
 .sidebar-toggle {
   font-size: 0.7em;
   display: inline-block;
   width: 1em;
-  margin-left: -1.2em;
   margin-right: 0.2em;
   vertical-align: middle;
-  color: #444;
+  color: var(--color-neutral-solid-gray-500);
   cursor: pointer;
   user-select: none;
 }
 
-/* 最上位（h2相当）は太字 */
-.sidebar > ul > li > a {
-  font-weight: bold;
+.sidebar .sidebar-close {
+  display: none;
 }
 
-/* ホバー時の色 */
-.sidebar li > a:hover {
-  color: #1976d2;
-  text-decoration: underline;
-}
-
-
-/* 本文エリア */
+/* ===== 本文エリア ===== */
 .main-content {
-  width: 85vw;
   flex: 1 1 0;
-  padding: 30px;
-  background: #fff;
-  /* 高さをcontainerに合わせて調整 */
-  height: calc(100vh - 48px - 44px - 40px);
+  padding: 28px 48px 40px;
+  background: var(--color-neutral-white);
+  height: 100%;
   overflow-y: auto;
   box-sizing: border-box;
-  margin: 0;
-  margin-right: 0 !important;
-  padding-right: 30px !important;
-  max-width: none !important;
+  position: relative;
 }
 
 .law-header {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
+  gap: 16px;
+  margin-bottom: 28px;
 }
 
-.law-header h1 {
+.law-title {
+  margin: 12px 0 28px;
+}
+.law-title h1 {
   font-size: 24px;
-  color: #222;
+  font-weight: bold;
+  color: var(--color-neutral-solid-gray-900);
 }
 
-.tabs button {
-  margin-left: 10px;
-  padding: 5px 12px;
-  background: #eee;
-  border: 1px solid #ccc;
-  cursor: pointer;
+.dads-form-control-label {
+  font-size: 13px;
 }
 
-.tabs button.active {
-  background: #005bac;
-  color: #fff;
-  border-color: #005bac;
+.law-header .dads-form-control-label {
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+}
+.law-header .dads-form-control-label__label {
+  font-weight: normal;
 }
 
 .preamble, .chapter {
-  margin-top: 30px;
+  margin-top: 28px;
 }
 
 .article {
-  margin-top: 20px;
+  margin-top: 14px;
 }
 
-/* 章 (h2) */
-.preamble > h2 {
-  font-size: 22px;
-  font-weight: bold;
-  margin-bottom: 18px;
-  margin-top: 0;
-  padding-left: 14px;
-  color: #222;
-}
-
-/* 章 (h2) */
+/* 章 (h2): e-Govに準じ中央揃え・プレーンな黒太字 */
+.preamble > h2,
 .chapter > h2 {
-  font-size: 22px;
+  font-size: 17px;
   font-weight: bold;
-  margin-bottom: 18px;
-  margin-top: 0;
-  padding-left: 14px;
-  color: #222;
+  margin-bottom: 16px;
+  margin-top: 16px;
+  margin-left: 45px;
+  text-align: left;
+  color: var(--color-neutral-solid-gray-900);
+}
+.preamble > h2:empty,
+.chapter > h2:empty {
+  display: none;
 }
 
 /* 節 (h3) */
 .chapter > h3 {
-  font-size: 19px;
+  font-size: 15.5px;
   font-weight: bold;
-  margin-bottom: 14px;
-  margin-top: 24px;
-  padding-left: 18px;
-  color: #234;
+  margin-bottom: 12px;
+  margin-top: 22px;
+  margin-left: 60px;
+  color: var(--color-neutral-solid-gray-900);
 }
 
 /* 款 (h4) */
 .chapter > h4 {
-  font-size: 17px;
+  font-size: 15px;
   font-weight: bold;
   margin-bottom: 10px;
-  margin-top: 20px;
-  padding-left: 22px;
-  color: #345;
+  margin-top: 18px;
+  margin-left: 75px;
+  color: var(--color-neutral-solid-gray-800);
 }
 
-/* 条 (h5) */
 .article h5 {
-  font-size: 16px;
-  margin-bottom: 5px;
-  border-left: 4px solid #005bac;
-  padding-left: 26px;
-  color: #222;
+  display: block;
+  font-size: 15px;
+  font-weight: bold;
+  color: var(--color-neutral-solid-gray-900);
+  margin: 0 0 6px;
+}
+.article h5:empty {
+  display: none;
 }
 
-/* フッター */
+.article p {
+  display: block;
+  font-size: 15px;
+  margin: 0;
+}
+
+/* 非一般条文の表示チェックボックス: 条文番号の直後にインラインで表示 */
+.article label.dads-checkbox.show-non-general {
+  display: inline-flex;
+  vertical-align: middle;
+  margin-right: 0.6em;
+}
+
+/* ===== フッター ===== */
 .site-footer {
   display: flex;
   align-items: center;
-  justify-content: space-between; /* 左右に分ける */
+  justify-content: space-between;
   padding: 0 20px;
-  font-size: 14px;
-  background: #f8f8f8;
-  border-top: 1px solid #ccc;
+  font-size: 13px;
+  background: var(--color-neutral-white);
+  border-top: 1px solid var(--color-neutral-solid-gray-200);
   position: fixed;
   bottom: 0;
   left: 0;
-  width: 100vw;
+  right: 0;
   z-index: 1000;
   height: 40px;
   box-sizing: border-box;
-  line-height: 40px;
 }
 
 .site-footer .footer-left,
 .site-footer .footer-right {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
-  height: 100%;
-  line-height: 40px;
-}
-
-.site-footer .footer-left {
-  justify-content: flex-start;
-}
-
-.site-footer .footer-right {
-  justify-content: flex-end;
+  gap: 16px;
 }
 
 .site-footer p {
   margin: 0;
+  color: var(--color-neutral-solid-gray-600);
 }
 
-.site-footer a {
-  color: #005bac;
-  text-decoration: none;
-  margin-left: 10px;
-  margin-right: 0;
-  /* 右寄せのためmargin-rightは不要 */
-  display: flex;
-  align-items: center;
-  line-height: 40px;
-}
-
-/* law-header内のform-switch配置調整 */
-.law-header .form-switch {
-  margin-left: 20px;
-  font-size: 1em;
-}
-
-/* 非一般参加者条文の「表示」チェックボックスの余白調整 */
-.show-non-general {
-  margin-right: 6px;
-  margin-left: 0.5em;
-  vertical-align: middle;
-}
-.show-non-general-label {
-  margin-right: 1em;
-  vertical-align: middle;
-}
-
-/* バッジのデザイン修正 */
-.badge {
-  display: inline-block;
-  background: #fff;
-  color: #222;
-  border: 1.5px solid #111;
-  border-radius: 4px;
-  padding: 2px 12px;
-  font-size: 14px;
-  font-weight: bold;
-  box-shadow: none;
-  margin-left: 8px;
-  letter-spacing: 0.05em;
-  vertical-align: middle;
-}
-
-/* 印刷用: law-info, main-content, site-footerのみ印刷 */
+/* ===== 印刷 ===== */
 @media print {
   body * {
     visibility: hidden !important;
   }
   .law-info, .main-content, .site-footer,
-  .law-info * , .main-content *, .site-footer * {
+  .law-info *, .main-content *, .site-footer * {
     visibility: visible !important;
   }
   .law-info, .main-content, .site-footer {
     position: static !important;
-    left: 0 !important;
-    top: 0 !important;
     width: 100vw !important;
     margin: 0 !important;
     padding: 0 !important;
-    box-shadow: none !important;
-    background: #fff !important;
+    background: var(--color-neutral-white) !important;
   }
-}
 
-/* ハンバーガーメニューはデフォルト非表示 */
-.hamburger {
-  display: none;
-}
+  /* main-contentは画面表示用にheight固定+overflow-y:autoの内部スクロール領域と
+     なっており、祖先の.containerもoverflow:hiddenで高さを固定しているため、
+     visibilityの切り替えだけでは印刷時に条文が見切れる。印刷時はこのクリッピング
+     連鎖を解除し、内容の実際の高さぶんだけ紙面に流し込む。 */
+  html, body {
+    height: auto !important;
+    overflow: visible !important;
+  }
+  .container {
+    display: block !important;
+    height: auto !important;
+    overflow: visible !important;
+    /* margin-topは本来、固定表示のheader/law-infoの下に隠れないための
+       余白だが、印刷時はlaw-infoをposition: staticで通常のflowに戻して
+       いるため、この余白がそのまま二重に効いて大きな空白になってしまう。
+       flow内で自然につながるよう0にする。 */
+    margin: 0 !important;
+  }
+  .main-content {
+    height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+  }
 
-/* sidebarの×ボタンはデフォルト非表示 */
-.sidebar .sidebar-close {
-  display: none;
-  position: absolute;
-  top: 10px;
-  left: 14px;
-  font-size: 2em;
-  color: #888;
-  background: none;
-  border: none;
-  cursor: pointer;
-  z-index: 3300;
-  line-height: 1;
-  width: 36px;
-  height: 36px;
-  text-align: center;
-  padding: 0;
-}
-.sidebar .sidebar-close:active {
-  color: #005bac;
-}
+  /* サイドバー(目次)や一般参加者向けトグル、非一般条文の表示チェックボックス、
+     フッターの印刷ボタンは操作用UIであり紙面には不要なため非表示にする */
+  .sidebar,
+  .law-header,
+  .sidebar-toggle,
+  .show-non-general,
+  #print-btn {
+    display: none !important;
+  }
 
-/* sidebar自体はデフォルトでflex（PC用） */
-.sidebar {
-  display: flex;
+  /* law-headerを非表示にしても見出し(law-title)自身の上下マージンは
+     そのまま残るため、law-infoとルール本文の間の余白を詰める */
+  .law-title {
+    margin: 0 0 12px !important;
+  }
 }
 
 /* ====== レスポンシブ対応: 768px以下 ====== */
 @media (max-width: 768px) {
   html, body {
-    width: 100vw;
+    width: 100%;
     overflow-x: hidden;
   }
 
   .site-header {
     height: 48px;
+  }
+  .site-header__inner {
     padding: 0 12px;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    z-index: 2000;
   }
-  .site-header .logo {
+  .site-header__logo {
     font-size: 16px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 70vw;
+    max-width: 55vw;
   }
-  .site-header .top-nav {
+  .top-nav {
     display: none;
   }
-  /* 目次ボタン */
-  .toc-toggle-btn {
-    display: inline-block;
-    background: #005bac;
-    color: #fff;
-    border: none;
-    border-radius: 4px;
-    font-size: 15px;
-    padding: 6px 16px;
-    margin-right: 8px;
-    margin-left: 0;
-    cursor: pointer;
-    height: 36px;
-    line-height: 24px;
-    vertical-align: middle;
-    z-index: 2101;
-  }
-  .toc-toggle-btn:active,
-  .toc-toggle-btn:focus {
-    background: #1976d2;
-    outline: none;
-  }
 
-  /* ハンバーガーメニュー */
-  .hamburger {
-    display: block;
-    width: 36px;
-    height: 36px;
-    background: none;
-    border: none;
-    cursor: pointer;
-    position: relative;
-    z-index: 2100;
-    margin-left: 0;
-    margin-right: 0;
-    padding: 0;
-  }
-  .hamburger span,
-  .hamburger span::before,
-  .hamburger span::after {
-    display: block;
-    position: absolute;
-    left: 8px;
-    width: 20px;
-    height: 3px;
-    background: #005bac;
-    border-radius: 2px;
-    transition: all 0.3s;
-    content: '';
-  }
-  .hamburger span {
-    top: 16px;
-    left: 8px;
-    right: 8px;
-  }
-  .hamburger span::before,
-  .hamburger span::after {
-    position: absolute;
-    left: 0;
-    width: 20px;
-    height: 3px;
-    background: #005bac;
-    border-radius: 2px;
-    content: '';
-  }
-  .hamburger span::before {
-    top: -8px;
-  }
-  .hamburger span::after {
-    top: 8px;
-  }
-
-  /* ドロワーナビゲーション */
-  .drawer-nav {
-    display: none;
-    position: fixed;
-    top: 48px;
-    right: 0;
-    width: 70vw;
-    max-width: 320px;
-    min-width: 180px;
-    height: calc(100vh - 48px);
-    background: #fff;
-    box-shadow: -2px 0 12px rgba(0,0,0,0.18);
-    z-index: 3200;
-    padding: 24px 18px 24px 18px;
-    transition: transform 0.25s;
-    transform: translateX(100%);
-  }
-  .drawer-nav.open {
-    display: block;
-    transform: translateX(0);
-  }
-  .drawer-nav .drawer-close {
-    position: absolute;
-    top: 10px;
-    left: 14px;
-    font-size: 2em;
-    color: #888;
-    background: none;
-    border: none;
-    cursor: pointer;
-    z-index: 3300;
-    line-height: 1;
-    width: 36px;
-    height: 36px;
-    text-align: center;
-    padding: 0;
-  }
-  .drawer-nav .drawer-close:active {
-    color: #005bac;
-  }
-  .drawer-nav ul {
-    list-style: none;
-    padding: 0;
-    margin: 40px 0 0 0;
-  }
-  .drawer-nav li {
-    margin-bottom: 18px;
-  }
-  .drawer-nav a {
-    color: #005bac;
-    text-decoration: none;
-    font-size: 18px;
-    font-weight: bold;
-  }
-  .drawer-nav a:active,
-  .drawer-nav a:focus {
-    color: #1976d2;
-    text-decoration: underline;
-  }
-
-  /* site-headerのボタン配置 */
-  .site-header {
-    flex-direction: row;
-    justify-content: flex-start;
-    align-items: center;
-  }
-  .site-header .logo {
-    flex: 1 1 auto;
-    margin-right: 8px;
-  }
-  .site-header .header-actions {
+  .header-actions {
     display: flex;
-    align-items: center;
-    gap: 0;
-    margin-left: auto;
+  }
+  #toc-toggle-btn {
+    display: inline-flex;
+  }
+  #drawer-menu-btn {
+    display: inline-flex;
   }
 
-  .law-info h2 {
-    font-size: 20px;
-    margin-right: 18px;
-    margin-bottom: 0;
-    color: #222;
+  .law-info {
+    top: 48px;
+    flex-wrap: wrap;
+    height: auto;
+    min-height: 40px;
+    padding: 6px 12px;
+    row-gap: 4px;
   }
   .law-info p {
-    margin-bottom: 0;
-    color: #444;
-    font-size: 15px;
+    font-size: 12px;
   }
 
-  /* サイドバー: デフォルト非表示、open時のみ表示。main-contentを覆うz-index */
+  .container {
+    height: calc(100vh - 48px - 44px - 40px);
+    height: calc(100dvh - 48px - 44px - 40px);
+    margin: 92px 0 40px 0;
+  }
+
+  body.law-info-v2 .law-info {
+    min-height: 72px;
+    padding: 8px 12px;
+  }
+  body.law-info-v2 .container {
+    height: calc(100vh - 48px - var(--law-info-h) - 40px);
+    height: calc(100dvh - 48px - var(--law-info-h) - 40px);
+    margin: calc(48px + var(--law-info-h)) 0 40px 0; /* header(48px) + law-info(実測) */
+  }
+
+  .main-content {
+    padding: 20px;
+  }
+
+  .law-title h1 {
+    font-size: 19px;
+  }
+
+  /* サイドバー(目次): モバイルではe-Gov同様に画面全体を覆うフルスクリーン表示に切り替える */
   .sidebar {
     display: none;
     position: fixed;
+    inset: 0;
     top: 48px;
-    left: 0;
-    width: 80vw;
-    max-width: 340px;
+    width: auto;
     min-width: 0;
+    max-width: none;
     height: calc(100vh - 48px);
-    background: #fff;
-    box-shadow: 2px 0 12px rgba(0,0,0,0.18);
+    height: calc(100dvh - 48px);
+    border-right: 0;
+    padding: 16px 20px 0;
     z-index: 3500;
-    overflow-y: auto;
-    padding: 24px 12px 24px 12px;
-    margin: 0;
-    transition: transform 0.25s;
-    transform: translateX(-100%);
-  }
-  .sidebar.open {
-    display: block;
-    transform: translateX(0);
-  }
-
-  .sidebar .toc {
-    margin-top: 48px; /* ×ボタンの高さ+余白分 */
-  }
-
-  /* law-info レイアウト変更: 2行構成・高さ増加 */
-  .law-info {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0;
-    min-height: 68px;
-    height: 68px;
-    padding: 10px 10px 8px 10px;
-  }
-  .law-info-row1 {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    width: 100%;
-    margin-bottom: 2px;
-  }
-  .law-info-row1 h2 {
-    font-size: 18px;
-    margin-right: 10px;
-    margin-bottom: 0;
-    color: #222;
-    padding: 0;
-    display: inline-block;
-    vertical-align: middle;
-  }
-  .law-info-row1 .badge {
-    margin-left: 0;
-    margin-right: 0;
-    font-size: 13px;
-    padding: 2px 8px;
-    vertical-align: middle;
-  }
-  .law-info-row2 {
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    gap: 12px;
-    flex-wrap: wrap;
-  }
-  .law-info-row2 p {
-    font-size: 13px;
-    margin-bottom: 0;
-    color: #444;
-    line-height: 1.5;
-    padding: 0;
-    word-break: break-all;
-  }
-
-  /* law-info直下のh2, p, .badgeを非表示（JSでラップするため） */
-  .law-info > h2,
-  .law-info > p,
-  .law-info > .badge {
-    display: none !important;
-  }
-
-  /* main-content/containerの高さ調整: law-info高さ分増やす */
-  .container {
-    height: calc(100vh - 48px - 68px - 40px);
-    margin: 116px 0 40px 0; /* header+law-info=116px, footer=40px */
-  }
-  .main-content {
-    height: calc(100vh - 48px - 68px - 40px);
-  }
-}
-
-/* 769px以上では目次ボタン・ハンバーガー・drawer-navは非表示 */
-@media (min-width: 769px) {
-  .toc-toggle-btn,
-  .hamburger,
-  .drawer-nav {
-    display: none !important;
-  }
-}
-
-/* ドロワーオーバーレイ時の背景ぼかし */
-@media (max-width: 768px) {
-  body.drawer-open {
     overflow: hidden;
   }
-  body.drawer-open .main-content::before {
-    content: "";
-    display: block;
-    position: fixed;
-    top: 48px;
-    left: 0;
-    width: 100vw;
-    height: calc(100vh - 48px);
-    background: rgba(0,0,0,0.18);
-    z-index: 3199;
+  .sidebar.open {
+    display: flex;
+  }
+  .dads-toc {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    flex: 1 1 auto;
+  }
+  .dads-toc__heading {
+    flex: 0 0 auto;
+  }
+  .dads-toc > .dads-list {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    padding-bottom: 16px;
+  }
+  .sidebar__footer {
+    display: flex;
+    flex: 0 0 auto;
+    padding: 12px 0 16px;
+    border-top: 1px solid var(--color-neutral-solid-gray-200);
+  }
+  .sidebar__footer .dads-button,
+  .sidebar .sidebar-close {
+    display: flex;
+    width: 100%;
+  }
+
+  /* law-info(施行日・ルール名バー)を隠さないよう、目次はその下から開始する */
+  body.law-info-v2 .sidebar {
+    top: calc(48px + var(--law-info-h)); /* header(48px) + law-info(実測) */
+    height: calc(100vh - 48px - var(--law-info-h));
+    height: calc(100dvh - 48px - var(--law-info-h));
+  }
+
+  .site-footer {
+    height: 40px;
+    font-size: 12px;
+    padding: 0 12px;
+  }
+
+  body.sidebar-open {
+    overflow: hidden;
   }
 }
-  .site-footer {
-    height: 36px;
-    font-size: 12px;
-    padding: 0 10px;
-    line-height: 36px;
-  }
-  .site-footer .footer-left,
-  .site-footer .footer-right {
-    line-height: 36px;
-  }
-  .site-footer a {
-    font-size: 12px;
-    margin-left: 6px;
-  }
 
-
-/* 769px以上ではsidebarはflex、ハンバーガー・×ボタンは非表示 */
+/* 769px以上では目次ボタン・ハンバーガーは非表示、サイドバーは常時表示 */
 @media (min-width: 769px) {
-  .hamburger {
+  #toc-toggle-btn,
+  #drawer-menu-btn {
     display: none !important;
   }
   .sidebar {
     display: flex !important;
     position: static !important;
-    width: 15vw !important;
-    min-width: 180px !important;
-    max-width: 350px !important;
-    height: 100% !important;
-    box-shadow: 1px 0 4px #eee !important;
     transform: none !important;
-    z-index: 1 !important;
-    padding: 24px 18px 24px 18px !important;
+    box-shadow: none !important;
   }
   .sidebar .sidebar-close {
     display: none !important;
   }
 }
 
-/* サイドバーオーバーレイ時の背景ぼかし（オプション） */
-@media (max-width: 768px) {
-  body.sidebar-open {
-    overflow: hidden;
-  }
-  body.sidebar-open .main-content::before {
-    content: "";
-    display: block;
-    position: fixed;
-    top: 48px;
-    left: 0;
-    width: 100vw;
-    height: calc(100vh - 48px);
-    background: rgba(0,0,0,0.18);
-    z-index: 2999;
-  }
+/* =====================================================================
+   PC表示時、右端の余白を除去
+   main-content内で完結する内部スクロール構成(ヘッダー/フッター固定)は維持する。
+   html要素はoverflow-xがhiddenのためoverflow-yが暗黙にautoとなり、DADSの
+   scrollbar-gutter:stable(base.css)が常時ガター分の余白を確保してしまうため、
+   実際にスクロールバーが必要な時だけ余白が生じるように戻す(style_index.cssと同様の挙動)。
+   ===================================================================== */
+html {
+  scrollbar-gutter: auto;
 }

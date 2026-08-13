@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>404 - ページが見つかりません | 3DS半分こするくらい仲良しクラフト</title>
+  <link rel="icon" href="/favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon-180x180.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex">
+  <script>
+    // GitHub Pagesはサイト全体で1つのルート直下404.htmlしか使えないため、
+    // /rule/配下が見つからなかった場合はrule専用のデザインの404ページへ
+    // 即座に転送する(それ以外のパスはこのページをそのまま表示する)。
+    (function () {
+      var idx = location.pathname.indexOf('/rule/');
+      if (idx !== -1) {
+        location.replace(location.pathname.slice(0, idx) + '/rule/404.html');
+      }
+    })();
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #10141b;
+      --text: #f4efe4;
+      --text-soft: #b7bfcc;
+      --accent: #e6b73d;
+      --accent-ink: #211705;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: "Noto Sans JP", sans-serif;
+      line-height: 1.6;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 40px 20px;
+    }
+    .error-code {
+      font-size: 5rem;
+      font-weight: 900;
+      color: var(--accent);
+      line-height: 1;
+      margin: 0 0 16px;
+    }
+    h1 {
+      font-size: 1.3rem;
+      margin: 0 0 12px;
+    }
+    p {
+      color: var(--text-soft);
+      margin: 0 0 32px;
+    }
+    a.home-link {
+      display: inline-block;
+      background: var(--accent);
+      color: var(--accent-ink);
+      font-weight: 700;
+      text-decoration: none;
+      padding: 0.8em 1.6em;
+      border-radius: 8px;
+    }
+    a.home-link:hover {
+      opacity: 0.9;
+    }
+  </style>
+</head>
+<body>
+  <div>
+    <p class="error-code">404</p>
+    <h1>お探しのページが見つかりませんでした</h1>
+    <p>ページが移動または削除された可能性があります。</p>
+    <a class="home-link" href="/">トップページに戻る</a>
+  </div>
+</body>
+</html>

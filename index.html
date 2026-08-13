@@ -6,216 +6,372 @@
   <link rel="icon" href="/favicon.ico" id="favicon">
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon-180x180.png">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="3DS半分こするくらい仲良しクラフトの公式ホームページです。ルールやWiki、マップ等のリンクはこちらから。">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Audiowide&family=Noto+Sans+JP:wght@100..900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Audiowide&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/@phosphor-icons/web" defer></script>
   <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      height: 100%;
+    :root {
+      --bg: #10141b;
+      --bg-elevated: #171d27;
+      --bg-elevated-2: #1e2531;
+      --line: rgba(244, 239, 228, 0.10);
+      --text: #f4efe4;
+      --text-soft: #b7bfcc;
+      --accent: #e6b73d;
+      --accent-soft: #f2cc6b;
+      --accent-ink: #211705;
+      --radius: 14px;
+      --nav-h: 72px;
     }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { animation-duration: 0.001s !important; transition-duration: 0.001s !important; }
+    }
+    html, body { margin: 0; padding: 0; }
     body {
+      background: var(--bg);
+      color: var(--text);
       font-family: "Noto Sans JP", sans-serif;
-      font-optical-sizing: auto;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+    img { max-width: 100%; display: block; }
+    a { color: inherit; }
+
+    /* ---------- accessibility helpers ---------- */
+    .skip-link {
+      position: fixed;
+      top: -3em;
+      left: 1em;
+      z-index: 100;
+      background: var(--accent);
+      color: var(--accent-ink);
       font-weight: 700;
-      font-style: normal;
-      line-height: 1.5;
-      /* 背景画像を固定表示（適宜パスを変更） */
-      background: url("background.jpg") no-repeat center center fixed;
-      background-size: cover;
-      background-color: #ccc;
+      padding: 0.6em 1em;
+      border-radius: 0 0 8px 8px;
+      transition: top 0.2s ease;
     }
-    .header-shadow {
-      position: fixed;
-      top: 0;
-      left: 0;
-      bottom: 0;
-      margin: 0;
-      width: 25%;
-      filter: drop-shadow(0px 0px 10px rgba(0, 0, 0, 0.5));
+    .skip-link:focus { top: 0; }
+    a:focus-visible, button:focus-visible {
+      outline: 3px solid var(--accent);
+      outline-offset: 2px;
     }
-    header {
-      position: fixed;
+
+    /* ---------- header / nav ---------- */
+    .site-header {
+      position: sticky;
       top: 0;
-      left: 0;
-      bottom: 0;
-      width: 100%;
-      background-color: #fff;
-      /* 左に傾斜した白い帯の形状を作成 */
-      clip-path: polygon(0 0, 70% 0, 100% 100%, 0 100%);
-      z-index: 1;
-      padding: 20px 10px;
-      box-sizing: border-box;
-      flex-flow: column;
-    }
-    .header-title {
-      position: fixed;
-      top: 0;
-      left: 0;
-      bottom: 60vh;
-      right: 30%;
+      z-index: 20;
+      height: var(--nav-h);
       display: flex;
       align-items: center;
-      justify-content: center;
-      flex-flow: column;
+      background: rgba(16, 20, 27, 0.72);
+      backdrop-filter: blur(14px) saturate(140%);
+      -webkit-backdrop-filter: blur(14px) saturate(140%);
+      border-bottom: 1px solid var(--line);
     }
-    .logo {
-      text-align: center;
-      margin: 10px;
-    }
-    .logo img {
-      width: 10vw;
-      height: 10vw;
-    }
-    .site-name {
+    .nav-inner {
       width: 100%;
-      font-size: 1.5vw;
-      color: #333;
-      text-align: center;
+      max-width: 1320px;
+      margin: 0 auto;
+      padding: 0 clamp(16px, 4vw, 40px);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.5rem;
     }
-    .menu {
-      position: fixed;
-      top: 0;
-      left: 0;
-      bottom: 0;
-      right: 0;
-      margin-top: 40vh;
-      vertical-align: middle;
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.7em;
+      text-decoration: none;
+      min-width: 0;
     }
-    nav ul {
+    .brand-logo {
+      width: 40px;
+      height: 40px;
+      flex: none;
+    }
+    .brand-name {
+      font-weight: 700;
+      font-size: 0.95rem;
+      line-height: 1.25;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .nav-toggle {
+      display: none;
+      background: transparent;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      width: 42px;
+      height: 42px;
+      padding: 0;
+      cursor: pointer;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+    }
+    .nav-toggle-bar {
+      width: 20px;
+      height: 2px;
+      background: var(--text);
+      transition: transform 0.25s ease, opacity 0.25s ease;
+    }
+    .nav-toggle[aria-expanded="true"] .bar-1 { transform: translateY(6px) rotate(45deg); }
+    .nav-toggle[aria-expanded="true"] .bar-2 { opacity: 0; }
+    .nav-toggle[aria-expanded="true"] .bar-3 { transform: translateY(-6px) rotate(-45deg); }
+
+    nav#primary-nav ul {
       list-style: none;
       margin: 0;
       padding: 0;
-    }
-    nav li {
-      margin: 0.5em 0;
-      font-size: 1.5vw;
-    }
-    nav a {
-      display: block;
-      text-decoration: none;
-      color: #333;
-      padding: 0.5em;
-      padding-left: 1.5em;
-      position: relative;
-      background: transparent;  /* 初期状態は背景透明（下地の白を表示） */
-    }
-    /* ホバー時に背景を左から右へグレーに変化 */
-    nav a::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 0;
-      height: 100%;
-      background-color: #e0e0e0;
-      z-index: -1;
-      transition: width 0.3s ease;
-    }
-    nav a:hover::before, nav a:focus::before {
-      width: 100%;
-    }
-    /* クリック時により暗いグレーの背景 */
-    nav a:active {
-      background-color: #a0a0a0;
-    }
-    main {
-      position: fixed;
-      margin-left: 40vw;
-      margin-right: 10vw;
-      margin-top: 10vh;
-      height: 100%;
-      width: 50%;
-      display: flex;
-      flex-flow: column;
-    }
-    .promo-text {
-      color: #fff;
-      font-family: "Audiowide", sans-serif;
-      font-weight: 400;
-      font-style: normal;
-      font-size: 6vw;
-      text-align: right;
-      text-shadow: 0 0 10px rgba(0,0,0,0.5);
-    }
-    .under-promo-text {
-      position: relative;
-      text-align: right;
-      color: #fff;
-      text-shadow: 0 0 10px rgba(0,0,0,0.5);
-      font-size: 2vw;
-    }
-    footer {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 75vw;
-      padding: 0.2em 0.5em;
-      font-size: 0.8em;
-      font-weight: 400;
-      color: #333;
-      background-color: transparent;
-      z-index: 2;
-      word-break: break-all;
-    }
-    /* レスポンシブ対応（画面が狭い場合） */
-    @media screen and (orientation: portrait) {
-      .header-shadow {
-        width: 25%;
-      }
-      header {
-        width: 100%;
-        padding: 10px;
-        clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
-      }
-
-    .header-title {
-      position: fixed;
-      top: 0;
-      left: 0;
-      bottom: 60vh;
-      right: 0;
       display: flex;
       align-items: center;
-      justify-content: center;
-      flex-flow: column;
+      gap: 0.25rem;
     }
-    .logo img {
-      width: 16vw;
-      height: 16vw;
-    }
-    .site-name {
-      font-size: 2vw;
-      }
-      nav a {
-        padding: 0.5em;
-        font-size: 2.5em;
-      }
-      main {
-      margin-left: 30vw;
-      margin-right: 10vw;
-      margin-top: 20vh;
-      width:60%;
+    nav#primary-nav a {
       display: flex;
-      flex-flow: column;
+      align-items: center;
+      gap: 0.4em;
+      text-decoration: none;
+      color: var(--text-soft);
+      font-weight: 500;
+      font-size: 0.92rem;
+      padding: 0.6em 0.9em;
+      border-radius: 8px;
+      position: relative;
+      transition: color 0.2s ease, background-color 0.2s ease;
+      white-space: nowrap;
     }
-    .promo-text {
-      color: #fff;
+    nav#primary-nav a:hover { color: var(--text); background: var(--bg-elevated); }
+    nav#primary-nav a[aria-current="page"] { color: var(--accent-soft); }
+    nav#primary-nav a[aria-current="page"]::after {
+      content: "";
+      position: absolute;
+      left: 0.9em;
+      right: 0.9em;
+      bottom: 0.35em;
+      height: 2px;
+      background: var(--accent);
+      border-radius: 2px;
+    }
+
+    /* ---------- hero ---------- */
+    .hero {
+      position: relative;
+      min-height: calc(100dvh - var(--nav-h));
+      display: flex;
+      align-items: flex-end;
+      overflow: hidden;
+    }
+    .hero-media {
+      position: absolute;
+      inset: 0;
+      background: url("background.jpg") center 35% / cover no-repeat;
+      z-index: 0;
+    }
+    .hero-media::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(0deg, rgba(10, 12, 17, 0.92) 0%, rgba(10, 12, 17, 0.55) 42%, rgba(10, 12, 17, 0.25) 68%, rgba(10, 12, 17, 0.55) 100%),
+        linear-gradient(100deg, rgba(10, 12, 17, 0.55) 0%, rgba(10, 12, 17, 0.05) 55%);
+    }
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 1320px;
+      margin: 0 auto;
+      padding: clamp(32px, 8vw, 96px) clamp(16px, 4vw, 40px) clamp(48px, 8vw, 88px);
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      text-align: right;
+    }
+    .hero-eyebrow {
+      font-family: "Audiowide", sans-serif;
+      font-size: 0.72rem;
+      letter-spacing: 0.22em;
+      color: var(--accent-soft);
+      margin: 0 0 0.9em;
+      text-shadow: 0 1px 6px rgba(0,0,0,0.5);
+    }
+    .hero-title {
       font-family: "Audiowide", sans-serif;
       font-weight: 400;
-      font-style: normal;
-      font-size: 7vw;
-      text-align: right;
-      text-shadow: 0 0 10px rgba(0,0,0,0.5);
+      margin: 0;
+      font-size: clamp(2.1rem, 6vw, 4.6rem);
+      line-height: 1.12;
+      letter-spacing: 0.01em;
+      text-wrap: balance;
+      text-shadow: 0 4px 22px rgba(0,0,0,0.6);
+      max-width: 16ch;
     }
-    .under-promo-text {
+    .hero-title .accent { color: var(--accent); }
+    .hero-sub {
+      margin: 1.1em 0 0;
+      max-width: 46ch;
+      color: var(--text);
+      font-size: clamp(0.88rem, 1.6vw, 1.05rem);
+      text-shadow: 0 2px 10px rgba(0,0,0,0.6);
+    }
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.9rem;
+      margin-top: 1.8em;
+      justify-content: flex-end;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5em;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 0.95rem;
+      padding: 0.85em 1.5em;
+      border-radius: 999px;
+      transition: transform 0.2s cubic-bezier(0.16,1,0.3,1), box-shadow 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
+      white-space: nowrap;
+    }
+    .btn:active { transform: translateY(1px) scale(0.98); }
+    .btn-primary {
+      background: var(--accent);
+      color: var(--accent-ink);
+      box-shadow: 0 10px 28px -10px rgba(230, 183, 61, 0.55);
+    }
+    .btn-primary:hover { background: var(--accent-soft); transform: translateY(-2px); }
+    .btn-ghost {
+      background: rgba(16, 20, 27, 0.45);
+      color: var(--text);
+      border: 1px solid rgba(244, 239, 228, 0.35);
+      backdrop-filter: blur(6px);
+    }
+    .btn-ghost:hover { border-color: var(--accent-soft); color: var(--accent-soft); transform: translateY(-2px); }
+
+    /* ---------- link tiles ---------- */
+    .links-section {
+      max-width: 1320px;
+      margin: 0 auto;
+      padding: clamp(56px, 8vw, 96px) clamp(16px, 4vw, 40px) clamp(72px, 10vw, 120px);
+    }
+    .links-heading {
+      font-size: clamp(1.3rem, 2.4vw, 1.8rem);
+      font-weight: 700;
+      margin: 0 0 1.4rem;
+    }
+    .links-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 1.1rem;
+    }
+    .link-tile {
       position: relative;
-      text-align: right;
-      color: #fff;
-      text-shadow: 0 0 10px rgba(0,0,0,0.5);
-      font-size: 2.5vw;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 1.6rem;
+      min-height: 168px;
+      padding: 1.4rem;
+      border-radius: var(--radius);
+      text-decoration: none;
+      color: var(--text);
+      border: 1px solid var(--line);
+      background: var(--bg-elevated);
+      opacity: 0;
+      transform: translateY(18px);
+      transition: transform 0.5s cubic-bezier(0.16,1,0.3,1), opacity 0.5s ease, border-color 0.25s ease, background-color 0.25s ease;
     }
+    .link-tile.in-view { opacity: 1; transform: translateY(0); }
+    .link-tile:nth-child(1) { transition-delay: 0.02s; }
+    .link-tile:nth-child(2) { transition-delay: 0.08s; }
+    .link-tile:nth-child(3) { transition-delay: 0.14s; }
+    .link-tile:nth-child(4) { transition-delay: 0.20s; }
+    .link-tile:nth-child(5) { transition-delay: 0.26s; }
+    .link-tile:hover {
+      border-color: rgba(230, 183, 61, 0.45);
+      background: var(--bg-elevated-2);
+    }
+    .link-tile:hover .link-tile-icon { color: var(--accent); transform: translateY(-2px); }
+    .link-tile-icon {
+      font-size: 1.6rem;
+      color: var(--text-soft);
+      transition: color 0.25s ease, transform 0.25s ease;
+    }
+    .link-tile-label {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.6rem;
+    }
+    .link-tile-label strong { font-size: 1.05rem; font-weight: 700; }
+    .link-tile-label i { color: var(--text-soft); transition: transform 0.25s ease; }
+    .link-tile:hover .link-tile-label i { transform: translateX(3px); color: var(--accent); }
+
+    /* ---------- footer ---------- */
+    .site-footer {
+      border-top: 1px solid var(--line);
+      padding: 1.6rem clamp(16px, 4vw, 40px) 2.2rem;
+    }
+    .footer-inner {
+      max-width: 1320px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      color: var(--text-soft);
+      font-size: 0.82rem;
+    }
+
+    /* ---------- responsive ---------- */
+    @media (max-width: 1080px) {
+      .links-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+    @media (max-width: 860px) {
+      .links-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 720px) {
+      .nav-toggle { display: flex; }
+      nav#primary-nav {
+        position: fixed;
+        top: var(--nav-h);
+        left: 0;
+        right: 0;
+        background: rgba(16, 20, 27, 0.98);
+        border-bottom: 1px solid var(--line);
+        transform: translateY(-8px);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.2s ease, transform 0.2s ease;
+      }
+      nav#primary-nav.open {
+        opacity: 1;
+        transform: translateY(0);
+        pointer-events: auto;
+      }
+      nav#primary-nav ul {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 0.6rem clamp(16px, 4vw, 40px) 1rem;
+        gap: 0.2rem;
+      }
+      nav#primary-nav a { padding: 0.9em 0.6em; font-size: 1rem; }
+      .brand-name { font-size: 0.82rem; }
+      .hero-content { align-items: flex-start; text-align: left; }
+      .hero-actions { justify-content: flex-start; }
+      .links-grid { grid-template-columns: 1fr; }
     }
   </style>
   <meta property="og:site_name" content="3DS半分こするくらい仲良しクラフト" />
@@ -227,29 +383,110 @@
   <meta property="og:locale" content="ja_JP" />
 </head>
 <body>
-<div class="header-shadow">
-  <header>
-    <div class="header-title">
-      <div class="logo"><img src="ds_logo_3.png" alt="DSロゴ"></div>
-      <div class="site-name">3DS半分こするくらい<br/>仲良しクラフト</div>
+  <a class="skip-link" href="#main-content">本文へスキップ</a>
+
+  <header class="site-header">
+    <div class="nav-inner">
+      <a class="brand" href="/">
+        <img class="brand-logo" src="ds_logo_3.png" alt="DSロゴ">
+        <span class="brand-name">3DS半分こするくらい<br>仲良しクラフト</span>
+      </a>
+      <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="primary-nav" aria-label="メニューを開く">
+        <span class="nav-toggle-bar bar-1"></span>
+        <span class="nav-toggle-bar bar-2"></span>
+        <span class="nav-toggle-bar bar-3"></span>
+      </button>
+      <nav id="primary-nav" aria-label="メインメニュー">
+        <ul>
+          <li><a href="/" aria-current="page"><i class="ph ph-house" aria-hidden="true"></i>ホーム</a></li>
+          <li><a href="/rule"><i class="ph ph-scroll" aria-hidden="true"></i>ルール</a></li>
+          <li><a href="guide.html"><i class="ph ph-compass" aria-hidden="true"></i>新規参加者ガイド</a></li>
+          <li><a href="http://wiki.ds2.uk/"><i class="ph ph-book-open" aria-hidden="true"></i>Wiki</a></li>
+          <li><a href="https://server.ds2.uk/"><i class="ph ph-plugs-connected" aria-hidden="true"></i>サーバーポータル</a></li>
+          <li><a href="https://map.ds2.uk/"><i class="ph ph-map-trifold" aria-hidden="true"></i>マップ</a></li>
+        </ul>
+      </nav>
     </div>
-    <div class="menu">
-    <nav>
-      <ul>
-        <li><a href="#">ホーム</a></li>
-        <li><a href="/rule">ルール</a></li>
-        <li><a href="http://wiki.ds2.uk/">Wiki</a></li>
-        <li><a href="https://server.ds2.uk/">サーバーポータル</a></li>
-        <li><a href="https://map.ds2.uk/">マップ</a></li>
-      </ul>
-    </nav>
-      </div>
   </header>
-</div>
-  <main>
-    <h1 class="promo-text">Let's <span style="color:rgb(255, 55, 0);">CRACK</span><br/>3DS together!</h1>
-    <p class="under-promo-text">IPアドレス: 専用Discordサーバーで公開<br/>バージョン: 1.20.6(1.9.x-1.21.xでも参加できます)</p>
+
+  <main id="main-content">
+    <section class="hero">
+      <div class="hero-media" aria-hidden="true"></div>
+      <div class="hero-content">
+        <p class="hero-eyebrow">MINECRAFT MULTIPLAY SERVER</p>
+        <h1 class="hero-title">Let's <span class="accent">CRACK</span><br>3DS together!</h1>
+        <p class="hero-sub">IPアドレス: 専用Discordサーバーで公開<br>バージョン: 1.20.6(1.9.x-1.21.xでも参加できます)</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="https://server.ds2.uk/">サーバーポータルへ</a>
+          <a class="btn btn-ghost" href="/rule">ルールを見る</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="links-section">
+      <h2 class="links-heading">みんなのリンク集</h2>
+      <div class="links-grid">
+        <a class="link-tile" href="/rule">
+          <i class="ph ph-scroll link-tile-icon" aria-hidden="true"></i>
+          <span class="link-tile-label"><strong>ルール</strong><i class="ph ph-arrow-right" aria-hidden="true"></i></span>
+        </a>
+        <a class="link-tile" href="guide.html">
+          <i class="ph ph-compass link-tile-icon" aria-hidden="true"></i>
+          <span class="link-tile-label"><strong>新規参加者ガイド</strong><i class="ph ph-arrow-right" aria-hidden="true"></i></span>
+        </a>
+        <a class="link-tile" href="http://wiki.ds2.uk/">
+          <i class="ph ph-book-open link-tile-icon" aria-hidden="true"></i>
+          <span class="link-tile-label"><strong>Wiki</strong><i class="ph ph-arrow-right" aria-hidden="true"></i></span>
+        </a>
+        <a class="link-tile" href="https://server.ds2.uk/">
+          <i class="ph ph-plugs-connected link-tile-icon" aria-hidden="true"></i>
+          <span class="link-tile-label"><strong>サーバーポータル</strong><i class="ph ph-arrow-right" aria-hidden="true"></i></span>
+        </a>
+        <a class="link-tile" href="https://map.ds2.uk/">
+          <i class="ph ph-map-trifold link-tile-icon" aria-hidden="true"></i>
+          <span class="link-tile-label"><strong>マップ</strong><i class="ph ph-arrow-right" aria-hidden="true"></i></span>
+        </a>
+      </div>
+    </section>
   </main>
-  <footer>© 2025 3DS半分こするくらい仲良しクラフト中央委員会</footer>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <span>© 2025 3DS半分こするくらい仲良しクラフト中央委員会</span>
+    </div>
+  </footer>
+
+  <script>
+    var toggle = document.getElementById('navToggle');
+    var nav = document.getElementById('primary-nav');
+    toggle.addEventListener('click', function () {
+      var open = nav.classList.toggle('open');
+      toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+    nav.addEventListener('click', function (e) {
+      if (e.target.closest('a')) {
+        nav.classList.remove('open');
+        toggle.setAttribute('aria-expanded', 'false');
+      }
+    });
+
+    if ('IntersectionObserver' in window) {
+      var observer = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('in-view');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.2 });
+      document.querySelectorAll('.link-tile').forEach(function (tile) {
+        observer.observe(tile);
+      });
+    } else {
+      document.querySelectorAll('.link-tile').forEach(function (tile) {
+        tile.classList.add('in-view');
+      });
+    }
+  </script>
 </body>
 </html>

@@ -1,0 +1,15 @@
+title: DSクラフト ルールポータル
+url: "https://www.ds2.uk"
+
+# rule/ 配下のルールページ用コレクション。各ページのfront matterで
+# permalink(公開パス)を指定しているため、collectionレベルのpermalinkは設定しない。
+collections:
+  rules:
+    output: true
+
+# ベンダー同梱の別リポジトリ(design-system-example-components-html)は
+# ファイル数が非常に多くビルド対象に含めると重いため除外する。
+# skills-lock.jsonはClaude Code用のツール設定でサイトの公開物ではないため除外する。
+exclude:
+  - rule/design-system-example-components-html
+  - skills-lock.json
