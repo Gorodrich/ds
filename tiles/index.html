@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>画像タイル配布 | 3DS半分こするくらい仲良しクラフト</title>
+  <link rel="icon" href="/favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon-180x180.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="全体画像を4×4の16分割にしたタイル画像を、区画をクリックするだけでダウンロードできる配布ページです。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Audiowide&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/@phosphor-icons/web" defer></script>
+  <link rel="stylesheet" href="style.css">
+  <meta property="og:site_name" content="3DS半分こするくらい仲良しクラフト" />
+  <meta property="og:url" content="/tiles/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="画像タイル配布" />
+  <meta property="og:description" content="全体画像を4×4の16分割にしたタイル画像を、区画をクリックするだけでダウンロードできる配布ページです。" />
+  <meta property="og:image" content="/ds_logo_3.png" />
+  <meta property="og:locale" content="ja_JP" />
+</head>
+<body>
+  <a class="skip-link" href="#main-content">本文へスキップ</a>
+
+  <header class="site-header">
+    <div class="nav-inner">
+      <a class="brand" href="/">
+        <img class="brand-logo" src="/ds_logo_3.png" alt="DSロゴ">
+        <span class="brand-name">3DS半分こするくらい<br>仲良しクラフト</span>
+      </a>
+      <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="primary-nav" aria-label="メニューを開く">
+        <span class="nav-toggle-bar bar-1"></span>
+        <span class="nav-toggle-bar bar-2"></span>
+        <span class="nav-toggle-bar bar-3"></span>
+      </button>
+      <nav id="primary-nav" aria-label="メインメニュー">
+        <ul>
+          <li><a href="/"><i class="ph ph-house" aria-hidden="true"></i>ホーム</a></li>
+          <li><a href="/rule"><i class="ph ph-scroll" aria-hidden="true"></i>ルール</a></li>
+          <li><a href="/guide.html"><i class="ph ph-compass" aria-hidden="true"></i>新規参加者ガイド</a></li>
+          <li><a href="http://wiki.ds2.uk/"><i class="ph ph-book-open" aria-hidden="true"></i>Wiki</a></li>
+          <li><a href="https://server.ds2.uk/"><i class="ph ph-plugs-connected" aria-hidden="true"></i>サーバーポータル</a></li>
+          <li><a href="https://map.ds2.uk/"><i class="ph ph-map-trifold" aria-hidden="true"></i>マップ</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main-content">
+    <div class="tile-page">
+      <div class="tile-intro">
+        <h1 class="tile-title">画像タイル配布</h1>
+        <p class="tile-lead">全体画像を4×4の16区画に分割して配布しています。下のマップから欲しい区画をクリックすると、対応するzipファイルのダウンロードが即座に始まります。各zipには当該区画の画像が3枚含まれます。</p>
+        <p class="tile-note">個人開発領の申請にあたっては、zip内の「available」ファイルを編集(申請したい箇所以外を削除)し、編集後のpngファイルをディスコード鯖の専用チャンネルにアップロードしてください。画像サイズは変更しないでください。</p>
+      </div>
+
+      <div class="tile-stage">
+        <div class="tile-grid" id="tileGrid" role="group" aria-label="区画選択マップ(4×4、01から16)"></div>
+        <p class="tile-hint">区画をクリック(タップ)すると、対応するzipのダウンロードが始まります。</p>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <span>© 2026 3DS半分こするくらい仲良しクラフト中央委員会</span>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
