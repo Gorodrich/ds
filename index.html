@@ -220,10 +220,14 @@
     .hero-title .accent { color: var(--accent); }
     .hero-sub {
       margin: 1.1em 0 0;
-      max-width: 46ch;
+      max-width: 100%;
       color: var(--text);
       font-size: clamp(0.88rem, 1.6vw, 1.05rem);
       text-shadow: 0 2px 10px rgba(0,0,0,0.6);
+    }
+    .hero-sub-line { white-space: nowrap; }
+    @media (max-width: 520px) {
+      .hero-sub-line { white-space: normal; }
     }
     .hero-actions {
       display: flex;
@@ -272,7 +276,7 @@
     }
     .links-grid {
       display: grid;
-      grid-template-columns: repeat(5, 1fr);
+      grid-template-columns: repeat(3, 1fr);
       gap: 1.1rem;
     }
     .link-tile {
@@ -298,6 +302,7 @@
     .link-tile:nth-child(3) { transition-delay: 0.14s; }
     .link-tile:nth-child(4) { transition-delay: 0.20s; }
     .link-tile:nth-child(5) { transition-delay: 0.26s; }
+    .link-tile:nth-child(6) { transition-delay: 0.32s; }
     .link-tile:hover {
       border-color: rgba(230, 183, 61, 0.45);
       background: var(--bg-elevated-2);
@@ -336,9 +341,6 @@
     }
 
     /* ---------- responsive ---------- */
-    @media (max-width: 1080px) {
-      .links-grid { grid-template-columns: repeat(3, 1fr); }
-    }
     @media (max-width: 860px) {
       .links-grid { grid-template-columns: repeat(2, 1fr); }
     }
@@ -415,7 +417,7 @@
       <div class="hero-content">
         <p class="hero-eyebrow">MINECRAFT MULTIPLAY SERVER</p>
         <h1 class="hero-title">Let's <span class="accent">CRACK</span><br>3DS together!</h1>
-        <p class="hero-sub">IPアドレス: 専用Discordサーバーで公開<br>バージョン: 1.20.6(1.9.x-最新バージョンでも参加できます)</p>
+        <p class="hero-sub"><span class="hero-sub-line">IPアドレス: 専用Discordサーバーで公開</span><br><span class="hero-sub-line">バージョン: 1.20.6(1.9.x-最新バージョンでも参加できます)</span></p>
         <div class="hero-actions">
           <a class="btn btn-primary" href="https://server.ds2.uk/">サーバーポータルへ</a>
           <a class="btn btn-ghost" href="/rule">ルールを見る</a>
@@ -445,6 +447,10 @@
         <a class="link-tile" href="https://map.ds2.uk/">
           <i class="ph ph-map-trifold link-tile-icon" aria-hidden="true"></i>
           <span class="link-tile-label"><strong>マップ</strong><i class="ph ph-arrow-right" aria-hidden="true"></i></span>
+        </a>
+        <a class="link-tile" href="tiles/index.html">
+          <i class="ph ph-grid-four link-tile-icon" aria-hidden="true"></i>
+          <span class="link-tile-label"><strong>画像タイル配布</strong><i class="ph ph-arrow-right" aria-hidden="true"></i></span>
         </a>
       </div>
     </section>

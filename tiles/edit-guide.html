@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>個人開発領マップ画像編集ガイド | 3DS半分こするくらい仲良しクラフト</title>
+<link rel="icon" href="/favicon.ico">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon-180x180.png">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="tiles/からダウンロードした申請可能領域画像を編集して、個人開発領を申請するためのガイド。GIMP・Photopea両対応と、審査に必須の形式要件をまとめています。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Audiowide&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/@phosphor-icons/web" defer></script>
+<meta property="og:site_name" content="3DS半分こするくらい仲良しクラフト" />
+<meta property="og:url" content="/tiles/edit-guide.html" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="個人開発領マップ画像編集ガイド" />
+<meta property="og:description" content="申請可能領域画像を編集して個人開発領を申請するためのガイド。必須の形式要件つき。" />
+<meta property="og:image" content="/ds_logo_3.png" />
+<meta property="og:locale" content="ja_JP" />
+<style>
+  :root{
+    --bg:#10141b;
+    --bg-elevated:#171d27;
+    --bg-elevated-2:#1e2531;
+    --line: rgba(244,239,228,0.10);
+    --text:#f4efe4;
+    --text-soft:#b7bfcc;
+    --text-faint:#7c8494;
+    --accent:#e6b73d;
+    --accent-soft:#f2cc6b;
+    --accent-ink:#211705;
+    --tip-bg: rgba(127,178,213,0.10);
+    --tip-border: rgba(127,178,213,0.38);
+    --tip-ink:#9fcaea;
+    --warn-bg: rgba(230,138,61,0.10);
+    --warn-border: rgba(230,138,61,0.4);
+    --warn-ink:#eba468;
+    --danger-bg: rgba(214,69,69,0.10);
+    --danger-border: rgba(214,69,69,0.42);
+    --danger-ink:#ec8f8f;
+    --radius: 14px;
+    --header-h: 64px;
+    --toc-w: 268px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+    *,*::before,*::after{animation-duration:0.001s !important; transition-duration:0.001s !important;}
+  }
+  html,body{margin:0;padding:0;}
+  body{
+    background: var(--bg);
+    color: var(--text);
+    font-family:"Noto Sans JP", sans-serif;
+    line-height:1.75;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit;}
+  img{max-width:100%;display:block;}
+  ul, ol{padding-left:1.3em;}
+  li{margin:0.35em 0;}
+
+  .skip-link{
+    position:fixed; top:-3em; left:1em; z-index:200;
+    background:var(--accent); color:var(--accent-ink); font-weight:700;
+    padding:0.6em 1em; border-radius:0 0 8px 8px; transition:top .2s ease;
+  }
+  .skip-link:focus{top:0;}
+  a:focus-visible, button:focus-visible, summary:focus-visible{
+    outline:3px solid var(--accent); outline-offset:2px;
+  }
+
+  /* ---------- progress bar ---------- */
+  .progress-track{
+    position:fixed; top:0; left:0; right:0; height:3px; z-index:120;
+    background:rgba(244,239,228,0.06);
+  }
+  .progress-fill{
+    height:100%; width:0%;
+    background:linear-gradient(90deg, var(--accent), var(--accent-soft));
+    transition:width .08s linear;
+  }
+
+  /* ---------- header ---------- */
+  .doc-header{
+    position:sticky; top:0; z-index:110; height:var(--header-h);
+    display:flex; align-items:center;
+    background:rgba(16,20,27,0.82);
+    backdrop-filter:blur(14px) saturate(140%);
+    -webkit-backdrop-filter:blur(14px) saturate(140%);
+    border-bottom:1px solid var(--line);
+    margin-top:3px;
+  }
+  .doc-header-inner{
+    width:100%; max-width:1320px; margin:0 auto;
+    padding:0 clamp(14px,3vw,32px);
+    display:flex; align-items:center; justify-content:space-between; gap:1rem;
+  }
+  .home-link{
+    display:flex; align-items:center; gap:0.5em;
+    text-decoration:none; color:var(--text-soft); font-size:0.86rem; font-weight:500;
+    padding:0.5em 0.7em; border-radius:8px; transition:color .2s ease, background-color .2s ease;
+    white-space:nowrap;
+  }
+  .home-link:hover{color:var(--text); background:var(--bg-elevated);}
+  .doc-title{
+    font-size:0.9rem; font-weight:700; color:var(--text);
+    overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+    text-align:center; flex:1; padding:0 0.5rem;
+  }
+  .toc-toggle{
+    display:none; align-items:center; gap:0.4em;
+    background:var(--bg-elevated); border:1px solid var(--line); color:var(--text);
+    border-radius:8px; padding:0.5em 0.8em; font-size:0.82rem; font-weight:700; cursor:pointer;
+  }
+
+  /* ---------- shell / toc ---------- */
+  .doc-shell{
+    max-width:1320px; margin:0 auto;
+    display:grid; grid-template-columns:var(--toc-w) minmax(0,1fr);
+    gap:clamp(24px,4vw,56px);
+    padding:0 clamp(14px,3vw,32px);
+  }
+  .toc{
+    position:sticky; top:calc(var(--header-h) + 3px + 24px);
+    align-self:start;
+    max-height:calc(100dvh - var(--header-h) - 3px - 48px);
+    overflow-y:auto;
+    padding:1.2rem 0 2rem;
+  }
+  .toc-label{
+    font-size:0.72rem; letter-spacing:0.14em; color:var(--text-faint);
+    font-weight:700; margin:0 0 0.8rem;
+  }
+  .toc ol{list-style:none; margin:0; padding:0; counter-reset:toc;}
+  .toc li{margin:0;}
+  .toc a{
+    counter-increment:toc;
+    display:flex; align-items:baseline; gap:0.55em;
+    text-decoration:none; color:var(--text-soft); font-size:0.86rem;
+    padding:0.5em 0.6em; border-radius:8px; border-left:2px solid transparent;
+    transition:color .2s ease, background-color .2s ease, border-color .2s ease;
+  }
+  .toc a::before{
+    content:counter(toc, decimal-leading-zero); font-family:"Audiowide", sans-serif; font-size:0.7rem;
+    color:var(--text-faint); min-width:1.4em;
+  }
+  .toc a:hover{color:var(--text); background:var(--bg-elevated);}
+  .toc a.active{color:var(--accent-soft); border-left-color:var(--accent); background:var(--bg-elevated);}
+  .toc a.active::before{color:var(--accent);}
+
+  .toc-overlay{
+    display:none; position:fixed; inset:0; z-index:130;
+    background:rgba(8,10,14,0.6);
+  }
+  .toc-overlay.open{display:block;}
+
+  /* ---------- main / hero ---------- */
+  main{min-width:0;}
+  .hero{padding:clamp(28px,5vw,56px) 0 clamp(20px,4vw,32px);}
+  .hero-eyebrow{
+    font-family:"Audiowide", sans-serif; font-size:0.7rem; letter-spacing:0.2em;
+    color:var(--accent-soft); margin:0 0 0.9em;
+  }
+  .hero h1{
+    font-size:clamp(1.7rem, 4vw, 2.6rem); margin:0 0 0.6em; line-height:1.3;
+    text-wrap:balance;
+  }
+  .hero p{color:var(--text-soft); margin:0.7em 0; font-size:0.98rem;}
+  .hero blockquote{
+    margin:1.4em 0 0; padding:0.9em 1.1em; border-left:3px solid var(--accent);
+    background:var(--bg-elevated); border-radius:0 10px 10px 0;
+    color:var(--text-soft); font-size:0.9rem;
+  }
+
+  /* ---------- quick nav ---------- */
+  .quicknav{padding:0.5rem 0 clamp(32px,5vw,56px);}
+  .quicknav h2{font-size:1.2rem; margin:0 0 1rem;}
+  .quicknav-grid{
+    display:grid; grid-template-columns:repeat(2,1fr); gap:0.8rem;
+  }
+  .quicknav-card{
+    display:flex; align-items:center; gap:0.9rem;
+    text-decoration:none; color:var(--text);
+    background:var(--bg-elevated); border:1px solid var(--line);
+    border-radius:var(--radius); padding:0.95rem 1.1rem;
+    transition:border-color .2s ease, background-color .2s ease, transform .2s cubic-bezier(.16,1,.3,1);
+  }
+  .quicknav-card:hover{border-color:rgba(230,183,61,0.4); background:var(--bg-elevated-2); transform:translateY(-2px);}
+  .quicknav-card i.q-icon{font-size:1.35rem; color:var(--accent); flex:none;}
+  .quicknav-card span{font-size:0.88rem; font-weight:500; line-height:1.4;}
+  .quicknav-card i.q-arrow{margin-left:auto; color:var(--text-faint); transition:transform .2s ease, color .2s ease; flex:none;}
+  .quicknav-card:hover i.q-arrow{transform:translateX(3px); color:var(--accent);}
+
+  /* ---------- reveal ---------- */
+  .reveal{opacity:0; transform:translateY(20px); transition:opacity .6s ease, transform .6s cubic-bezier(.16,1,.3,1);}
+  .reveal.in-view{opacity:1; transform:translateY(0);}
+
+  /* ---------- chapters ---------- */
+  .chapter{padding:clamp(40px,6vw,64px) 0; border-top:1px solid var(--line); scroll-margin-top:calc(var(--header-h) + 20px);}
+  .chapter:first-of-type{border-top:1px solid var(--line);}
+  .chapter-head{display:flex; align-items:center; gap:1rem; margin-bottom:1.1rem;}
+  .chapter-num{
+    font-family:"Audiowide", sans-serif; font-size:1.5rem; color:var(--accent);
+    flex:none; width:2.4rem;
+  }
+  .chapter-icon{
+    flex:none; width:44px; height:44px; border-radius:11px;
+    display:flex; align-items:center; justify-content:center;
+    background:var(--bg-elevated); border:1px solid var(--line); font-size:1.25rem; color:var(--accent-soft);
+  }
+  .chapter h2{font-size:clamp(1.25rem,2.4vw,1.55rem); margin:0; line-height:1.4;}
+  .chapter > p{color:var(--text-soft);}
+  .chapter h3{font-size:1.05rem; margin:1.8em 0 0.6em;}
+  .chapter h4{font-size:0.94rem; margin:1.4em 0 0.5em; color:var(--accent-soft);}
+
+  /* ---------- callouts ---------- */
+  .callout{
+    display:flex; gap:0.8rem; padding:1rem 1.15rem; border-radius:12px;
+    border:1px solid var(--line); margin:1.4em 0;
+  }
+  .callout i{flex:none; font-size:1.2rem; margin-top:0.1em;}
+  .callout p, .callout div{margin:0; font-size:0.92rem; color:var(--text-soft);}
+  .callout.tip{background:var(--tip-bg); border-color:var(--tip-border);}
+  .callout.tip i{color:var(--tip-ink);}
+  .callout.warn{background:var(--warn-bg); border-color:var(--warn-border);}
+  .callout.warn i{color:var(--warn-ink);}
+  .callout.danger{background:var(--danger-bg); border-color:var(--danger-border);}
+  .callout.danger i{color:var(--danger-ink);}
+
+  /* ---------- lists with icons ---------- */
+  .icon-list{list-style:none; padding:0; margin:1.2em 0; display:flex; flex-direction:column; gap:0.6rem;}
+  .icon-list li{
+    position:relative; padding-left:1.85em; margin:0;
+    color:var(--text-soft); font-size:0.94rem;
+  }
+  .icon-list i{position:absolute; left:0; top:0.2em; color:var(--accent); font-size:1.05rem;}
+
+  /* ---------- stepper ---------- */
+  .stepper{list-style:none; margin:1.3em 0; padding:0;}
+  .stepper > li{
+    position:relative; padding:0 0 1.4rem 2.2rem; margin:0;
+    border-left:2px solid var(--line);
+  }
+  .stepper > li:last-child{border-color:transparent; padding-bottom:0;}
+  .stepper > li::before{
+    content:attr(data-step);
+    position:absolute; left:-0.85rem; top:0;
+    width:1.7rem; height:1.7rem; border-radius:50%;
+    background:var(--bg-elevated-2); border:1px solid var(--accent);
+    color:var(--accent-soft); font-size:0.78rem; font-weight:700;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .stepper p, .stepper .step-sub{margin:0; font-size:0.92rem; color:var(--text-soft);}
+  .stepper .step-sub{list-style:disc; margin-top:0.4em; padding-left:1.1em;}
+
+  /* ---------- table ---------- */
+  .table-wrap{overflow-x:auto; margin:1.3em 0; border:1px solid var(--line); border-radius:var(--radius);}
+  table{width:100%; border-collapse:collapse; font-size:0.88rem; min-width:480px;}
+  thead th{
+    text-align:left; padding:0.75em 1em; background:var(--bg-elevated-2);
+    color:var(--accent-soft); font-weight:700; border-bottom:1px solid var(--line);
+    white-space:nowrap;
+  }
+  tbody td{padding:0.75em 1em; border-bottom:1px solid var(--line); color:var(--text-soft); vertical-align:top;}
+  tbody tr:last-child td{border-bottom:none;}
+  tbody tr:hover td{background:rgba(244,239,228,0.02);}
+
+  /* ---------- accordion (details) ---------- */
+  details.accordion{
+    border:1px solid var(--line); border-radius:var(--radius); margin:0.8em 0;
+    background:var(--bg-elevated); overflow:hidden;
+  }
+  details.accordion summary{
+    list-style:none; cursor:pointer; padding:1rem 1.15rem;
+    display:flex; align-items:center; justify-content:space-between; gap:1rem;
+    font-weight:700; font-size:0.96rem;
+  }
+  details.accordion summary::-webkit-details-marker{display:none;}
+  details.accordion summary .caret{
+    flex:none; color:var(--text-faint); transition:transform .2s ease;
+  }
+  details.accordion[open] summary .caret{transform:rotate(180deg);}
+  details.accordion .accordion-body{
+    padding:0 1.15rem 1.15rem; color:var(--text-soft); font-size:0.92rem;
+  }
+  details.accordion .accordion-body p{margin:0.7em 0;}
+
+  /* ---------- tool toggle (GIMP / Photopea) ---------- */
+  .tool-toggle{
+    display:inline-flex; gap:0.3rem; padding:0.3rem;
+    background:var(--bg-elevated); border:1px solid var(--line); border-radius:999px;
+    margin:0.6em 0 1.6em;
+  }
+  .tool-toggle-btn{
+    display:inline-flex; align-items:center; gap:0.5em;
+    border:none; background:transparent; color:var(--text-soft);
+    font-family:inherit; font-size:0.9rem; font-weight:700; cursor:pointer;
+    padding:0.6em 1.2em; border-radius:999px;
+    transition:background-color .2s ease, color .2s ease;
+  }
+  .tool-toggle-btn i{font-size:1.05rem;}
+  .tool-toggle-btn:hover{color:var(--text);}
+  .tool-toggle-btn.is-active{background:var(--accent); color:var(--accent-ink);}
+  .tool-panel[hidden]{display:none;}
+
+  /* ---------- checklist ---------- */
+  .checklist{list-style:none; margin:1.3em 0; padding:0; display:flex; flex-direction:column; gap:0.6rem;}
+  .checklist li{
+    display:flex; gap:0.7em; align-items:flex-start;
+    padding:0.8rem 1rem; background:var(--bg-elevated); border:1px solid var(--line);
+    border-radius:10px; margin:0;
+  }
+  .checklist input[type="checkbox"]{
+    flex:none; width:1.15em; height:1.15em; margin:0.15em 0 0; accent-color:var(--accent);
+  }
+  .checklist label{font-size:0.92rem; color:var(--text); cursor:pointer;}
+
+  /* ---------- final notice ---------- */
+  .final-notice{
+    margin:clamp(40px,6vw,64px) 0 0; padding:1.4rem 1.5rem;
+    border:1px solid var(--warn-border); background:var(--warn-bg);
+    border-radius:var(--radius); display:flex; gap:1rem;
+  }
+  .final-notice i{flex:none; font-size:1.4rem; color:var(--warn-ink); margin-top:0.1em;}
+  .final-notice strong{display:block; margin-bottom:0.4em; font-size:0.98rem;}
+  .final-notice p{margin:0; font-size:0.9rem; color:var(--text-soft);}
+
+  /* ---------- footer ---------- */
+  .site-footer{
+    border-top:1px solid var(--line); margin-top:clamp(40px,6vw,64px);
+    padding:1.6rem clamp(14px,3vw,32px) 3rem;
+  }
+  .footer-inner{
+    max-width:1320px; margin:0 auto;
+    display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:1rem;
+    color:var(--text-faint); font-size:0.8rem;
+  }
+  .footer-inner a{color:var(--text-soft); text-decoration:none;}
+  .footer-inner a:hover{color:var(--accent-soft);}
+
+  /* ---------- back to top ---------- */
+  .back-to-top{
+    position:fixed; right:clamp(14px,3vw,32px); bottom:clamp(14px,3vw,32px); z-index:90;
+    width:46px; height:46px; border-radius:50%;
+    background:var(--accent); color:var(--accent-ink); border:none;
+    display:flex; align-items:center; justify-content:center; font-size:1.15rem;
+    cursor:pointer; opacity:0; pointer-events:none; transform:translateY(10px);
+    transition:opacity .25s ease, transform .25s ease, background-color .2s ease;
+    box-shadow:0 10px 26px -10px rgba(230,183,61,0.6);
+  }
+  .back-to-top.visible{opacity:1; pointer-events:auto; transform:translateY(0);}
+  .back-to-top:hover{background:var(--accent-soft);}
+
+  /* ---------- responsive ---------- */
+  @media (max-width: 1000px){
+    .doc-shell{grid-template-columns:1fr;}
+    .toc-toggle{display:inline-flex;}
+    .toc{
+      position:fixed; top:0; bottom:0; left:0; z-index:140;
+      width:min(84vw, 320px); max-height:none;
+      background:var(--bg); border-right:1px solid var(--line);
+      padding:1.4rem 1.2rem 2rem;
+      transform:translateX(-100%);
+      transition:transform .25s ease;
+    }
+    .toc.open{transform:translateX(0);}
+    .quicknav-grid{grid-template-columns:1fr;}
+  }
+  @media (max-width: 620px){
+    .chapter-head{align-items:flex-start;}
+    table{min-width:420px;}
+  }
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main-content">本文へスキップ</a>
+
+<div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+
+<header class="doc-header">
+  <div class="doc-header-inner">
+    <a class="home-link" href="index.html"><i class="ph ph-arrow-left" aria-hidden="true"></i>タイル配布へ戻る</a>
+    <span class="doc-title">個人開発領マップ画像編集ガイド</span>
+    <button class="toc-toggle" id="tocToggle" aria-expanded="false" aria-controls="toc">
+      <i class="ph ph-list" aria-hidden="true"></i>目次
+    </button>
+  </div>
+</header>
+
+<div class="toc-overlay" id="tocOverlay"></div>
+
+<div class="doc-shell">
+  <aside class="toc" id="toc" aria-label="目次">
+    <p class="toc-label">目次</p>
+    <ol>
+      <li><a href="#s0">必ず確認する条件</a></li>
+      <li><a href="#s1">画像のダウンロード</a></li>
+      <li><a href="#s2">画像を編集する</a></li>
+      <li><a href="#s3">Discordへの提出方法</a></li>
+      <li><a href="#s4">提出前セルフチェック</a></li>
+    </ol>
+  </aside>
+
+  <main id="main-content">
+    <section class="hero reveal">
+      <p class="hero-eyebrow">MAP EDITING GUIDE</p>
+      <h1>個人開発領マップ画像編集ガイド</h1>
+      <p><a href="index.html">tiles/</a> からダウンロードした「申請可能領域画像（白＝申請可能、透明＝申請不可）」を編集して、<strong>自分が申請したい範囲だけを白で残し、それ以外をすべて透明にする</strong>作業のやり方を説明します。</p>
+      <p>編集ソフトは <strong>GIMP</strong>（インストールして使うソフト）と <strong>Photopea</strong>（インストール不要・ブラウザだけで使えるソフト）の2種類に対応しています。どちらか使いやすい方を1つだけ選んで作業してください。Photoshopなど他のソフトを使っても構いませんが、その場合も1章の条件は必ず守ってください。</p>
+      <blockquote>GIMPやPhotopeaの操作にすでに慣れている人は、3章の手順は読み飛ばして構いません。ただし<strong>1章「必ず確認する条件」だけは全員必ず確認してください</strong>。ここを満たしていない画像は審査で差し戻しになります。</blockquote>
+    </section>
+
+    <section class="quicknav reveal" aria-labelledby="quicknav-heading">
+      <h2 id="quicknav-heading">早見表：知りたいことから読む</h2>
+      <div class="quicknav-grid">
+        <a class="quicknav-card" href="#s0"><i class="ph ph-warning-octagon q-icon" aria-hidden="true"></i><span>審査に必須の形式要件を確認したい</span><i class="ph ph-arrow-right q-arrow" aria-hidden="true"></i></a>
+        <a class="quicknav-card" href="#s1"><i class="ph ph-download q-icon" aria-hidden="true"></i><span>画像のダウンロード手順</span><i class="ph ph-arrow-right q-arrow" aria-hidden="true"></i></a>
+        <a class="quicknav-card" href="#s2"><i class="ph ph-paint-brush q-icon" aria-hidden="true"></i><span>GIMP／Photopeaで編集する</span><i class="ph ph-arrow-right q-arrow" aria-hidden="true"></i></a>
+        <a class="quicknav-card" href="#s3"><i class="ph ph-discord-logo q-icon" aria-hidden="true"></i><span>Discordへの提出方法</span><i class="ph ph-arrow-right q-arrow" aria-hidden="true"></i></a>
+        <a class="quicknav-card" href="#s4"><i class="ph ph-list-checks q-icon" aria-hidden="true"></i><span>提出前のセルフチェック</span><i class="ph ph-arrow-right q-arrow" aria-hidden="true"></i></a>
+      </div>
+    </section>
+
+    <article>
+      <!-- 0 -->
+      <section class="chapter reveal" id="s0">
+        <div class="chapter-head">
+          <span class="chapter-num">01</span>
+          <span class="chapter-icon"><i class="ph ph-warning-octagon" aria-hidden="true"></i></span>
+          <h2>必ず確認する条件（最重要・全員対象）</h2>
+        </div>
+        <p>運営が審査を行うため、以下の条件を<strong>必ず</strong>守ってください。守れていない画像は差し戻しになります。</p>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>条件</th><th>内容</th></tr></thead>
+            <tbody>
+              <tr><td>形式</td><td><strong>PNG形式</strong>で保存・書き出しすること</td></tr>
+              <tr><td>サイズ</td><td>ダウンロードした画像から<strong>リサイズ（拡大・縮小）を絶対にしない</strong>こと。画像の縦横ピクセル数は最初から最後まで変えない</td></tr>
+              <tr><td>境界線</td><td>白と透明の境界に<strong>ぼかし・グラデーション・アンチエイリアス</strong>（ギザギザを滑らかに見せる半透明処理）<strong>を使わない</strong>こと。境界は完全な白 or 完全な透明のどちらかにする（中間色（半透明の白）を作らない）</td></tr>
+              <tr><td>内容</td><td>自分が申請したい範囲だけを白で残し、それ以外の白い部分はすべて透明にする（消す）</td></tr>
+              <tr><td>面積</td><td><strong>個人開発領は25万平方ブロック（250,000ブロック）を超えてはなりません</strong>（旧ボーダー外の個人開発領に関するルール特例 第3条第1項）。ダウンロードされる画像は<strong>1ピクセル＝1ブロック</strong>の解像度で作られているため、「白く残した（不透明な）ピクセルの数＝申請する面積のブロック数」として扱えます。エクスポート前に必ず<strong>白いピクセルの数が250,000以下</strong>であることを確認してください（確認方法は2章・3章内で説明します）。</td></tr>
+              <tr><td>ファイル名</td><td>必ず <code>[地図番号]_マイクラのユーザー名.png</code>（例：<code>04_56drich.png</code>）にすること</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="callout warn">
+          <i class="ph ph-eye" aria-hidden="true"></i>
+          <div><strong>アンチエイリアスとは？</strong><p>選択範囲の斜めの線や曲線を選ぶと、ソフトによっては境界をぼかして「ギザギザに見えないように」自動処理することがあります。これをすると白と透明の間に半透明のピクセルができてしまい、面積や範囲の判定があいまいになるため、<strong>必ずOFF（無効）に設定してから作業</strong>してください。設定方法は2章・3章内で説明します。</p></div>
+        </div>
+      </section>
+
+      <!-- 1 -->
+      <section class="chapter reveal" id="s1">
+        <div class="chapter-head">
+          <span class="chapter-num">02</span>
+          <span class="chapter-icon"><i class="ph ph-download" aria-hidden="true"></i></span>
+          <h2>共通の準備：画像のダウンロード</h2>
+        </div>
+        <ol class="stepper">
+          <li data-step="1"><p>ブラウザで <a href="index.html">tiles/</a> を開きます。</p></li>
+          <li data-step="2"><p>表示された地図上で、自分が申請したい大まかなエリアを含むタイル（マス目）をクリックします。</p></li>
+          <li data-step="3"><p>クリックすると、そのタイルに対応する画像が3種類（地表の地図／バイオーム地図／申請可能領域を白で示した画像）ダウンロードされます。</p></li>
+          <li data-step="4"><p>この中で編集に使うのは<strong>「申請可能領域を白で塗りつぶした画像」</strong>です。地表の地図やバイオーム地図は、どこを申請するか検討する際の参考資料として使ってください（編集・提出の対象ではありません）。</p></li>
+          <li data-step="5"><p>クリックしたタイルに表示されている<strong>「地図番号」（01〜16の数字）を必ず確認・メモしてください</strong>。この番号は、ファイル名ルール（1章参照）で使用します。</p></li>
+          <li data-step="6"><p>申請したい範囲が複数のタイルにまたがる場合は、必要なタイルをすべてクリックしてダウンロードしてください。タイルごとに地図番号が異なるため、それぞれの番号を控えておいてください（画像ごとに異なるファイル名になります）。複数枚の画像をどう扱うかは、必要に応じて運営の専用チャンネルで確認してください。</p></li>
+          <li data-step="7"><p>ダウンロードした画像は分かりやすい場所（デスクトップに作業用フォルダを作るのがおすすめ）に保存しておきます。</p></li>
+        </ol>
+        <p>準備ができたら、以下の「GIMP版」または「Photopea版」のどちらかに進んでください。</p>
+      </section>
+
+      <!-- 2 -->
+      <section class="chapter reveal" id="s2">
+        <div class="chapter-head">
+          <span class="chapter-num">03</span>
+          <span class="chapter-icon"><i class="ph ph-paint-brush" aria-hidden="true"></i></span>
+          <h2>画像を編集する</h2>
+        </div>
+        <p>編集ソフトは<strong>GIMP</strong>（インストールして使うソフト）と<strong>Photopea</strong>（インストール不要・ブラウザだけで使えるソフト）に対応しています。どちらか使いやすい方を1つ選んで、そのまま最後まで進めてください。</p>
+
+        <div class="tool-toggle" role="tablist" aria-label="編集ソフトを選択">
+          <button type="button" class="tool-toggle-btn is-active" data-tool="gimp" role="tab" aria-selected="true" id="tab-gimp" aria-controls="panel-gimp">
+            <i class="ph ph-paint-brush" aria-hidden="true"></i>GIMP
+          </button>
+          <button type="button" class="tool-toggle-btn" data-tool="photopea" role="tab" aria-selected="false" id="tab-photopea" aria-controls="panel-photopea" tabindex="-1">
+            <i class="ph ph-browser" aria-hidden="true"></i>Photopea
+          </button>
+        </div>
+
+        <div class="tool-panel" data-tool-panel="gimp" id="panel-gimp" role="tabpanel" aria-labelledby="tab-gimp">
+          <p>GIMPはパソコンにインストールして使う無料の高機能画像編集ソフトです。オフラインでも作業できます。</p>
+
+          <h3>GIMP-1. インストール方法</h3>
+          <h4>Windowsの場合</h4>
+          <ol class="stepper">
+            <li data-step="1"><p>ブラウザで <a href="https://www.gimp.org/downloads/" target="_blank" rel="noopener">https://www.gimp.org/downloads/</a> にアクセスします。</p></li>
+            <li data-step="2"><p>「Download GIMP」（バージョン番号が書かれた大きなボタン）をクリックします。</p></li>
+            <li data-step="3"><p>ダウンロードした <code>.exe</code> ファイル（例：<code>gimp-2.10.xx-setup.exe</code>）をダブルクリックして実行します。</p></li>
+            <li data-step="4"><p>「このアプリがデバイスに変更を加えることを許可しますか？」と聞かれたら「はい」をクリックします。</p></li>
+            <li data-step="5"><p>インストーラーの指示に従い、「Install」「Next」などをクリックしていけば完了します（特に設定を変える必要はありません）。</p></li>
+            <li data-step="6"><p>インストール後、スタートメニューから「GIMP」を起動します。</p></li>
+          </ol>
+          <h4>Macの場合</h4>
+          <ol class="stepper">
+            <li data-step="1"><p>ブラウザで <a href="https://www.gimp.org/downloads/" target="_blank" rel="noopener">https://www.gimp.org/downloads/</a> にアクセスします。</p></li>
+            <li data-step="2"><p>Mac用のダウンロードボタンをクリックします（Apple Silicon／Intelどちらか自分のMacに合う方を選びます。分からない場合は画面左上の「このMacについて」で確認できます）。</p></li>
+            <li data-step="3"><p>ダウンロードした <code>.dmg</code> ファイルを開きます。</p></li>
+            <li data-step="4"><p>表示されたウィンドウの中の「GIMP」アイコンを、隣の「Applications」フォルダのアイコンにドラッグ＆ドロップします。</p></li>
+            <li data-step="5"><p>「アプリケーション」フォルダからGIMPを起動します。初回起動時に「開発元を確認できないため開けません」と出た場合は、「システム設定」→「プライバシーとセキュリティ」を開き、「このまま開く」を選択してください。</p></li>
+          </ol>
+
+          <h3>GIMP-2. 画像を開く</h3>
+          <ol class="stepper">
+            <li data-step="1"><p>GIMPを起動します。</p></li>
+            <li data-step="2"><p>メニューの<strong>「ファイル」→「開く/インポート」</strong>をクリックします。</p></li>
+            <li data-step="3"><p>さきほどダウンロードした「申請可能領域を白で示した画像」を選択し、「開く」をクリックします。</p></li>
+          </ol>
+
+          <h3>GIMP-3. アンチエイリアスをOFFにする（作業前に必ず設定）</h3>
+          <ol class="stepper">
+            <li data-step="1">
+              <p>左側（または画面上部）のツールボックスから、使う選択ツールを選びます。おすすめは以下のいずれかです。</p>
+              <ul class="step-sub">
+                <li><strong>矩形選択ツール</strong>（四角形で選びたい場合）</li>
+                <li><strong>フリー選択ツール（投げ縄）</strong>（自由な形・斜め線で選びたい場合）</li>
+              </ul>
+            </li>
+            <li data-step="2"><p>ツールを選ぶと、画面左側または「ツールオプション」パネルにそのツールの設定項目が表示されます。</p></li>
+            <li data-step="3"><p>設定項目の中にある<strong>「アンチエイリアス（Antialiasing）」</strong>のチェックボックスを探し、<strong>チェックを外します（OFFにします）</strong>。</p></li>
+            <li data-step="4"><p>「ツールオプション」パネルが見当たらない場合は、メニューの<strong>「ウィンドウ」→「ドッキング可能なダイアログ」→「ツールオプション」</strong>から表示できます。</p></li>
+          </ol>
+          <div class="callout warn">
+            <i class="ph ph-warning" aria-hidden="true"></i>
+            <p>これを忘れると境界がぼやけてしまうため、必ず選択を始める前に確認してください。</p>
+          </div>
+
+          <h3>GIMP-4. 申請したい範囲だけを選択して、それ以外を透明にする</h3>
+          <p><strong>方法A：申請したい範囲を選んで、周りを消す（おすすめ）</strong></p>
+          <ol class="stepper">
+            <li data-step="1">
+              <p>選択ツール（矩形選択またはフリー選択）を使い、自分が申請したい範囲（白い部分の中の、残したい形）をなぞって選択します。</p>
+              <ul class="step-sub">
+                <li>直線的な範囲なら矩形選択、複雑な形ならフリー選択（クリックで頂点を打っていき、最後に始点に戻ってダブルクリックすると選択が確定します）が便利です。</li>
+              </ul>
+            </li>
+            <li data-step="2"><p>選択できたら、メニューの<strong>「選択」→「選択範囲を反転」</strong>をクリックします（これで「申請したい範囲以外」が選択された状態になります）。</p></li>
+            <li data-step="3"><p>画像にアルファチャンネル（透明を扱える状態）が設定されているか確認します。メニューの<strong>「レイヤー」→「透明部分」→「アルファチャンネルの追加」</strong>をクリックしてください（すでに追加済みの場合はこの項目がグレーアウトしていますが、問題ありません）。</p></li>
+            <li data-step="4"><p>キーボードの<strong>「Delete」キー</strong>を押します。選択されていた「申請したい範囲以外」の白い部分が透明になります。</p></li>
+            <li data-step="5"><p>メニューの<strong>「選択」→「選択を解除」</strong>をクリックして選択状態を解除します。</p></li>
+          </ol>
+          <p><strong>方法B：消しゴムツールで直接消す</strong></p>
+          <ul class="icon-list">
+            <li><i class="ph ph-eraser" aria-hidden="true"></i>複雑な形で選択が難しい場合は、選択せずに<strong>消しゴムツール</strong>で直接、不要な白い部分を塗りつぶすように消していく方法でも構いません。この場合もツールオプションで「不透明度100%」「アンチエイリアスOFF」「硬さ（ハードネス）100%（ソフトブラシは使わない）」に設定してから使ってください。</li>
+          </ul>
+
+          <h3>GIMP-5. 仕上がりを確認する</h3>
+          <ol class="stepper">
+            <li data-step="1"><p>メニューの<strong>「表示」→「ズーム」</strong>で拡大し、境界部分をよく見てください。</p></li>
+            <li data-step="2"><p>境界がギザギザ（ドット単位でくっきり）になっていればOKです。境界がぼやけて灰色っぽく見える場合はアンチエイリアスが効いてしまっているので、<code>Ctrl+Z</code>（元に戻す）でやり直してください。</p></li>
+          </ol>
+
+          <h3>GIMP-6. 面積が25万平方ブロック以内か確認する（エクスポート前に必ず実施）</h3>
+          <p>書き出す前に、白く残した範囲（＝申請する面積）が<strong>250,000ピクセル（＝250,000ブロック）以内</strong>に収まっているかを、GIMPの「ヒストグラム」機能で確認します。</p>
+          <ol class="stepper">
+            <li data-step="1"><p>ツールボックスから<strong>「色域を選択」ツール</strong>（メニューの「ツール」→「選択ツール」→「色域を選択」、ショートカット：<code>Shift + O</code>）を選びます。</p></li>
+            <li data-step="2">
+              <p>ツールオプションで以下を確認・設定します。</p>
+              <ul class="step-sub">
+                <li><strong>しきい値（Threshold）</strong>：<code>0</code></li>
+                <li><strong>アンチエイリアス</strong>：チェックを外す（OFF）</li>
+                <li><strong>フェザー</strong>：チェックを外す（OFF）</li>
+              </ul>
+            </li>
+            <li data-step="3">
+              <p>キャンバス上の、白く残っている（自分が申請したい）部分をクリックします。これで白いピクセルだけが選択された状態になります。</p>
+              <ul class="step-sub">
+                <li>白い範囲が1か所にまとまっていない場合（複数の飛び地がある場合）は、ツールオプションの「アンチエイリアス」の下あたりにある<strong>「連続領域」のチェックを外す</strong>と、離れた場所の白い部分もまとめて選択できます。</li>
+              </ul>
+            </li>
+            <li data-step="4"><p>メニューの<strong>「ウィンドウ」→「ドッキング可能なダイアログ」→「ヒストグラム」</strong>を開きます（すでに開いている場合はそのパネルを見ます）。</p></li>
+            <li data-step="5">
+              <p>ヒストグラムパネルの下側（または「統計」欄）に<strong>「ピクセル（Pixels）」</strong>という項目があります。これが現在選択されている範囲の合計ピクセル数、つまり申請しようとしている面積（ブロック数）です。</p>
+              <ul class="step-sub">
+                <li>パネルのチャンネル（Value／Alphaなど）はどれを選んでいても「ピクセル」の値自体は変わりません。「Count」という項目とは別物なので混同しないよう注意してください（「Count」はヒストグラムのグラフ上で特定の明るさの範囲をドラッグして選んだときに表示される値です）。</li>
+              </ul>
+            </li>
+            <li data-step="6">
+              <p>表示された「ピクセル」の数値が<strong>250,000以下</strong>であることを確認してください。</p>
+              <ul class="step-sub">
+                <li>250,000を超えている場合は、選択を解除（「選択」→「選択を解除」）した上で、白い範囲の一部を消す（GIMP-4の手順で不要な部分をさらに削除する）などして範囲を小さくし、再度この手順で確認してください。</li>
+              </ul>
+            </li>
+            <li data-step="7"><p>確認が終わったら、メニューの<strong>「選択」→「選択を解除」</strong>をクリックして選択状態を解除してから、次のエクスポート作業に進みます。</p></li>
+          </ol>
+
+          <h3>GIMP-7. PNG形式で書き出す（保存）</h3>
+          <div class="callout tip">
+            <i class="ph ph-lightbulb" aria-hidden="true"></i>
+            <p>GIMPでは「保存」と「エクスポート」が別の操作です。<strong>必ず「エクスポート」を使ってPNGにしてください。</strong></p>
+          </div>
+          <ol class="stepper">
+            <li data-step="1"><p>メニューの<strong>「ファイル」→「名前を付けてエクスポート」</strong>をクリックします。</p></li>
+            <li data-step="2"><p>ファイル名を<strong><code>[地図番号]_マイクラのユーザー名.png</code></strong>（例：<code>04_56drich.png</code>）の形式で入力します。地図番号は「2章」でメモした2桁の数字を使ってください（末尾が<code>.png</code>になっていることも確認してください）。</p></li>
+            <li data-step="3"><p>保存先を選び、「エクスポート」をクリックします。</p></li>
+            <li data-step="4"><p>「PNGとしてエクスポート」という設定画面が出てきます。画像サイズや解像度に関する項目は<strong>一切変更せず</strong>、そのまま「エクスポート」をクリックします。</p></li>
+            <li data-step="5"><p>完成です。作成されたPNGファイルをDiscordの専用チャンネルにアップロードしてください（手順は4章「Discordへの提出方法」を参照）。</p></li>
+          </ol>
+        </div>
+
+        <div class="tool-panel" data-tool-panel="photopea" id="panel-photopea" role="tabpanel" aria-labelledby="tab-photopea" hidden>
+          <p>Photopeaは無料でブラウザ上で使える画像編集サービスです。ソフトのインストールが不要なので、学校のパソコンなど自由にソフトを入れられない環境でも使えます。</p>
+
+          <h3>Photopea-1. アクセス方法</h3>
+          <ol class="stepper">
+            <li data-step="1"><p>ブラウザで <a href="https://www.photopea.com/" target="_blank" rel="noopener">https://www.photopea.com/</a> にアクセスします。</p></li>
+            <li data-step="2"><p>特に会員登録は不要です。開くとすぐに編集画面が表示されます。</p></li>
+          </ol>
+
+          <h3>Photopea-2. 画像を開く</h3>
+          <ol class="stepper">
+            <li data-step="1"><p>トップ画面（または左上メニュー）の<strong>「File」→「Open」</strong>をクリックします。</p></li>
+            <li data-step="2"><p>ダウンロードした「申請可能領域を白で示した画像」を選択して開きます。</p></li>
+            <li data-step="3"><p>パソコンの画像ファイルをそのままブラウザ画面にドラッグ＆ドロップしても開けます。</p></li>
+          </ol>
+
+          <h3>Photopea-3. アンチエイリアスをOFFにする（作業前に必ず設定）</h3>
+          <ol class="stepper">
+            <li data-step="1">
+              <p>左側のツールバーから、使う選択ツールをクリックします。おすすめは以下のいずれかです。</p>
+              <ul class="step-sub">
+                <li><strong>Rectangular Marquee Tool</strong>（四角形の選択、ショートカット：<code>M</code>）</li>
+                <li><strong>Lasso Tool</strong> の中の <strong>Polygonal Lasso Tool</strong>（クリックで頂点を打って多角形に選ぶ）</li>
+                <li><strong>Magic Wand Tool</strong>（同じ色（白）の範囲をクリック一つで選ぶ。マス目状に区切られた範囲を選びたいときに便利）</li>
+              </ul>
+            </li>
+            <li data-step="2"><p>ツールを選ぶと、画面上部にそのツールのオプションバーが表示されます。</p></li>
+            <li data-step="3"><p>オプションバーの中にある<strong>「Anti-alias」</strong>のチェックボックスを探し、<strong>チェックを外します（OFFにします）</strong>。</p></li>
+            <li data-step="4"><p>Magic Wand Toolを使う場合は、あわせて<strong>「Contiguous（隣接）」</strong>にチェックが入っていることも確認してください（離れた場所の白まで一気に選ばれるのを防げます）。</p></li>
+          </ol>
+
+          <h3>Photopea-4. 申請したい範囲だけを選択して、それ以外を透明にする</h3>
+          <p><strong>方法A：申請したい範囲を選んで、周りを消す（おすすめ）</strong></p>
+          <ol class="stepper">
+            <li data-step="1">
+              <p>選択ツールを使い、自分が申請したい範囲（残したい白い部分の形）を選択します。</p>
+              <ul class="step-sub">
+                <li>Polygonal Lasso Toolの場合、クリックで頂点を打っていき、最後は始点をクリックするか <code>Enter</code> キーで選択を確定します。</li>
+              </ul>
+            </li>
+            <li data-step="2"><p>選択できたら、上部メニューの<strong>「Select」→「Inverse」</strong>（選択範囲の反転）をクリックします。</p></li>
+            <li data-step="3">
+              <p>キーボードの<strong>「Delete」キー</strong>を押します。選択されていた「申請したい範囲以外」の白い部分が透明になります。</p>
+              <ul class="step-sub">
+                <li>もし透明にならず白いまま消えない場合は、右側のレイヤーパネルでそのレイヤーに鍵アイコン（ロック）がかかっていないか確認し、かかっていれば解除してください。</li>
+              </ul>
+            </li>
+            <li data-step="4"><p>上部メニューの<strong>「Select」→「Deselect」</strong>で選択を解除します。</p></li>
+          </ol>
+          <p><strong>方法B：消しゴムツールで直接消す</strong></p>
+          <ul class="icon-list">
+            <li><i class="ph ph-eraser" aria-hidden="true"></i>複雑な形の場合は<strong>Eraser Tool（消しゴム、ショートカット：<code>E</code>）</strong>で直接消しても構いません。オプションバーで「Hardness（硬さ）」を100%に、「Anti-alias」をOFFに設定してから使ってください（ソフトなブラシは使わないでください）。</li>
+          </ul>
+
+          <h3>Photopea-5. 仕上がりを確認する</h3>
+          <ol class="stepper">
+            <li data-step="1"><p><code>Ctrl</code> + <code>+</code>（または画面右上の拡大率表示）で拡大し、境界部分を確認します。</p></li>
+            <li data-step="2"><p>境界がドット単位でくっきりしていればOKです。ぼやけている場合は <code>Ctrl + Z</code> でやり直してください。</p></li>
+          </ol>
+
+          <h3>Photopea-6. 面積が25万平方ブロック以内か確認する（エクスポート前に必ず実施）</h3>
+          <p>書き出す前に、白く残した範囲（＝申請する面積）が<strong>250,000ピクセル（＝250,000ブロック）以内</strong>に収まっているかを、Photopeaの「ヒストグラム」機能で確認します。</p>
+          <ol class="stepper">
+            <li data-step="1"><p>左側のツールバーから<strong>Magic Wand Tool（マジック棒ツール、ショートカット：<code>W</code>）</strong>を選びます。</p></li>
+            <li data-step="2">
+              <p>画面上部のオプションバーで以下を確認・設定します。</p>
+              <ul class="step-sub">
+                <li><strong>Tolerance（許容値）</strong>：<code>0</code></li>
+                <li><strong>Anti-alias</strong>：チェックを外す（OFF）</li>
+                <li><strong>Contiguous（隣接）</strong>：白い範囲が1か所にまとまっている場合はチェックを入れたまま、離れた場所にも白い部分が複数ある場合はチェックを外す</li>
+              </ul>
+            </li>
+            <li data-step="3"><p>キャンバス上の、白く残っている（自分が申請したい）部分をクリックします。これで白いピクセルだけが選択された状態になります。</p></li>
+            <li data-step="4"><p>上部メニューの<strong>「Window」→「Histogram」</strong>をクリックしてヒストグラムパネルを開きます。</p></li>
+            <li data-step="5"><p>パネルの右上にある小さなメニューアイコン（≡のようなアイコン、パネルメニュー）をクリックし、<strong>「Expanded View」</strong>（または「All Channels View」）を選択します。デフォルトの簡易表示のままだと統計の数値が表示されないことがあるためです。</p></li>
+            <li data-step="6">
+              <p>パネル内に表示される統計欄の中から<strong>「Pixels」</strong>という項目を探します。これが現在選択されている範囲の合計ピクセル数、つまり申請しようとしている面積（ブロック数）です。</p>
+              <ul class="step-sub">
+                <li>「Count」という項目とは別物なので混同しないよう注意してください（「Count」はヒストグラムのグラフ上を実際にドラッグして特定の明るさの範囲を選んだときに表示される値です。今回は「Pixels」の値だけを見れば十分です）。</li>
+                <li>数値が表示されない・更新されないなど動作が不安定な場合は、一度ヒストグラムのグラフ部分を1回クリックしてから確認し直してください。</li>
+              </ul>
+            </li>
+            <li data-step="7">
+              <p>表示された「Pixels」の数値が<strong>250,000以下</strong>であることを確認してください。</p>
+              <ul class="step-sub">
+                <li>250,000を超えている場合は、選択を解除（「Select」→「Deselect」）した上で、白い範囲の一部を消す（Photopea-4の手順で不要な部分をさらに削除する）などして範囲を小さくし、再度この手順で確認してください。</li>
+              </ul>
+            </li>
+            <li data-step="8"><p>確認が終わったら、メニューの<strong>「Select」→「Deselect」</strong>をクリックして選択状態を解除してから、次のエクスポート作業に進みます。</p></li>
+          </ol>
+          <div class="callout tip">
+            <i class="ph ph-lightbulb" aria-hidden="true"></i>
+            <p>参考：この確認方法はPhotoshop互換のヒストグラムパネルの仕様に基づくものです。GIMPの「ヒストグラム」ダイアログと同じ考え方（選択範囲の合計ピクセル数＝「Pixels」の値を読む）で確認できます。</p>
+          </div>
+
+          <h3>Photopea-7. PNG形式で書き出す（保存）</h3>
+          <ol class="stepper">
+            <li data-step="1"><p>上部メニューの<strong>「File」→「Export as」→「PNG」</strong>をクリックします。</p></li>
+            <li data-step="2"><p>書き出し設定画面が表示されます。<strong>「Width」「Height」（サイズ）の数値は最初に開いたときの数値のまま、絶対に変更しないでください。</strong></p></li>
+            <li data-step="3"><p>「Export」ボタン（または「Save」ボタン）をクリックすると、パソコンにPNGファイルがダウンロードされます。ダウンロード時（または保存後のリネーム時）に、ファイル名を<strong><code>[地図番号]_マイクラのユーザー名.png</code></strong>（例：<code>04_56drich.png</code>）の形式にしてください。地図番号は「2章」でメモした2桁の数字を使ってください。</p></li>
+            <li data-step="4"><p>完成です。作成されたPNGファイルをDiscordの専用チャンネルにアップロードしてください（次の「Discordへの提出方法」を参照）。</p></li>
+          </ol>
+        </div>
+      </section>
+
+      <!-- 3 -->
+      <section class="chapter reveal" id="s3">
+        <div class="chapter-head">
+          <span class="chapter-num">04</span>
+          <span class="chapter-icon"><i class="ph ph-discord-logo" aria-hidden="true"></i></span>
+          <h2>共通：Discordへの提出方法</h2>
+        </div>
+        <ol class="stepper">
+          <li data-step="1"><p>Discord鯖の個人開発領申請用の専用チャンネルを開きます。</p></li>
+          <li data-step="2"><p>ファイル名が<strong><code>[地図番号]_マイクラのユーザー名.png</code></strong>（例：<code>04_56drich.png</code>）になっていることを確認します（運営側のツールがこのファイル名から地図番号・ユーザー名を自動判別するため、この形式でないと処理できません）。</p></li>
+          <li data-step="3"><p>作成したPNGファイルをチャット欄にドラッグ＆ドロップ、またはクリップボタンから選択してアップロードします。</p></li>
+          <li data-step="4"><p>複数タイルにまたがって申請する場合は、タイルごとに分けた複数のPNGファイル（それぞれ対応する地図番号を付けたファイル名）をすべてアップロードしてください。</p></li>
+          <li data-step="5"><p>提出後は運営による面積チェック・重複チェックを経て、承認または差し戻しの連絡があります。差し戻された場合は、指摘内容を確認のうえ画像を修正し、再度提出してください。</p></li>
+        </ol>
+      </section>
+
+      <!-- 4 -->
+      <section class="chapter reveal" id="s4">
+        <div class="chapter-head">
+          <span class="chapter-num">05</span>
+          <span class="chapter-icon"><i class="ph ph-list-checks" aria-hidden="true"></i></span>
+          <h2>よくある失敗例（提出前に必ずセルフチェック）</h2>
+        </div>
+        <ul class="checklist">
+          <li><input type="checkbox" id="cb0"><label for="cb0">画像がPNG形式になっているか（JPEGなど別形式で保存していないか）</label></li>
+          <li><input type="checkbox" id="cb1"><label for="cb1">画像の縦横ピクセルサイズを変更していないか（最初にダウンロードした画像と同じサイズか）</label></li>
+          <li><input type="checkbox" id="cb2"><label for="cb2">境界がぼやけていないか（アンチエイリアスがOFFになっていたか）</label></li>
+          <li><input type="checkbox" id="cb3"><label for="cb3">白く残っているのが「自分が申請したい範囲だけ」になっているか（消し忘れの白い部分がないか）</label></li>
+          <li><input type="checkbox" id="cb4"><label for="cb4"><strong>ヒストグラムで確認した白いピクセル数が250,000以下になっているか</strong>（25万平方ブロック制限。GIMP-6／Photopea-6を参照）</label></li>
+          <li><input type="checkbox" id="cb5"><label for="cb5">ファイルが破損していないか（提出前に一度開き直して確認する）</label></li>
+          <li><input type="checkbox" id="cb6"><label for="cb6"><strong>ファイル名が<code>[地図番号]_マイクラのユーザー名.png</code>（例：<code>04_56drich.png</code>）の形式になっているか</strong>（地図番号は2桁、ダウンロード時にタイルに表示されていた番号と一致しているか）</label></li>
+        </ul>
+        <p>以上の点を満たしていれば、運営側は面積の自動または簡易チェックとアップロードのみで対応できるようになります。ご協力よろしくお願いします。</p>
+      </section>
+    </article>
+  </main>
+</div>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <span>© 2026 3DS半分こするくらい仲良しクラフト中央委員会</span>
+    <a href="index.html"><i class="ph ph-arrow-left" aria-hidden="true"></i> タイル配布に戻る</a>
+  </div>
+</footer>
+
+<button class="back-to-top" id="backToTop" aria-label="ページの先頭に戻る">
+  <i class="ph ph-arrow-up" aria-hidden="true"></i>
+</button>
+
+<script>
+  /* progress bar */
+  var progressFill = document.getElementById('progressFill');
+  var ticking = false;
+  function updateProgress() {
+    var doc = document.documentElement;
+    var scrollTop = window.scrollY || doc.scrollTop;
+    var height = doc.scrollHeight - doc.clientHeight;
+    var pct = height > 0 ? (scrollTop / height) * 100 : 0;
+    progressFill.style.width = pct + '%';
+    ticking = false;
+  }
+  window.addEventListener('scroll', function () {
+    if (!ticking) {
+      requestAnimationFrame(updateProgress);
+      ticking = true;
+    }
+  }, { passive: true });
+  updateProgress();
+
+  /* back to top */
+  var backToTop = document.getElementById('backToTop');
+  function updateBackToTop() {
+    if (window.scrollY > 480) backToTop.classList.add('visible');
+    else backToTop.classList.remove('visible');
+  }
+  window.addEventListener('scroll', function () {
+    requestAnimationFrame(updateBackToTop);
+  }, { passive: true });
+  backToTop.addEventListener('click', function () {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+  updateBackToTop();
+
+  /* mobile toc drawer */
+  var toc = document.getElementById('toc');
+  var tocToggle = document.getElementById('tocToggle');
+  var tocOverlay = document.getElementById('tocOverlay');
+  function closeToc() {
+    toc.classList.remove('open');
+    tocOverlay.classList.remove('open');
+    tocToggle.setAttribute('aria-expanded', 'false');
+  }
+  tocToggle.addEventListener('click', function () {
+    var open = toc.classList.toggle('open');
+    tocOverlay.classList.toggle('open', open);
+    tocToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+  tocOverlay.addEventListener('click', closeToc);
+  toc.addEventListener('click', function (e) {
+    if (e.target.closest('a')) closeToc();
+  });
+
+  /* scrollspy */
+  var tocLinks = Array.prototype.slice.call(toc.querySelectorAll('a'));
+  var sections = tocLinks.map(function (a) {
+    return document.getElementById(a.getAttribute('href').slice(1));
+  });
+  if ('IntersectionObserver' in window) {
+    var spy = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        var link = tocLinks[sections.indexOf(entry.target)];
+        if (!link) return;
+        if (entry.isIntersecting) {
+          tocLinks.forEach(function (l) { l.classList.remove('active'); });
+          link.classList.add('active');
+        }
+      });
+    }, { rootMargin: '-20% 0px -70% 0px', threshold: 0 });
+    sections.forEach(function (s) { if (s) spy.observe(s); });
+  }
+
+  /* tool toggle (GIMP / Photopea) */
+  var toolButtons = Array.prototype.slice.call(document.querySelectorAll('.tool-toggle-btn'));
+  var toolPanels = Array.prototype.slice.call(document.querySelectorAll('.tool-panel'));
+  toolButtons.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var tool = btn.getAttribute('data-tool');
+      toolButtons.forEach(function (b) {
+        var active = b === btn;
+        b.classList.toggle('is-active', active);
+        b.setAttribute('aria-selected', active ? 'true' : 'false');
+        b.tabIndex = active ? 0 : -1;
+      });
+      toolPanels.forEach(function (p) {
+        p.hidden = p.getAttribute('data-tool-panel') !== tool;
+      });
+    });
+  });
+
+  /* reveal on scroll */
+  if ('IntersectionObserver' in window) {
+    var reveal = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in-view');
+          reveal.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.reveal').forEach(function (el) { reveal.observe(el); });
+  } else {
+    document.querySelectorAll('.reveal').forEach(function (el) { el.classList.add('in-view'); });
+  }
+</script>
+</body>
+</html>
