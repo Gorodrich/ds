@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>個人開発領マップ 事前セルフチェック | 3DS半分こするくらい仲良しクラフト</title>
+<link rel="icon" href="/favicon.ico">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon-180x180.png">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="個人開発領マップ申請用の画像を提出前にブラウザ内だけでチェックできるセルフチェックツールです。画像はサーバーに送信されません。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Audiowide&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/@phosphor-icons/web" defer></script>
+<link rel="stylesheet" href="doc-style.css">
+<meta property="og:site_name" content="3DS半分こするくらい仲良しクラフト" />
+<meta property="og:url" content="/tiles/checker.html" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="個人開発領マップ 事前セルフチェック" />
+<meta property="og:description" content="提出前にブラウザ内だけで申請画像をチェックできるツールです。画像はサーバーに送信されません。" />
+<meta property="og:image" content="/ds_logo_3.png" />
+<meta property="og:locale" content="ja_JP" />
+</head>
+<body>
+<a class="skip-link" href="#main-content">本文へスキップ</a>
+
+<header class="doc-header">
+  <div class="doc-header-inner">
+    <a class="home-link" href="index.html"><i class="ph ph-arrow-left" aria-hidden="true"></i>タイル配布へ戻る</a>
+    <span class="doc-title">事前セルフチェックツール</span>
+    <a class="home-link home-link-accent" href="edit-guide.html"><i class="ph ph-warning-octagon" aria-hidden="true"></i>編集ガイド</a>
+  </div>
+</header>
+
+<main id="main-content">
+  <div class="container">
+    <section class="hero">
+      <p class="hero-eyebrow">SELF-CHECK TOOL</p>
+      <h1>個人開発領マップ 事前セルフチェックツール</h1>
+      <p>提出前にファイルをこのページでチェックできます。</p>
+      <blockquote>アップロードした画像は<strong>サーバーに送信されず、すべてこのブラウザ内だけで処理されます</strong>。</blockquote>
+    </section>
+
+    <div class="callout warn">
+      <i class="ph ph-warning-octagon" aria-hidden="true"></i>
+      <ul>
+        <li>ファイル名は必ず <code>[地図番号]_マイクラのユーザー名.png</code>(例:<code>04_56drich.png</code>)にしてください。</li>
+        <li>1人分の申請でファイルが複数枚(複数タイルにまたがる場合)ある場合は、まとめて選択してください。</li>
+        <li>画像サイズが大きいため、チェックに数秒〜数十秒かかる場合があります。</li>
+      </ul>
+    </div>
+
+    <section class="upload-card">
+      <label for="file-input" class="file-label">
+        <i class="ph ph-upload-simple" aria-hidden="true"></i>
+        <span>PNGファイルを選択(複数選択可)</span>
+      </label>
+      <div class="upload-row">
+        <input type="file" id="file-input" accept=".png,image/png" multiple>
+        <button id="check-button" class="btn-pill" type="button" disabled>
+          <i class="ph ph-magnifying-glass" aria-hidden="true"></i>チェック開始
+        </button>
+        <span id="selected-count" class="selected-count"></span>
+      </div>
+    </section>
+
+    <section id="status" class="status" hidden></section>
+
+    <section id="results" class="results"></section>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <span>© 2026 3DS半分こするくらい仲良しクラフト中央委員会</span>
+    <a href="index.html"><i class="ph ph-arrow-left" aria-hidden="true"></i> タイル配布に戻る</a>
+  </div>
+</footer>
+
+<script src="checker.js"></script>
+</body>
+</html>

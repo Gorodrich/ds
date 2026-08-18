@@ -161,11 +161,17 @@ nav#primary-nav a:hover { color: var(--text); background: var(--bg-elevated); }
   font-size: 0.85rem;
 }
 
+.tile-cta-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.7em;
+  margin-top: 1.2em;
+}
 .tile-guide-cta {
   display: inline-flex;
   align-items: center;
   gap: 0.55em;
-  margin-top: 1.2em;
   padding: 0.65em 1.2em;
   background: var(--bg-elevated);
   border: 1px solid var(--line);
