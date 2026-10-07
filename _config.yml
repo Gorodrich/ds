@@ -6,6 +6,13 @@ url: "https://www.ds2.uk"
 collections:
   rules:
     output: true
+  # docs/ 配下のガイドページ用コレクション(_docs/<タブ>/*.md、1ファイル ＝ 1章)。
+  # 公開パスは各ページのfront matterのpermalinkで /docs/<タブ>/<スラッグ>/ の形に指定する。
+  docs:
+    output: true
+
+# ガイドページの「Markdownを表示」で開く、元のMarkdownファイルの置き場所(GitHubの生ファイル)
+docs_source_base: https://raw.githubusercontent.com/gorodrich/ds/main/
 
 # ベンダー同梱の別リポジトリ(design-system-example-components-html)は
 # ファイル数が非常に多くビルド対象に含めると重いため除外する。

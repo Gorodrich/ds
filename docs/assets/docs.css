@@ -1,0 +1,436 @@
+/*
+  ガイド(/docs/、_layouts/doc.html)共通のスタイル。
+  色などのトークンは tiles/doc-style.css と同じ値に揃えている。
+  本文(.prose)はMarkdownから生成されるHTMLに直接スタイルを当てる。
+*/
+:root{
+  --bg:#10141b;
+  --bg-elevated:#171d27;
+  --bg-elevated-2:#1e2531;
+  --line: rgba(244,239,228,0.10);
+  --text:#f4efe4;
+  --text-soft:#b7bfcc;
+  --text-faint:#7c8494;
+  --accent:#e6b73d;
+  --accent-soft:#f2cc6b;
+  --accent-ink:#211705;
+  --tip-bg: rgba(127,178,213,0.10);
+  --tip-border: rgba(127,178,213,0.38);
+  --tip-ink:#9fcaea;
+  --warn-bg: rgba(230,138,61,0.10);
+  --warn-border: rgba(230,138,61,0.4);
+  --warn-ink:#eba468;
+  --danger-bg: rgba(214,69,69,0.10);
+  --danger-border: rgba(214,69,69,0.42);
+  --danger-ink:#ec8f8f;
+  --radius: 14px;
+  --header-row-h: 60px;
+  --tabs-h: 46px;
+  --header-h: calc(var(--header-row-h) + var(--tabs-h));
+  --nav-w: 248px;
+  --toc-w: 220px;
+  --gutter: clamp(16px,3vw,32px);
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth; scroll-padding-top:calc(var(--header-h) + 16px);}
+@media (prefers-reduced-motion: reduce){
+  html{scroll-behavior:auto;}
+  *,*::before,*::after{animation-duration:0.001s !important; transition-duration:0.001s !important;}
+}
+html,body{margin:0;padding:0;}
+body{
+  background: var(--bg);
+  color: var(--text);
+  font-family:"Noto Sans JP", sans-serif;
+  line-height:1.75;
+  -webkit-font-smoothing:antialiased;
+}
+a{color:inherit;}
+img{max-width:100%;}
+
+.visually-hidden{
+  position:absolute; width:1px; height:1px; overflow:hidden;
+  clip:rect(0 0 0 0); clip-path:inset(50%); white-space:nowrap;
+}
+.skip-link{
+  position:fixed; top:-3em; left:1em; z-index:200;
+  background:var(--accent); color:var(--accent-ink); font-weight:700;
+  padding:0.6em 1em; border-radius:0 0 8px 8px; transition:top .2s ease;
+}
+.skip-link:focus{top:0;}
+a:focus-visible, button:focus-visible, summary:focus-visible{
+  outline:3px solid var(--accent); outline-offset:2px;
+}
+
+/* ---------- header ---------- */
+.docs-header{
+  position:sticky; top:0; z-index:110;
+  background:rgba(16,20,27,0.88);
+  backdrop-filter:blur(14px) saturate(140%);
+  -webkit-backdrop-filter:blur(14px) saturate(140%);
+  border-bottom:1px solid var(--line);
+}
+.docs-header-row{
+  max-width:1320px; margin:0 auto; height:var(--header-row-h);
+  padding:0 var(--gutter);
+  display:flex; align-items:center; gap:0.6rem;
+}
+.docs-brand{
+  display:flex; align-items:center; gap:0.6em;
+  text-decoration:none; font-size:0.95rem; color:var(--text-soft); white-space:nowrap;
+}
+.docs-brand img{border-radius:6px;}
+.docs-brand strong{color:var(--text);}
+.home-link{
+  margin-left:auto;
+  display:flex; align-items:center; gap:0.45em;
+  text-decoration:none; color:var(--text-soft); font-size:0.84rem; font-weight:500;
+  padding:0.45em 0.7em; border-radius:8px; transition:color .2s ease, background-color .2s ease;
+  white-space:nowrap;
+}
+.home-link:hover{color:var(--text); background:var(--bg-elevated);}
+.nav-toggle{
+  display:none; align-items:center; justify-content:center;
+  width:38px; height:38px; flex:none;
+  background:var(--bg-elevated); border:1px solid var(--line); color:var(--text);
+  border-radius:8px; font-size:1.15rem; cursor:pointer;
+}
+
+/* タブ: 横に並べ、収まらない幅では横スクロールする */
+.docs-tabs{max-width:1320px; margin:0 auto; padding:0 var(--gutter);}
+.docs-tabs ul{
+  list-style:none; margin:0; padding:0; height:var(--tabs-h);
+  display:flex; gap:0.3rem; overflow-x:auto; scrollbar-width:none;
+}
+.docs-tabs ul::-webkit-scrollbar{display:none;}
+.docs-tabs li{flex:none;}
+.docs-tabs a{
+  display:flex; align-items:center; gap:0.45em; height:100%;
+  padding:0 0.85em; text-decoration:none; white-space:nowrap;
+  color:var(--text-soft); font-size:0.88rem; font-weight:500;
+  border-bottom:2px solid transparent;
+  transition:color .2s ease, border-color .2s ease;
+}
+.docs-tabs a i{font-size:1.05rem;}
+.docs-tabs a .tab-external{font-size:0.8rem; color:var(--text-faint);}
+.docs-tabs a:hover{color:var(--text);}
+.docs-tabs a[aria-current]{color:var(--accent-soft); border-bottom-color:var(--accent); font-weight:700;}
+
+/* ---------- shell ---------- */
+.docs-shell{
+  max-width:1320px; margin:0 auto; padding:0 var(--gutter);
+  display:grid;
+  grid-template-columns:var(--nav-w) minmax(0,1fr) var(--toc-w);
+  gap:clamp(24px,3.5vw,48px);
+}
+.no-page-toc .docs-shell{grid-template-columns:var(--nav-w) minmax(0,1fr);}
+.no-page-toc .page-toc{display:none;}
+
+/* 左: タブ内の章一覧 */
+.docs-nav, .page-toc{
+  position:sticky; top:var(--header-h); align-self:start;
+  max-height:calc(100dvh - var(--header-h)); overflow-y:auto;
+  padding:1.6rem 0 2rem;
+}
+.docs-nav-label{
+  font-size:0.72rem; letter-spacing:0.14em; color:var(--text-faint);
+  font-weight:700; margin:0 0 0.6rem;
+}
+.docs-nav ol, .docs-nav ul{list-style:none; margin:0 0 1.6rem; padding:0;}
+.docs-nav li{margin:0;}
+.docs-nav a{
+  display:flex; align-items:baseline; gap:0.6em;
+  text-decoration:none; color:var(--text-soft); font-size:0.86rem; line-height:1.5;
+  padding:0.5em 0.65em; border-radius:8px; border-left:2px solid transparent;
+  transition:color .2s ease, background-color .2s ease, border-color .2s ease;
+}
+.docs-nav .nav-num{
+  flex:none; min-width:1.4em; text-align:center;
+  font-family:"Audiowide", sans-serif; font-size:0.72rem; color:var(--text-faint);
+}
+.docs-nav i.nav-num{font-size:0.95rem; align-self:center;}
+.docs-nav a:hover{color:var(--text); background:var(--bg-elevated);}
+.docs-nav a[aria-current]{color:var(--accent-soft); border-left-color:var(--accent); background:var(--bg-elevated); font-weight:700;}
+.docs-nav a[aria-current] .nav-num{color:var(--accent);}
+
+/* 右: このページの内容 */
+.page-toc ol{list-style:none; margin:0; padding:0; border-left:1px solid var(--line);}
+.page-toc li{margin:0;}
+.page-toc a{
+  display:block; text-decoration:none; color:var(--text-faint);
+  font-size:0.8rem; line-height:1.5; padding:0.35em 0 0.35em 0.9em;
+  margin-left:-1px; border-left:2px solid transparent;
+  transition:color .2s ease, border-color .2s ease;
+}
+.page-toc .toc-h3 a{padding-left:1.8em;}
+.page-toc a:hover{color:var(--text);}
+.page-toc a.active{color:var(--accent-soft); border-left-color:var(--accent);}
+
+.nav-overlay{display:none; position:fixed; inset:0; z-index:130; background:rgba(8,10,14,0.6);}
+.nav-overlay.open{display:block;}
+
+/* ---------- page head ---------- */
+.docs-main{min-width:0; max-width:780px; padding:clamp(24px,4vw,40px) 0 0;}
+.page-eyebrow{
+  margin:0 0 0.6rem; font-size:0.8rem; font-weight:700; color:var(--accent-soft);
+}
+.page-eyebrow a{text-decoration:none;}
+.page-eyebrow a:hover{text-decoration:underline;}
+.page-eyebrow span{color:var(--text-faint); margin:0 0.2em;}
+.page-title-row{display:flex; align-items:center; gap:0.9rem;}
+.page-icon{
+  flex:none; width:46px; height:46px; border-radius:12px;
+  display:flex; align-items:center; justify-content:center;
+  background:var(--bg-elevated); border:1px solid var(--line); font-size:1.3rem; color:var(--accent-soft);
+}
+.page-head h1{font-size:clamp(1.5rem,3.4vw,2.1rem); line-height:1.35; margin:0; text-wrap:balance;}
+/* LLMに質問する：[Markdownをコピー | ∨] の分割ボタン。∨でほかの方法のメニューを開く */
+.ask{
+  display:flex; flex-wrap:wrap; align-items:center; justify-content:flex-end;
+  gap:0.3rem 0.6rem; margin:1rem 0 0;
+}
+.ask-label{font-size:0.8rem; color:var(--text-faint);}
+.split{position:relative; display:inline-flex;}
+.split-main, .split-toggle{
+  display:inline-flex; align-items:center; gap:0.45em;
+  font-family:inherit; font-size:0.8rem; font-weight:500; line-height:1.4;
+  color:var(--text-soft); cursor:pointer;
+  background:var(--bg-elevated); border:1px solid var(--line);
+  padding:0.45em 0.8em;
+  transition:color .2s ease, border-color .2s ease, background-color .2s ease;
+}
+.split-main{border-radius:8px 0 0 8px;}
+.split-toggle{border-radius:0 8px 8px 0; margin-left:-1px; padding-inline:0.55em;}
+.split-main i, .split-toggle i{font-size:1rem;}
+.split-toggle i{transition:transform .15s ease;}
+.split-toggle[aria-expanded="true"] i{transform:rotate(180deg);}
+.split-main:hover, .split-toggle:hover, .split-toggle[aria-expanded="true"]{
+  color:var(--text); background:var(--bg-elevated-2);
+  border-color:rgba(230,183,61,0.4); position:relative; z-index:1;
+}
+.split-main.is-done{color:var(--accent-soft);}
+.split-menu{
+  position:absolute; top:calc(100% + 6px); right:0; z-index:60;
+  width:max-content; max-width:min(320px, calc(100vw - 32px));
+  padding:0.3rem; background:var(--bg-elevated);
+  border:1px solid var(--line); border-radius:10px;
+  box-shadow:0 14px 32px -12px rgba(0,0,0,0.7);
+}
+.split-menu[hidden]{display:none;}
+.menu-item{
+  display:flex; align-items:flex-start; gap:0.6rem; width:100%;
+  padding:0.6rem 0.75rem; border:none; border-radius:7px; background:none;
+  color:var(--text); font:inherit; text-align:left; text-decoration:none; cursor:pointer;
+}
+.menu-item i{flex:none; font-size:1.05rem; margin-top:0.15em; color:var(--text-faint);}
+.menu-item:hover, .menu-item:focus-visible{background:var(--bg-elevated-2); outline:none;}
+.menu-item:hover i, .menu-item:focus-visible i{color:var(--accent);}
+.menu-title{display:block; font-size:0.86rem; font-weight:700; line-height:1.5;}
+.menu-desc{display:block; font-size:0.76rem; color:var(--text-faint); line-height:1.5;}
+
+/* ---------- prose (Markdownから生成される本文) ---------- */
+.prose{margin-top:clamp(24px,4vw,36px); color:var(--text-soft); font-size:0.96rem;}
+.prose > :first-child{margin-top:0;}
+.prose p{margin:0.9em 0;}
+.prose h2{
+  color:var(--text); font-size:clamp(1.15rem,2.2vw,1.35rem); line-height:1.45;
+  margin:2.4em 0 0.7em; padding-top:1.4em; border-top:1px solid var(--line);
+}
+.prose h3{color:var(--text); font-size:1.05rem; margin:1.9em 0 0.6em;}
+.prose h4{color:var(--accent-soft); font-size:0.95rem; margin:1.5em 0 0.5em;}
+.prose a{color:var(--accent-soft); text-decoration:underline; text-decoration-color:rgba(242,204,107,0.4); text-underline-offset:0.2em;}
+.prose a:hover{text-decoration-color:currentColor;}
+.prose strong{color:var(--text);}
+.prose code{
+  background:rgba(244,239,228,0.08); padding:1px 6px; border-radius:4px; font-size:0.92em;
+}
+.prose ul, .prose ol{padding-left:1.4em; margin:1em 0;}
+.prose li{margin:0.4em 0;}
+.prose li::marker{color:var(--accent);}
+.prose img{display:block; border-radius:10px; border:1px solid var(--line); margin:1.2em 0;}
+.prose hr{border:none; border-top:1px solid var(--line); margin:2em 0;}
+.prose blockquote{
+  margin:1.4em 0; padding:0.9em 1.1em; border-left:3px solid var(--accent);
+  background:var(--bg-elevated); border-radius:0 10px 10px 0; font-size:0.92rem;
+}
+.prose blockquote p{margin:0.5em 0;}
+.prose blockquote > :first-child{margin-top:0;}
+.prose blockquote > :last-child{margin-bottom:0;}
+
+/* 注意書き: > 本文 の次の行に {: .callout .tip} / .warn / .danger */
+.prose blockquote.callout{
+  display:flex; gap:0.8rem; padding:1rem 1.15rem; border-radius:12px;
+  border:1px solid var(--line);
+}
+.prose .callout > i{flex:none; font-size:1.2rem; margin-top:0.15em;}
+.prose .callout > div{min-width:0;}
+.prose .callout.tip{background:var(--tip-bg); border-color:var(--tip-border);}
+.prose .callout.tip > i{color:var(--tip-ink);}
+.prose .callout.warn{background:var(--warn-bg); border-color:var(--warn-border);}
+.prose .callout.warn > i{color:var(--warn-ink);}
+.prose .callout.danger{background:var(--danger-bg); border-color:var(--danger-border);}
+.prose .callout.danger > i{color:var(--danger-ink);}
+/* ページ末尾の注意書き: > **注意書き** の次の行から本文、最後に {: .callout .notice} */
+.prose .callout.notice{
+  margin-top:clamp(40px,6vw,56px); padding:1.2rem 1.3rem;
+  background:var(--warn-bg); border-color:var(--warn-border); font-size:0.84rem;
+}
+.prose .callout.notice > i{color:var(--warn-ink); font-size:1.3rem;}
+.prose .callout.notice strong{display:inline-block; margin-bottom:0.3em; font-size:0.92rem;}
+
+/* 用語集: 定義リスト(用語 / : 説明)。スクリプトが用語と説明の組を<div>で囲む */
+.prose dl{display:grid; grid-template-columns:repeat(2,1fr); gap:0.7rem; margin:1.2em 0;}
+.prose dl > div{padding:0.85rem 1rem; background:var(--bg-elevated); border:1px solid var(--line); border-radius:10px;}
+.prose dt{font-weight:700; color:var(--accent-soft); font-size:0.88rem; margin:0 0 0.3em;}
+.prose dd{margin:0; font-size:0.86rem;}
+.prose dd p{margin:0;}
+
+/* 要点カード: 番号付きリストの次の行に {: .keypoints} */
+.prose ol.keypoints{
+  list-style:none; padding:0; counter-reset:keypoint;
+  display:grid; grid-template-columns:repeat(2,1fr); gap:1rem; margin:1.4em 0;
+}
+.prose ol.keypoints > li{
+  counter-increment:keypoint; margin:0; position:relative;
+  padding:1.1rem 1.1rem 1.1rem 4rem; min-height:4.2rem;
+  background:var(--bg-elevated); border:1px solid var(--line); border-radius:var(--radius);
+  color:var(--text); font-size:0.92rem;
+}
+.prose ol.keypoints > li::before{
+  content:counter(keypoint);
+  position:absolute; left:1.1rem; top:1.1rem;
+  width:2rem; height:2rem; border-radius:50%;
+  background:var(--accent); color:var(--accent-ink); font-weight:900;
+  display:flex; align-items:center; justify-content:center; font-size:0.95rem;
+}
+
+/* 手順: 番号付きリストの次の行に {: .steps} */
+.prose ol.steps{list-style:none; padding:0; margin:1.3em 0 1.3em 0.85rem; counter-reset:step;}
+.prose ol.steps > li{
+  counter-increment:step; position:relative; margin:0;
+  padding:0 0 1.4rem 1.6rem; border-left:2px solid var(--line);
+}
+.prose ol.steps > li:last-child{border-color:transparent; padding-bottom:0;}
+.prose ol.steps > li::before{
+  content:counter(step);
+  position:absolute; left:-0.95rem; top:0;
+  width:1.7rem; height:1.7rem; border-radius:50%;
+  background:var(--bg-elevated-2); border:1px solid var(--accent);
+  color:var(--accent-soft); font-size:0.78rem; font-weight:700;
+  display:flex; align-items:center; justify-content:center;
+}
+.prose ol.steps ul{margin:0.4em 0 0;}
+
+/* チェックリスト: - [ ] 項目 のリストの次の行に {: .checklist} */
+.prose ul.checklist{list-style:none; padding:0; margin:1.3em 0; display:flex; flex-direction:column; gap:0.6rem;}
+.prose ul.checklist > li{margin:0;}
+.prose ul.checklist label{
+  display:flex; gap:0.7em; align-items:flex-start; cursor:pointer;
+  padding:0.8rem 1rem; background:var(--bg-elevated); border:1px solid var(--line); border-radius:10px;
+  color:var(--text); font-size:0.92rem;
+  transition:border-color .2s ease, background-color .2s ease;
+}
+.prose ul.checklist label:hover{border-color:rgba(230,183,61,0.4);}
+.prose ul.checklist input{flex:none; width:1.15em; height:1.15em; margin:0.3em 0 0; accent-color:var(--accent); cursor:pointer;}
+.prose ul.checklist label:has(input:checked){background:var(--bg-elevated-2); color:var(--text-soft);}
+
+/* 表 */
+.prose .table-wrap{overflow-x:auto; margin:1.3em 0; border:1px solid var(--line); border-radius:var(--radius);}
+.prose table{width:100%; border-collapse:collapse; font-size:0.88rem;}
+.prose thead th{
+  text-align:left; padding:0.75em 1em; background:var(--bg-elevated-2);
+  color:var(--accent-soft); font-weight:700; border-bottom:1px solid var(--line); white-space:nowrap;
+}
+.prose tbody td{padding:0.75em 1em; border-bottom:1px solid var(--line); vertical-align:top;}
+/* 1列目は「条件」「形式」のような短い見出し語を想定し、途中で折り返さない */
+.prose tbody td:first-child{white-space:nowrap; color:var(--text);}
+.prose tbody tr:last-child td{border-bottom:none;}
+
+/* 折りたたみ: <details markdown="1"><summary>見出し</summary> 本文 </details> */
+.prose details{
+  border:1px solid var(--line); border-radius:var(--radius); margin:0.8em 0;
+  background:var(--bg-elevated); padding:0 1.15rem;
+}
+.prose details summary{
+  cursor:pointer; padding:1rem 0; font-weight:700; color:var(--text); font-size:0.96rem;
+}
+.prose details[open] summary{border-bottom:1px solid var(--line); margin-bottom:0.4rem;}
+.prose details > :last-child{margin-bottom:1rem;}
+
+/* ---------- 概要ページのカード ---------- */
+.cards-heading{
+  font-size:1.1rem; color:var(--text);
+  margin:2.6em 0 1rem; padding-top:1.4em; border-top:1px solid var(--line);
+}
+.card-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:0.8rem; margin:1.6rem 0 0;}
+.cards-heading + .card-grid{margin-top:0;}
+.nav-card{
+  display:flex; align-items:flex-start; gap:0.9rem;
+  text-decoration:none; color:var(--text);
+  background:var(--bg-elevated); border:1px solid var(--line);
+  border-radius:var(--radius); padding:1rem 1.1rem;
+  transition:border-color .2s ease, background-color .2s ease, transform .2s cubic-bezier(.16,1,.3,1);
+}
+.nav-card:hover{border-color:rgba(230,183,61,0.4); background:var(--bg-elevated-2); transform:translateY(-2px);}
+.nav-card-compact{align-items:center;}
+.card-icon{font-size:1.35rem; color:var(--accent); flex:none;}
+.card-num{flex:none; font-family:"Audiowide", sans-serif; font-size:1rem; color:var(--accent); line-height:1.6;}
+.card-text{display:flex; flex-direction:column; gap:0.2em; min-width:0;}
+.card-text strong{font-size:0.92rem; line-height:1.5; display:inline-flex; align-items:center; gap:0.3em;}
+.card-text strong i{font-size:0.85rem; color:var(--text-faint);}
+.card-text > span{font-size:0.8rem; color:var(--text-faint); line-height:1.55;}
+.card-arrow{margin-left:auto; color:var(--text-faint); flex:none; transition:transform .2s ease, color .2s ease;}
+.nav-card:hover .card-arrow{transform:translateX(3px); color:var(--accent);}
+
+/* ---------- 前後のページ ---------- */
+.pager{display:grid; grid-template-columns:1fr 1fr; gap:0.8rem; margin:clamp(32px,5vw,48px) 0 0;}
+.pager-link{
+  display:flex; flex-direction:column; gap:0.25em;
+  text-decoration:none; padding:0.9rem 1.1rem;
+  border:1px solid var(--line); border-radius:var(--radius);
+  transition:border-color .2s ease, background-color .2s ease;
+}
+.pager-link:hover{border-color:rgba(230,183,61,0.4); background:var(--bg-elevated);}
+.pager-dir{display:inline-flex; align-items:center; gap:0.35em; font-size:0.76rem; color:var(--text-faint);}
+.pager-link strong{font-size:0.92rem; line-height:1.5;}
+.pager-next{grid-column:2; text-align:right; align-items:flex-end;}
+
+/* ---------- footer ---------- */
+.docs-footer{
+  border-top:1px solid var(--line); margin-top:clamp(48px,7vw,72px);
+  padding:1.6rem var(--gutter) 3rem;
+}
+.footer-inner{
+  max-width:1320px; margin:0 auto;
+  display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:0.6rem 1rem;
+  color:var(--text-faint); font-size:0.8rem;
+}
+.footer-inner a{color:var(--text-soft);}
+.footer-inner a:hover{color:var(--accent-soft);}
+
+/* ---------- responsive ---------- */
+@media (max-width: 1180px){
+  .docs-shell, .no-page-toc .docs-shell{grid-template-columns:var(--nav-w) minmax(0,1fr);}
+  .page-toc{display:none;}
+}
+@media (max-width: 900px){
+  .docs-shell, .no-page-toc .docs-shell{grid-template-columns:minmax(0,1fr);}
+  .nav-toggle{display:inline-flex;}
+  .docs-nav{
+    /* グリッドの子のままなので、align-selfを戻さないと高さが中身の分しかなくなる */
+    position:fixed; top:0; bottom:0; left:0; z-index:140; align-self:stretch;
+    width:min(84vw, 320px); max-height:none;
+    background:var(--bg); border-right:1px solid var(--line);
+    padding:1.4rem 1.2rem 2rem;
+    transform:translateX(-100%); visibility:hidden;
+    transition:transform .25s ease, visibility .25s;
+  }
+  .docs-nav.open{transform:translateX(0); visibility:visible;}
+  .docs-main{max-width:none;}
+}
+@media (max-width: 620px){
+  .card-grid, .prose dl, .prose ol.keypoints{grid-template-columns:1fr;}
+  .pager{grid-template-columns:1fr;}
+  .pager-next{grid-column:1;}
+  .home-link span{display:none;}
+}
