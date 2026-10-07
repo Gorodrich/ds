@@ -17,6 +17,8 @@
    高さに書き換える。JS実行前/非対応環境向けの初期値として72pxを設定する。 */
 :root {
   --law-info-h: 72px;
+  /* 条文の字下げの単位: 本文(15px)の全角1字分。見出しの文字サイズが違っても字下げはこの単位で揃える */
+  --law-zw: 15px;
 }
 
 html, body {
@@ -291,7 +293,14 @@ body.law-info-v2 .container {
 .law-title {
   margin: 12px 0 28px;
 }
+/* ルール番号: 本文と同じ文字サイズ、0字 */
+.law-title .law-number {
+  font-size: 15px;
+  margin: 0 0 4px;
+  color: var(--color-neutral-solid-gray-900);
+}
 .law-title h1 {
+  margin-left: calc(var(--law-zw) * 3); /* 題名: 3字下げ */
   font-size: 24px;
   font-weight: bold;
   color: var(--color-neutral-solid-gray-900);
@@ -325,7 +334,7 @@ body.law-info-v2 .container {
   font-weight: bold;
   margin-bottom: 16px;
   margin-top: 16px;
-  margin-left: 45px;
+  margin-left: calc(var(--law-zw) * 3); /* 3字下げ */
   text-align: left;
   color: var(--color-neutral-solid-gray-900);
 }
@@ -340,7 +349,7 @@ body.law-info-v2 .container {
   font-weight: bold;
   margin-bottom: 12px;
   margin-top: 22px;
-  margin-left: 60px;
+  margin-left: calc(var(--law-zw) * 4); /* 4字下げ */
   color: var(--color-neutral-solid-gray-900);
 }
 
@@ -350,7 +359,7 @@ body.law-info-v2 .container {
   font-weight: bold;
   margin-bottom: 10px;
   margin-top: 18px;
-  margin-left: 75px;
+  margin-left: calc(var(--law-zw) * 5); /* 5字下げ */
   color: var(--color-neutral-solid-gray-800);
 }
 
@@ -370,6 +379,20 @@ body.law-info-v2 .container {
   font-size: 15px;
   margin: 0;
 }
+
+/* 条文の各行(rule-scripts.htmlが項・号等を判定してクラスを付ける)。
+   字下げは本文の全角1字(1em = --law-zw)を単位に、1行目をtext-indent、折り返しをpadding-leftで表す */
+.law-line {
+  display: block;
+  font-size: 15px;
+  margin: 0;
+}
+.law-line--plain    { padding-left: 0;   text-indent: 1em; }  /* 前文・附則等の本文: 1字下げ、折り返し0字 */
+.law-line--single   { padding-left: 1em; text-indent: 1em; }  /* 項が1つだけの本文: 2字下げ、折り返し1字 */
+.law-line--kou      { padding-left: 1em; text-indent: -1em; } /* 項(①…): 0字、折り返し1字 */
+.law-line--kou-cont { padding-left: 1em; text-indent: 0; }    /* 項に続く番号なしの段落: 1字 */
+.law-line--gou      { padding-left: 2em; text-indent: -1em; } /* 号(一…): 1字下げ、折り返し2字 */
+.law-line--saibun   { padding-left: 3em; text-indent: -1em; } /* 号の細分(イ…): 2字下げ、折り返し3字 */
 
 /* 非一般条文の表示チェックボックス: 条文番号の直後にインラインで表示 */
 .article label.dads-checkbox.show-non-general {
