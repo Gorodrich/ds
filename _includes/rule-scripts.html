@@ -67,12 +67,11 @@ document.addEventListener('DOMContentLoaded', function() {
   // 字下げ用のクラスを付ける。字下げは本文の全角1字を単位とする(style.cssの.law-line--*)。
   //   項:   ①②…で始まる行          号: 一二…＋全角空白で始まる行
   //   号の細分: イロハ…＋全角空白で始まる行   それ以外は本文
-  // 本文は文脈で書式を変える: 前文・附則・条番号のない条は「1字下げ・折り返し0字」、
+  // 本文は文脈で書式を変える: 前文・附則・見出し(#####)のない本文は「1字下げ・折り返し0字」、
   // 項が1つだけの条は「2字下げ・折り返し1字」、項が2つ以上の条では項の続きとして扱う。
   const KOU_RE = /^[①-⑳㉑-㉟㊱-㊿]/;
   const GOU_RE = /^[一二三四五六七八九十百]+　/;
   const SAIBUN_RE = /^[イロハニホヘトチリヌルヲワカヨタレソツネナラムウヰノオクヤマケフコエテアサキユメミシヱヒモセス]　/;
-  const ARTICLE_NUMBER_RE = /^第[0-9０-９一二三四五六七八九十百]+条/;
   const lineKind = text => KOU_RE.test(text) ? 'kou' : GOU_RE.test(text) ? 'gou' : SAIBUN_RE.test(text) ? 'saibun' : 'text';
   const textOf = html => {
     const tmp = document.createElement('div');
@@ -88,8 +87,10 @@ document.addEventListener('DOMContentLoaded', function() {
     let textKind = 'plain';
     if (block.classList.contains('article')) {
       const h5 = block.querySelector(':scope > h5');
-      const hasArticleNumber = h5 && ARTICLE_NUMBER_RE.test(h5.textContent.trim());
-      if (hasArticleNumber) {
+      // 附則の外にある見出し付きの本文は、見出しの文言(条番号の有無)によらず条として扱う
+      const sectionHeading = block.parentElement.querySelector(':scope > h2');
+      const isSupplementary = sectionHeading && sectionHeading.textContent.trim() === '附則';
+      if (h5 && !isSupplementary) {
         const hasKou = lines.some(ls => ls.some(l => l.kind === 'kou'));
         textKind = hasKou ? 'kou-cont' : 'single';
       }
