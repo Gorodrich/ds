@@ -102,6 +102,7 @@
         </div>
       </div>
       <div class="law-title">
+        {% if page.rule_number and page.rule_number != "" %}<p class="law-number">{{ page.rule_number }}</p>{% endif %}
         <h1>{{ page.rule_name }}</h1>
       </div>
 
