@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', function() {
   // h2で章(前文はpreamble)を、h5で条を区切る。HTML版のページでは何もしない。
   const mainEl = document.querySelector('main.main-content');
   const lawTitleEl = mainEl && mainEl.querySelector(':scope > .law-title');
-  if (lawTitleEl && mainEl.querySelector(':scope > h2, :scope > h5')) {
+  if (lawTitleEl && mainEl.querySelector(':scope > :not(.law-header):not(.law-title):not(section)')) {
     let section = null;
     let article = null;
     let articleCount = 0;
@@ -50,6 +50,13 @@ document.addEventListener('DOMContentLoaded', function() {
         section.appendChild(article);
         article.appendChild(node);
       } else {
+        if (!article && section.className === 'chapter' && tag !== '') {
+          // 条の見出しがない本文(施行令の本則等)も条文として扱う
+          article = document.createElement('article');
+          article.className = 'article';
+          article.id = 'article-' + (++articleCount);
+          section.appendChild(article);
+        }
         (article || section).appendChild(node);
       }
       node = next;
@@ -75,7 +82,9 @@ document.addEventListener('DOMContentLoaded', function() {
     li.appendChild(a);
 
     // 階層構造を作る
-    if (level > lastLevel) {
+    if (level > lastLevel && !parents[parents.length - 1].lastElementChild) {
+      // 章見出しのないルール(条から始まるもの)は、条を目次の最上位に並べる
+    } else if (level > lastLevel) {
       let ul = document.createElement('ul');
       ul.className = 'dads-list';
       ul.dataset.spacing = '8';
@@ -141,7 +150,8 @@ document.addEventListener('DOMContentLoaded', function() {
         el.tagName !== 'H5' && !el.classList.contains('show-non-general'));
       const p = bodies[0];
       const setBodyDisplay = value => bodies.forEach(el => { el.style.display = value; });
-      const isGeneral = h5 && h5.dataset.general === "true";
+      // 見出しのない条文(Markdown版の施行令本則等)は常に表示する
+      const isGeneral = !h5 || h5.dataset.general === "true";
       let showBox = article.querySelector('.show-non-general');
       let input = showBox ? showBox.querySelector('.dads-checkbox__input') : null;
 
