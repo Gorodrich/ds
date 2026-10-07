@@ -6,6 +6,8 @@ order: 5
 title: Discordへの提出方法
 icon: discord-logo
 description: 作成したPNGファイルを、Discord鯖の個人開発領申請用チャンネルに提出します。
+rules:
+  R0801003: [2, 3, 4, 5]
 ---
 
 1. Discord鯖の個人開発領申請用の専用チャンネルを開きます。

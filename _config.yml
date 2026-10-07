@@ -3,6 +3,8 @@ url: "https://www.ds2.uk"
 
 # rule/ 配下のルールページ用コレクション。各ページのfront matterで
 # permalink(公開パス)を指定しているため、collectionレベルのpermalinkは設定しない。
+# rules は docs より前に書くこと。ガイドの関連条文(_includes/docs-related-rules.html)は、
+# 先に変換されたルールのHTMLから条を抜き出すため、この順で変換される必要がある。
 collections:
   rules:
     output: true

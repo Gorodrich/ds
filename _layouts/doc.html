@@ -166,6 +166,12 @@
 {%- endcomment -%}
 {%- assign source_file = page.path | split: "/" | last -%}
 {%- capture page_source %}{% include_relative {{ source_file }} %}{% endcapture -%}
+{%- comment -%}
+  コピーするときに本文の前に付けるAI向けの前置き(_includes/docs-llm-preamble.md)と、
+  本文の後に付ける関連条文の原文(front matter の rules。_includes/docs-related-rules.html)
+{%- endcomment -%}
+{%- capture llm_preamble %}{% include docs-llm-preamble.md %}{% endcapture -%}
+{%- capture related_rules %}{% include docs-related-rules.html refs=page.rules %}{% endcapture -%}
 <script>
   var DOC_META = {
     title: {{ page.title | jsonify }},
@@ -173,6 +179,8 @@
     url: {{ page.url | absolute_url | jsonify }}
   };
   var DOC_SOURCE = {{ page_source | jsonify | replace: "</", "<\/" }};
+  var DOC_PREAMBLE = {{ llm_preamble | strip | jsonify | replace: "</", "<\/" }};
+  var DOC_RULES = {{ related_rules | strip | replace: "</", "<\/" }};
 </script>
 {% include docs-scripts.html %}
 </body>

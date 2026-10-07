@@ -98,7 +98,8 @@ document.addEventListener('DOMContentLoaded', function () {
   var menuItems = Array.prototype.slice.call(menu.querySelectorAll('[role="menuitem"]'));
 
   // 元ファイルからfront matterと見た目用の指定({: .callout .tip} などの行)を除き、
-  // サイト内リンクを完全なURLにして、ページ名と出典を先頭に付ける
+  // サイト内リンクを完全なURLにして、ページ名と出典を先頭に付ける。
+  // 1ページだけ貼られても文脈が伝わるよう、その前にAI向けの前置きを、後ろに関連条文の原文を付ける
   function pageMarkdown() {
     var origin = DOC_META.url.replace(/^(https?:\/\/[^\/]+).*$/, '$1');
     var text = DOC_SOURCE
@@ -106,9 +107,39 @@ document.addEventListener('DOMContentLoaded', function () {
       .replace(/^\{:[^}\n]*\}[ \t]*\r?\n?/gm, '')
       .replace(/\]\(\//g, '](' + origin + '/')
       .trim();
-    return '# ' + DOC_META.title + '\n\n'
+    return DOC_PREAMBLE + '\n\n---\n\n'
+      + '# ' + DOC_META.title + '\n\n'
       + '> 出典: DSクラフト ガイド「' + DOC_META.tab + '」 ' + DOC_META.url + '\n\n'
-      + text + '\n';
+      + text + '\n'
+      + relatedRulesMarkdown();
+  }
+
+  // 関連条文(条ごとのHTML)を、条文ページと同じ1行1項・1行1号のテキストにする
+  function articleText(html) {
+    var box = document.createElement('div');
+    box.innerHTML = html;
+    // 旧ルールの条番号へのリンクは、titleに書いた現在の条番号を括弧で残す
+    box.querySelectorAll('a[title]').forEach(function (a) { a.append('（' + a.title + '）'); });
+    box.querySelectorAll('br').forEach(function (br) { br.replaceWith('\n'); });
+    box.querySelectorAll('p, li, tr').forEach(function (el) { el.append('\n'); });
+    return box.textContent
+      .split('\n')
+      .map(function (line) { return line.trim(); })
+      .filter(Boolean)
+      .join('\n');
+  }
+  function relatedRulesMarkdown() {
+    if (!DOC_RULES.length) return '';
+    var out = '\n---\n\n## 参考条文（原文）\n\n'
+      + 'このページの内容に関係するルールの条文です。上のガイドの説明と食い違う場合は、こちらが優先します。\n';
+    DOC_RULES.forEach(function (rule) {
+      out += '\n### ' + rule.title + (rule.number ? '（' + rule.number + '）' : '') + '\n\n'
+        + '> 出典: ' + rule.url + '\n';
+      rule.articles.forEach(function (a) {
+        out += '\n#### ' + rule.title + ' ' + a.heading + '\n\n' + articleText(a.html) + '\n';
+      });
+    });
+    return out;
   }
   function fallbackCopy(text) {
     var ta = document.createElement('textarea');
