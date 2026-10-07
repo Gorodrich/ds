@@ -15,3 +15,11 @@ exclude:
   - rule/design-system-example-components-html
   - skills-lock.json
   - README.md
+
+# ルール条文をMarkdown(_rules/*.md)で書くための変換設定。
+# hard_wrap: 条文中の改行(項・号の区切り)をそのまま<br>にする。
+# auto_ids: 見出しidは目次スクリプトが見出しの文言から付けるため、kramdownの自動付与を止める
+#           (自動付与だと「第8条（窃盗の禁止）」の括弧が除かれ、既存の条文間リンクが切れる)。
+kramdown:
+  hard_wrap: true
+  auto_ids: false

@@ -16,6 +16,46 @@ document.addEventListener('DOMContentLoaded', function() {
     updateLawInfoHeight();
   }
 
+  // Markdownで書かれた条文(_rules/*.md)はsection・articleの囲みを持たないため、
+  // HTML版と同じ構造(section.preamble/section.chapter > article.article)に組み直す。
+  // h2で章(前文はpreamble)を、h5で条を区切る。HTML版のページでは何もしない。
+  const mainEl = document.querySelector('main.main-content');
+  const lawTitleEl = mainEl && mainEl.querySelector(':scope > .law-title');
+  if (lawTitleEl && mainEl.querySelector(':scope > h2, :scope > h5')) {
+    let section = null;
+    let article = null;
+    let articleCount = 0;
+    let node = lawTitleEl.nextSibling;
+    while (node) {
+      const next = node.nextSibling;
+      const tag = node.nodeType === Node.ELEMENT_NODE ? node.tagName : '';
+      if (!section && tag === '' && !node.textContent.trim()) {
+        // 本文先頭の空白テキストは囲まずに残す
+        node = next;
+        continue;
+      }
+      if (tag === 'H2' || !section) {
+        section = document.createElement('section');
+        section.className = tag === 'H2' && node.textContent.trim() === '前文' ? 'preamble' : 'chapter';
+        mainEl.insertBefore(section, node);
+        article = null;
+      }
+      if (tag === 'H2' || tag === 'H3' || tag === 'H4') {
+        article = null;
+        section.appendChild(node);
+      } else if (tag === 'H5') {
+        article = document.createElement('article');
+        article.className = 'article';
+        article.id = 'article-' + (++articleCount);
+        section.appendChild(article);
+        article.appendChild(node);
+      } else {
+        (article || section).appendChild(node);
+      }
+      node = next;
+    }
+  }
+
   const toc = document.getElementById('toc');
   const headings = document.querySelectorAll('main h2, main h3, main h4, main h5');
   let lastLevel = 2;
@@ -96,12 +136,16 @@ document.addEventListener('DOMContentLoaded', function() {
   function updateArticles() {
     document.querySelectorAll('.article').forEach(article => {
       const h5 = article.querySelector('h5');
-      const p = article.querySelector('p');
+      // 条文本文(h5と表示チェックボックス以外の要素)。Markdown版では空行で段落が分かれうるため複数を扱う
+      const bodies = Array.from(article.children).filter(el =>
+        el.tagName !== 'H5' && !el.classList.contains('show-non-general'));
+      const p = bodies[0];
+      const setBodyDisplay = value => bodies.forEach(el => { el.style.display = value; });
       const isGeneral = h5 && h5.dataset.general === "true";
       let showBox = article.querySelector('.show-non-general');
       let input = showBox ? showBox.querySelector('.dads-checkbox__input') : null;
 
-      if (!isGeneral) {
+      if (!isGeneral && p) {
         if (!showBox) {
           // チェックボックスがなければ生成
           showBox = document.createElement('label');
@@ -121,24 +165,24 @@ document.addEventListener('DOMContentLoaded', function() {
           showBox.appendChild(labelSpan);
           // pの直前に挿入
           p.parentNode.insertBefore(showBox, p);
-          // チェック時にpを表示
+          // チェック時に本文を表示
           input.addEventListener('change', function() {
-            p.style.display = this.checked ? '' : 'none';
+            setBodyDisplay(this.checked ? '' : 'none');
           });
         }
         if (isSwitchOn()) {
-          // スイッチON: チェックボックス表示、pはチェック時のみ
+          // スイッチON: チェックボックス表示、本文はチェック時のみ
           showBox.style.display = '';
-          p.style.display = input.checked ? '' : 'none';
+          setBodyDisplay(input.checked ? '' : 'none');
         } else {
-          // スイッチOFF: チェックボックス非表示、p常に表示
+          // スイッチOFF: チェックボックス非表示、本文常に表示
           showBox.style.display = 'none';
-          p.style.display = '';
+          setBodyDisplay('');
         }
       } else {
-        // 一般参加者向け条文は常にp表示、チェックボックス非表示
+        // 一般参加者向け条文は常に本文表示、チェックボックス非表示
         if (showBox) showBox.style.display = 'none';
-        if (p) p.style.display = '';
+        setBodyDisplay('');
       }
     });
   }
