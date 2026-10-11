@@ -27,7 +27,7 @@
   title: 個人開発領の申請
   icon: map-pin
   url: /docs/territory/
-  description: 個人開発領の申請に使うマップ画像の編集方法と、提出前に必ず守る条件をまとめています。
+  description: 個人開発領の申請に使うマップ画像の編集方法と、提出前に必ず守る条件、運営botでの届け出方をまとめています。
   links:
     - title: 画像タイル配布
       url: /tiles/
@@ -35,6 +35,12 @@
     - title: 提出前セルフチェックツール
       url: /tiles/checker.html
       icon: list-checks
+
+- id: opsbot
+  title: 運営bot
+  icon: robot
+  url: /docs/opsbot/
+  description: Discordの運営bot（OpsBot・表示名「DSクラフト運営bot」）のコマンドの使い方を、参加者向けと運営者向けに分けてまとめています。
 
 - id: rule
   title: ルール
