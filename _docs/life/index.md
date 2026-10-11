@@ -38,6 +38,9 @@ quicknav:
   - title: 運営に質問したい・サーバーに入れない
     url: /docs/life/help/
     icon: lifebuoy
+  - title: Discordの乗っ取りを防ぎたい・乗っ取られた
+    url: /docs/life/security/
+    icon: shield-check
 ---
 
 このガイドは、すでに参加者（または仮参加者）になった人向けに、サーバーで生活するうえで知っておくべきルールをまとめたものです。サーバーの雰囲気と参加までの流れは[新規参加案内](/onboarding.html)で紹介しています。友だちを招待するとき、仮参加から本参加になるまでの流れは[新しい参加者を迎えるとき（招待・仮参加）](/docs/life/joining/)にあります。
