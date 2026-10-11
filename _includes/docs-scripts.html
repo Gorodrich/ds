@@ -1,0 +1,242 @@
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  var body = document.getElementById('docBody');
+
+  // ===== Markdownで書いた部品の見た目を整える =====
+  // 引用 + {: .callout .tip} などで書いた注意書きに、種類に応じたアイコンを付ける
+  var CALLOUT_ICONS = { tip: 'lightbulb', warn: 'warning', danger: 'warning-octagon', notice: 'seal-warning' };
+  body.querySelectorAll('.callout').forEach(function (box) {
+    var kind = Object.keys(CALLOUT_ICONS).find(function (k) { return box.classList.contains(k); }) || 'tip';
+    var inner = document.createElement('div');
+    while (box.firstChild) inner.appendChild(box.firstChild);
+    var icon = document.createElement('i');
+    icon.className = 'ph ph-' + CALLOUT_ICONS[kind];
+    icon.setAttribute('aria-hidden', 'true');
+    box.appendChild(icon);
+    box.appendChild(inner);
+  });
+
+  // 定義リスト(用語集)は、用語と説明の組ごとに<div>で囲んでカード状に並べる
+  body.querySelectorAll('dl').forEach(function (dl) {
+    var item = null;
+    Array.prototype.slice.call(dl.children).forEach(function (el) {
+      if (el.tagName === 'DT' && !(item && item.lastElementChild.tagName === 'DT')) {
+        item = document.createElement('div');
+        dl.insertBefore(item, el);
+      }
+      if (item) item.appendChild(el);
+    });
+  });
+
+  // チェックリスト(- [ ] … の次の行に {: .checklist})は、押せないチェックボックスで出力されるため
+  // 押せるようにし、文言ごと<label>で囲んで文言のクリックでもチェックできるようにする
+  body.querySelectorAll('ul.checklist > li').forEach(function (li) {
+    var input = li.querySelector(':scope > input[type="checkbox"]');
+    if (!input) return;
+    input.disabled = false;
+    // 文言は1つの<span>にまとめる(太字やリンクが混ざっても1つの段落として折り返すように)
+    var text = document.createElement('span');
+    while (input.nextSibling) text.appendChild(input.nextSibling);
+    var label = document.createElement('label');
+    label.appendChild(input);
+    label.appendChild(text);
+    li.appendChild(label);
+  });
+
+  // 表は狭い画面で横スクロールできるように囲む
+  body.querySelectorAll('table').forEach(function (table) {
+    var wrap = document.createElement('div');
+    wrap.className = 'table-wrap';
+    table.parentNode.insertBefore(wrap, table);
+    wrap.appendChild(table);
+  });
+
+  // ===== このページの内容(h2・h3の目次) =====
+  // 見出しidはルールポータルと同じく、見出しの文言そのまま(空白は-)にする
+  var pageToc = document.getElementById('pageToc');
+  var headings = Array.prototype.slice.call(body.querySelectorAll('h2, h3'));
+  headings.forEach(function (h) {
+    if (!h.id) h.id = h.textContent.trim().replace(/\s+/g, '-');
+    var li = document.createElement('li');
+    li.className = 'toc-' + h.tagName.toLowerCase();
+    var a = document.createElement('a');
+    a.href = '#' + h.id;
+    a.textContent = h.textContent;
+    li.appendChild(a);
+    pageToc.appendChild(li);
+  });
+  if (!headings.length) document.body.classList.add('no-page-toc');
+
+  // 表示中の見出しを目次で強調する
+  var tocLinks = Array.prototype.slice.call(pageToc.querySelectorAll('a'));
+  if (tocLinks.length && 'IntersectionObserver' in window) {
+    var spy = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) return;
+        tocLinks.forEach(function (l) { l.classList.remove('active'); });
+        tocLinks[headings.indexOf(entry.target)].classList.add('active');
+      });
+    }, { rootMargin: '-15% 0px -70% 0px', threshold: 0 });
+    headings.forEach(function (h) { spy.observe(h); });
+  }
+
+  // 目次生成後にidが付くため、URLの#付きで開いたときは改めてその見出しへ移動する
+  if (location.hash) {
+    var target = document.getElementById(decodeURIComponent(location.hash.slice(1)));
+    if (target) target.scrollIntoView();
+  }
+
+  // ===== LLMに質問する：[Markdownをコピー | ∨] =====
+  // 主ボタンはコピー。∨で開くメニューに「Markdownをコピー」「Markdownを表示」を並べる。
+  // 「Markdownを表示」はGitHubの生ファイルへのただのリンクなので、ここではメニューを閉じるだけ。
+  var ask = document.querySelector('.ask');
+  var copyBtn = ask.querySelector('.split-main');
+  var copyLabel = copyBtn.querySelector('span');
+  var copyIcon = copyBtn.querySelector('i');
+  var menuToggle = ask.querySelector('.split-toggle');
+  var menu = ask.querySelector('.split-menu');
+  var menuItems = Array.prototype.slice.call(menu.querySelectorAll('[role="menuitem"]'));
+
+  // 元ファイルからfront matterと見た目用の指定({: .callout .tip} などの行)を除き、
+  // サイト内リンクを完全なURLにして、ページ名と出典を先頭に付ける。
+  // 1ページだけ貼られても文脈が伝わるよう、その前にAI向けの前置きを、後ろに関連条文の原文を付ける
+  function pageMarkdown() {
+    var origin = DOC_META.url.replace(/^(https?:\/\/[^\/]+).*$/, '$1');
+    var text = DOC_SOURCE
+      .replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n/, '')
+      .replace(/^\{:[^}\n]*\}[ \t]*\r?\n?/gm, '')
+      .replace(/\]\(\//g, '](' + origin + '/')
+      .trim();
+    return DOC_PREAMBLE + '\n\n---\n\n'
+      + '# ' + DOC_META.title + '\n\n'
+      + '> 出典: DSクラフト ガイド「' + DOC_META.tab + '」 ' + DOC_META.url + '\n\n'
+      + text + '\n'
+      + relatedRulesMarkdown();
+  }
+
+  // 関連条文(条ごとのHTML)を、条文ページと同じ1行1項・1行1号のテキストにする
+  function articleText(html) {
+    var box = document.createElement('div');
+    box.innerHTML = html;
+    // 旧ルールの条番号へのリンクは、titleに書いた現在の条番号を括弧で残す
+    box.querySelectorAll('a[title]').forEach(function (a) { a.append('（' + a.title + '）'); });
+    box.querySelectorAll('br').forEach(function (br) { br.replaceWith('\n'); });
+    box.querySelectorAll('p, li, tr').forEach(function (el) { el.append('\n'); });
+    return box.textContent
+      .split('\n')
+      .map(function (line) { return line.trim(); })
+      .filter(Boolean)
+      .join('\n');
+  }
+  function relatedRulesMarkdown() {
+    if (!DOC_RULES.length) return '';
+    var out = '\n---\n\n## 参考条文（原文）\n\n'
+      + 'このページの内容に関係するルールの条文です。上のガイドの説明と食い違う場合は、こちらが優先します。\n';
+    DOC_RULES.forEach(function (rule) {
+      out += '\n### ' + rule.title + (rule.number ? '（' + rule.number + '）' : '') + '\n\n'
+        + '> 出典: ' + rule.url + '\n';
+      rule.articles.forEach(function (a) {
+        out += '\n#### ' + rule.title + ' ' + a.heading + '\n\n' + articleText(a.html) + '\n';
+      });
+    });
+    return out;
+  }
+  function fallbackCopy(text) {
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.setAttribute('readonly', '');
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    var ok = document.execCommand('copy');
+    document.body.removeChild(ta);
+    return ok ? Promise.resolve() : Promise.reject();
+  }
+  var resetTimer = null;
+  function showCopyState(ok) {
+    copyLabel.textContent = ok ? 'コピーしました' : 'コピーできませんでした';
+    copyIcon.className = 'ph ' + (ok ? 'ph-check' : 'ph-x');
+    copyBtn.classList.toggle('is-done', ok);
+    clearTimeout(resetTimer);
+    resetTimer = setTimeout(function () {
+      copyLabel.textContent = 'Markdownをコピー';
+      copyIcon.className = 'ph ph-copy';
+      copyBtn.classList.remove('is-done');
+    }, 2000);
+  }
+  function copyMarkdown() {
+    var text = pageMarkdown();
+    var copying = navigator.clipboard && window.isSecureContext
+      ? navigator.clipboard.writeText(text).catch(function () { return fallbackCopy(text); })
+      : fallbackCopy(text);
+    copying.then(function () { showCopyState(true); }, function () { showCopyState(false); });
+  }
+
+  function openMenu(focusFirst) {
+    menu.hidden = false;
+    menuToggle.setAttribute('aria-expanded', 'true');
+    if (focusFirst) menuItems[0].focus();
+  }
+  function closeMenu(returnFocus) {
+    if (menu.hidden) return;
+    menu.hidden = true;
+    menuToggle.setAttribute('aria-expanded', 'false');
+    if (returnFocus) menuToggle.focus();
+  }
+
+  ask.addEventListener('click', function (e) {
+    if (e.target.closest('a.menu-item')) {
+      closeMenu(false);
+      return;
+    }
+    var btn = e.target.closest('[data-md="copy"]');
+    if (!btn) return;
+    closeMenu(btn.closest('.split-menu') !== null);
+    copyMarkdown();
+  });
+  menuToggle.addEventListener('click', function () {
+    if (menu.hidden) openMenu(false);
+    else closeMenu(false);
+  });
+  menuToggle.addEventListener('keydown', function (e) {
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      openMenu(true);
+    }
+  });
+  menu.addEventListener('keydown', function (e) {
+    var i = menuItems.indexOf(document.activeElement);
+    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+      e.preventDefault();
+      var step = e.key === 'ArrowDown' ? 1 : -1;
+      menuItems[(i + step + menuItems.length) % menuItems.length].focus();
+    } else if (e.key === 'Escape') {
+      closeMenu(true);
+    } else if (e.key === 'Tab') {
+      closeMenu(false);
+    }
+  });
+  document.addEventListener('click', function (e) {
+    if (!ask.contains(e.target)) closeMenu(false);
+  });
+
+  // ===== 狭い画面での章一覧ドロワー =====
+  var nav = document.getElementById('docsNav');
+  var navToggle = document.getElementById('navToggle');
+  var navOverlay = document.getElementById('navOverlay');
+  function setNavOpen(open) {
+    nav.classList.toggle('open', open);
+    navOverlay.classList.toggle('open', open);
+    navToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+  navToggle.addEventListener('click', function () { setNavOpen(!nav.classList.contains('open')); });
+  navOverlay.addEventListener('click', function () { setNavOpen(false); });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && nav.classList.contains('open')) {
+      setNavOpen(false);
+      navToggle.focus();
+    }
+  });
+});
+</script>

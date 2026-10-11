@@ -1,0 +1,6 @@
+# jekyll serve / build の出力
+_site/
+.jekyll-cache/
+.jekyll-metadata
+
+guide-rewrite.md

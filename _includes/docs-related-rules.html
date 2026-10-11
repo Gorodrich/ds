@@ -1,0 +1,69 @@
+{%- comment -%}
+  ガイドページの front matter の rules に書いた関連条文を、_rules/ のルールから条ごとに抜き出し、
+  「Markdownをコピー」で末尾に付けるためのJSON配列として出力する。
+
+    rules:
+      R0701003: [7, 8, 9]          # 条番号(数字)は「第N条」として探す
+      R0701001: ["第2条の2"]        # 枝番号・附則などは見出しの番号部分をそのまま書く
+      R0410001: all                 # ルールのすべての条
+
+  条は条文ページと同じく「#####」の見出し(HTMLではh5)の単位で、見出しの「（」より前か見出し全体が
+  一致したものを取り出す。各条の本文はHTMLのまま渡し、コピー時にスクリプトでテキストにする。
+  ルールのコレクション(rules)はガイド(docs)より先に変換されるため(_config.yml の collections の順)、
+  ここで読む rule.content は変換後のHTMLになっている。
+
+  書いたルールや条が見つからないときは、存在しないファイルをincludeしてビルドを止める
+  (エラーメッセージのファイル名に、見つからなかったルール・条が出る)。
+{%- endcomment -%}
+[
+{%- assign first_rule = true -%}
+{%- for ref in include.refs -%}
+  {%- assign rule_id = ref[0] -%}
+  {%- assign wanted = ref[1] -%}
+  {%- assign rule = site.rules | where: "slug", rule_id | first -%}
+  {%- unless rule -%}{%- capture missing %}ERROR-docs-rules-unknown-rule-{{ rule_id }}{% endcapture -%}{%- include {{ missing }} -%}{%- endunless -%}
+  {%- unless rule.content contains "<h5" -%}{%- include ERROR-docs-rules-rule-not-rendered-yet -%}{%- endunless -%}
+
+  {%- comment -%}探す見出しの番号部分の一覧(数字は「第N条」にする){%- endcomment -%}
+  {%- assign labels = "" | split: "" -%}
+  {%- unless wanted == "all" -%}
+    {%- for w in wanted -%}
+      {%- assign w_str = w | append: "" -%}
+      {%- assign w_num = w_str | plus: 0 | append: "" -%}
+      {%- if w_num == w_str -%}{%- assign w_str = "第" | append: w_str | append: "条" -%}{%- endif -%}
+      {%- assign labels = labels | push: w_str -%}
+    {%- endfor -%}
+  {%- endunless -%}
+
+  {%- unless first_rule %},{% endunless -%}
+  {%- assign first_rule = false -%}
+  {"title":{{ rule.rule_name | default: rule.title | jsonify }},"number":{{ rule.rule_number | jsonify }},"url":{{ rule.url | absolute_url | jsonify }},"articles":[
+  {%- assign found = "" | split: "" -%}
+  {%- assign first_article = true -%}
+  {%- assign blocks = rule.content | split: "<h5" -%}
+  {%- for b in blocks offset: 1 -%}
+    {%- assign head_and_body = b | split: "</h5>" -%}
+    {%- assign heading = head_and_body[0] | split: ">" | last | strip -%}
+    {%- assign label = heading | split: "（" | first | strip -%}
+    {%- assign hit = false -%}
+    {%- if wanted == "all" -%}
+      {%- assign hit = true -%}
+    {%- elsif labels contains label -%}
+      {%- assign hit = true -%}{%- assign found = found | push: label -%}
+    {%- elsif labels contains heading -%}
+      {%- assign hit = true -%}{%- assign found = found | push: heading -%}
+    {%- endif -%}
+    {%- if hit -%}
+      {%- comment -%}次の条の前に章・節などの見出しがあれば、そこまでで切る{%- endcomment -%}
+      {%- assign body = head_and_body[1] | split: "<h2" | first | split: "<h3" | first | split: "<h4" | first | strip -%}
+      {%- unless first_article %},{% endunless -%}
+      {%- assign first_article = false -%}
+      {"heading":{{ heading | jsonify }},"html":{{ body | jsonify }}}
+    {%- endif -%}
+  {%- endfor -%}
+  ]}
+  {%- for l in labels -%}
+    {%- unless found contains l -%}{%- capture missing %}ERROR-docs-rules-unknown-article-{{ rule_id }}-{{ l }}{% endcapture -%}{%- include {{ missing }} -%}{%- endunless -%}
+  {%- endfor -%}
+{%- endfor -%}
+]
