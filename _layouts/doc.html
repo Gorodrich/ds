@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+{%- assign tab = site.data.docs_tabs | where: "id", page.tab | first -%}
+{%- assign tab_pages = site.docs | where: "tab", page.tab | sort: "order" -%}
+{%- comment -%}章ページ(order 1以上)には章番号を付ける。order 0 はタブの概要ページ{%- endcomment -%}
+{%- assign is_chapter = false -%}
+{%- if page.order > 0 -%}{%- assign is_chapter = true -%}{%- endif -%}
+<meta charset="UTF-8">
+<title>{{ page.title }}{% if page.url != tab.url %} | {{ tab.title }}{% endif %} | DSクラフト ガイド</title>
+<link rel="icon" href="/favicon.ico">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon-180x180.png">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="{{ page.description }}">
+<meta property="og:site_name" content="DSクラフト ガイド">
+<meta property="og:url" content="{{ page.url | absolute_url }}">
+<meta property="og:type" content="article">
+<meta property="og:title" content="{{ page.title }}">
+<meta property="og:description" content="{{ page.description }}">
+<meta property="og:image" content="https://www.ds2.uk/ds_logo_3.png">
+<meta property="og:locale" content="ja_JP">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Audiowide&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/@phosphor-icons/web" defer></script>
+<link rel="stylesheet" href="/docs/assets/docs.css">
+</head>
+<body>
+<a class="skip-link" href="#main-content">本文へスキップ</a>
+
+<header class="docs-header">
+  <div class="docs-header-row">
+    <button class="nav-toggle" id="navToggle" type="button" aria-expanded="false" aria-controls="docsNav">
+      <i class="ph ph-list" aria-hidden="true"></i><span class="visually-hidden">章の一覧</span>
+    </button>
+    <a class="docs-brand" href="/docs/">
+      <img src="/ds_logo_s.png" alt="" width="28" height="28">
+      <span>DSクラフト <strong>ガイド</strong></span>
+    </a>
+    <a class="home-link" href="/"><i class="ph ph-house" aria-hidden="true"></i><span>ホームへ</span></a>
+  </div>
+  <nav class="docs-tabs" aria-label="ガイドのジャンル">
+    <ul>
+      {%- for t in site.data.docs_tabs %}
+      <li><a href="{{ t.url }}"{% if t.id == page.tab %} aria-current="true"{% endif %}><i class="ph ph-{{ t.icon }}" aria-hidden="true"></i>{{ t.title }}{% if t.external %}<i class="ph ph-arrow-up-right tab-external" aria-hidden="true"></i>{% endif %}</a></li>
+      {%- endfor %}
+    </ul>
+  </nav>
+</header>
+
+<div class="nav-overlay" id="navOverlay"></div>
+
+<div class="docs-shell">
+  <aside class="docs-nav" id="docsNav" aria-label="{{ tab.title }}の章">
+    <p class="docs-nav-label">{{ tab.title }}</p>
+    <ol>
+      {%- for p in tab_pages %}
+      <li><a href="{{ p.url }}"{% if p.url == page.url %} aria-current="page"{% endif %}>{% if p.order > 0 %}<span class="nav-num">{{ p.order }}</span>{% else %}<i class="ph ph-house-line nav-num" aria-hidden="true"></i>{% endif %}<span>{{ p.title }}</span></a></li>
+      {%- endfor %}
+    </ol>
+    {%- if tab.links %}
+    <p class="docs-nav-label">関連ページ</p>
+    <ul>
+      {%- for l in tab.links %}
+      <li><a href="{{ l.url }}"><i class="ph ph-{{ l.icon }} nav-num" aria-hidden="true"></i><span>{{ l.title }}</span></a></li>
+      {%- endfor %}
+    </ul>
+    {%- endif %}
+  </aside>
+
+  <main id="main-content" class="docs-main">
+    <div class="page-head">
+      {%- if is_chapter %}
+      <p class="page-eyebrow"><a href="{{ tab.url }}">{{ tab.title }}</a> <span>›</span> 第{{ page.order }}章</p>
+      {%- endif %}
+      <div class="page-title-row">
+        {%- if page.icon %}<span class="page-icon"><i class="ph ph-{{ page.icon }}" aria-hidden="true"></i></span>{% endif %}
+        <h1>{{ page.title }}</h1>
+      </div>
+      <div class="ask">
+        <span class="ask-label" id="askLabel">LLMに質問する：</span>
+        <div class="split" role="group" aria-labelledby="askLabel">
+          <button class="split-main" type="button" data-md="copy"><i class="ph ph-copy" aria-hidden="true"></i><span aria-live="polite">Markdownをコピー</span></button>
+          <button class="split-toggle" type="button" aria-haspopup="menu" aria-expanded="false" aria-controls="askMenu" aria-label="ほかの方法を選ぶ"><i class="ph ph-caret-down" aria-hidden="true"></i></button>
+          <div class="split-menu" id="askMenu" role="menu" hidden>
+            <button class="menu-item" type="button" role="menuitem" data-md="copy"><i class="ph ph-copy" aria-hidden="true"></i><span><span class="menu-title">Markdownをコピー</span><span class="menu-desc">AIのチャット欄に貼り付けて質問します</span></span></button>
+            <a class="menu-item" role="menuitem" href="{{ site.docs_source_base }}{{ page.path }}" target="_blank" rel="noopener"><i class="ph ph-arrow-square-out" aria-hidden="true"></i><span><span class="menu-title">Markdownを表示</span><span class="menu-desc">新しいタブで開きます。URLをAIに渡すこともできます</span></span></a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <article class="prose" id="docBody">
+      {{ content }}
+    </article>
+
+    {%- if page.index_cards == "tabs" %}
+    <h2 class="cards-heading">ガイドの一覧</h2>
+    <div class="card-grid">
+      {%- for t in site.data.docs_tabs %}{% if t.id != page.tab %}
+      <a class="nav-card" href="{{ t.url }}">
+        <i class="ph ph-{{ t.icon }} card-icon" aria-hidden="true"></i>
+        <span class="card-text"><strong>{{ t.title }}{% if t.external %}<i class="ph ph-arrow-up-right" aria-hidden="true"></i>{% endif %}</strong><span>{{ t.description }}</span></span>
+      </a>
+      {%- endif %}{% endfor %}
+    </div>
+    {%- elsif page.index_cards == "chapters" %}
+    {%- if page.quicknav %}
+    <h2 class="cards-heading">知りたいことから読む</h2>
+    <div class="card-grid">
+      {%- for q in page.quicknav %}
+      <a class="nav-card nav-card-compact" href="{{ q.url }}"><i class="ph ph-{{ q.icon }} card-icon" aria-hidden="true"></i><span class="card-text"><strong>{{ q.title }}</strong></span><i class="ph ph-arrow-right card-arrow" aria-hidden="true"></i></a>
+      {%- endfor %}
+    </div>
+    {%- endif %}
+    <h2 class="cards-heading">章の一覧</h2>
+    <div class="card-grid">
+      {%- for p in tab_pages %}{% if p.order > 0 %}
+      <a class="nav-card" href="{{ p.url }}">
+        <span class="card-num">{{ p.order | prepend: "0" | slice: -2, 2 }}</span>
+        <span class="card-text"><strong>{{ p.title }}</strong><span>{{ p.description }}</span></span>
+      </a>
+      {%- endif %}{% endfor %}
+    </div>
+    {%- endif %}
+
+    {%- comment -%}前後のページ(同じタブ内のorder順){%- endcomment -%}
+    {%- assign prev_page = nil -%}
+    {%- assign next_page = nil -%}
+    {%- for p in tab_pages -%}
+      {%- if p.url == page.url -%}
+        {%- assign i_prev = forloop.index0 | minus: 1 -%}
+        {%- if i_prev >= 0 -%}{%- assign prev_page = tab_pages[i_prev] -%}{%- endif -%}
+        {%- assign next_page = tab_pages[forloop.index] -%}
+      {%- endif -%}
+    {%- endfor %}
+    {%- if prev_page or next_page %}
+    <nav class="pager" aria-label="前後のページ">
+      {%- if prev_page %}
+      <a class="pager-link pager-prev" href="{{ prev_page.url }}"><span class="pager-dir"><i class="ph ph-arrow-left" aria-hidden="true"></i>前へ</span><strong>{{ prev_page.title }}</strong></a>
+      {%- endif %}
+      {%- if next_page %}
+      <a class="pager-link pager-next" href="{{ next_page.url }}"><span class="pager-dir">次へ<i class="ph ph-arrow-right" aria-hidden="true"></i></span><strong>{{ next_page.title }}</strong></a>
+      {%- endif %}
+    </nav>
+    {%- endif %}
+  </main>
+
+  <aside class="page-toc" aria-label="このページの内容">
+    <p class="docs-nav-label">このページの内容</p>
+    <ol id="pageToc"></ol>
+  </aside>
+</div>
+
+<footer class="docs-footer">
+  <div class="footer-inner">
+    <span>© 2026 3DS半分こするくらい仲良しクラフト中央委員会</span>
+    <span>文章は <a href="https://creativecommons.org/licenses/by/4.0/deed.ja">CC BY 4.0</a> で利用できます</span>
+  </div>
+</footer>
+
+{%- comment -%}
+  「Markdownをコピー」用に、このページの元のMarkdownファイルをそのまま埋め込む。
+  include_relative は元ファイルをLiquidとして読み込むため、ガイド本文にはLiquidのタグを書かないこと
+  (書くとコピー内容が展開後のHTMLになる)。front matterはスクリプト側で取り除く。
+{%- endcomment -%}
+{%- assign source_file = page.path | split: "/" | last -%}
+{%- capture page_source %}{% include_relative {{ source_file }} %}{% endcapture -%}
+{%- comment -%}
+  コピーするときに本文の前に付けるAI向けの前置き(_includes/docs-llm-preamble.md)と、
+  本文の後に付ける関連条文の原文(front matter の rules。_includes/docs-related-rules.html)
+{%- endcomment -%}
+{%- capture llm_preamble %}{% include docs-llm-preamble.md %}{% endcapture -%}
+{%- capture related_rules %}{% include docs-related-rules.html refs=page.rules %}{% endcapture -%}
+<script>
+  var DOC_META = {
+    title: {{ page.title | jsonify }},
+    tab: {{ tab.title | jsonify }},
+    url: {{ page.url | absolute_url | jsonify }}
+  };
+  var DOC_SOURCE = {{ page_source | jsonify | replace: "</", "<\/" }};
+  var DOC_PREAMBLE = {{ llm_preamble | strip | jsonify | replace: "</", "<\/" }};
+  var DOC_RULES = {{ related_rules | strip | replace: "</", "<\/" }};
+</script>
+{% include docs-scripts.html %}
+</body>
+</html>

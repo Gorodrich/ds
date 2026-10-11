@@ -1,0 +1,50 @@
+# ガイド(/docs/)のタブ定義。上から順にタブとして並ぶ。
+#   id:          _docs/<id>/ のディレクトリ名、および各ページのfront matterの tab と対応させる
+#   title:       タブの表示名
+#   icon:        Phosphor Iconsのアイコン名(ph-を除いた部分)
+#   url:         タブを押したときに開くページ(タブの概要ページ)
+#   external:    true のときはガイドの外のページへ移動するだけのタブ(サイドバーを持たない)
+#   description: /docs/ の入口に並べるタブ紹介文
+#   links:       サイドバーの章一覧の下に並べる関連リンク(任意)
+
+- id: start
+  title: はじめに
+  icon: flag
+  url: /docs/
+  description: ガイドの使い方と、参加前に見ておきたいページの案内です。
+  links:
+    - title: 新規参加案内(スライド)
+      url: /onboarding.html
+      icon: presentation-chart
+
+- id: life
+  title: 生活ガイド
+  icon: compass
+  url: /docs/life/
+  description: サーバーで生活するうえで知っておくべきルールを、章ごとに解説します。
+
+- id: territory
+  title: 個人開発領の申請
+  icon: map-pin
+  url: /docs/territory/
+  description: 個人開発領の申請に使うマップ画像の編集方法と、提出前に必ず守る条件、運営botでの届け出方をまとめています。
+  links:
+    - title: 画像タイル配布
+      url: /tiles/
+      icon: grid-four
+    - title: 提出前セルフチェックツール
+      url: /tiles/checker.html
+      icon: list-checks
+
+- id: opsbot
+  title: 運営bot
+  icon: robot
+  url: /docs/opsbot/
+  description: Discordの運営bot（OpsBot・表示名「DSクラフト運営bot」）のコマンドの使い方を、参加者向けと運営者向けに分けてまとめています。
+
+- id: rule
+  title: ルール
+  icon: scroll
+  url: /rule/
+  external: true
+  description: 施行中のルール・ルール施行令・国内法の条文を確認できるルールポータルです。

@@ -3,9 +3,18 @@ url: "https://www.ds2.uk"
 
 # rule/ 配下のルールページ用コレクション。各ページのfront matterで
 # permalink(公開パス)を指定しているため、collectionレベルのpermalinkは設定しない。
+# rules は docs より前に書くこと。ガイドの関連条文(_includes/docs-related-rules.html)は、
+# 先に変換されたルールのHTMLから条を抜き出すため、この順で変換される必要がある。
 collections:
   rules:
     output: true
+  # docs/ 配下のガイドページ用コレクション(_docs/<タブ>/*.md、1ファイル ＝ 1章)。
+  # 公開パスは各ページのfront matterのpermalinkで /docs/<タブ>/<スラッグ>/ の形に指定する。
+  docs:
+    output: true
+
+# ガイドページの「Markdownを表示」で開く、元のMarkdownファイルの置き場所(GitHubの生ファイル)
+docs_source_base: https://raw.githubusercontent.com/gorodrich/ds/main/
 
 # ベンダー同梱の別リポジトリ(design-system-example-components-html)は
 # ファイル数が非常に多くビルド対象に含めると重いため除外する。
