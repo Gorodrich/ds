@@ -221,6 +221,23 @@ document.addEventListener('DOMContentLoaded', function () {
     if (!ask.contains(e.target)) closeMenu(false);
   });
 
+  // ===== 一番上に戻るボタン =====
+  // ある程度スクロールしたら右下に表示する。スクロールは目次の移動と同じく
+  // html の scroll-behavior:smooth に任せる(動きを減らす設定のときは即座に移動する)
+  var toTop = document.getElementById('toTop');
+  function updateToTop() {
+    toTop.classList.toggle('visible', window.scrollY > 400);
+  }
+  window.addEventListener('scroll', updateToTop, { passive: true });
+  updateToTop();
+  toTop.addEventListener('click', function () {
+    window.scrollTo(0, 0);
+    // キーボード操作でもページの先頭から読み直せるよう、フォーカスを本文の先頭へ移す
+    var main = document.getElementById('main-content');
+    main.setAttribute('tabindex', '-1');
+    main.focus({ preventScroll: true });
+  });
+
   // ===== 狭い画面での章一覧ドロワー =====
   var nav = document.getElementById('docsNav');
   var navToggle = document.getElementById('navToggle');

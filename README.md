@@ -69,7 +69,7 @@ Minecraft（Java版）のマルチプレイコミュニティ「3DS半分こす�
 ├── background.jpg, ds_logo_*.png, apple-touch-icon-180x180.png, favicon.ico
 │                             # サイト背景画像、ブランドロゴ、アイコンアセット
 ├── CNAME                     # 独自ドメイン設定（www.ds2.uk）
-└── LICENSE · LICENSE-CONTENT # ライセンス文書（コード：MIT / 文章：CC BY 4.0）
+└── LICENSE · LICENSE-CONTENT # ライセンス文書（コード：MIT / 文章：CC BY-SA 4.0）
 ```
 
 ## 開発
@@ -228,7 +228,7 @@ rules:                            # 関連条文（「Markdownをコピー」で
 
 ## ライセンス
 
-本プロジェクトは、対象ごとに **[MIT License](LICENSE)** と **[CC BY 4.0](LICENSE-CONTENT)** を使い分けて公開しています（利用者がいずれかを選択する方式ではありません）。
+本プロジェクトは、対象ごとに **[MIT License](LICENSE)** と **[CC BY-SA 4.0](LICENSE-CONTENT)** を使い分けて公開しています（利用者がいずれかを選択する方式ではありません）。
 
 ```
 Copyright (C) 2025-2026 3DS半分こするくらい仲良しクラフト中央委員会
@@ -239,13 +239,14 @@ Copyright (C) 2025-2026 3DS半分こするくらい仲良しクラフト中央�
 | 対象 | ライセンス | 該当ファイル |
 |---|---|---|
 | ソースコード（HTML・CSS・JavaScript・Jekyll設定・レイアウト） | MIT License | [`LICENSE`](LICENSE) |
-| 文章（ルール条文・ガイド等、ページに表示される文章全般） | CC BY 4.0 | [`LICENSE-CONTENT`](LICENSE-CONTENT) |
+| 文章（ルール条文・ガイド等、ページに表示される文章全般） | CC BY-SA 4.0 | [`LICENSE-CONTENT`](LICENSE-CONTENT) |
 | ブランドロゴ・各種アイコン（`ds_logo_*.png`, `favicon.ico` 等） | 著作権保持（All Rights Reserved） | — |
 | ゲーム画面・マップ画像（`background.jpg`, `tiles/assets/`） | 著作権保持（All Rights Reserved） | — |
 | 第三者由来アセット（デジタル庁デザインシステム、フォント、アイコン） | 各提供元のライセンスを継承 | [`rule/assets/dads/LICENSE`](rule/assets/dads/LICENSE) 等 |
 
-- **混在時の適用**：1つの HTML ファイルにコードと文章が混在する場合は、HTML マークアップ等の構造に MIT License、表示される文章テキストに CC BY 4.0 を適用します。
-- **文章の利用と出典表記**：文章を利用する場合は、出典（例：`出典:DSクラフト ルールポータル https://www.ds2.uk/rule/ CC BY 4.0`）を表示してください。改変した場合はその旨を明記し、コミュニティの公式ルールであるかのように誤認させないでください。
+- **混在時の適用**：1つの HTML ファイルにコードと文章が混在する場合は、HTML マークアップ等の構造に MIT License、表示される文章テキストに CC BY-SA 4.0 を適用します。
+- **文章の利用と出典表記**：文章を利用する場合は、出典（例：`出典:DSクラフト ルールポータル https://www.ds2.uk/rule/ CC BY-SA 4.0`）を表示してください。改変した場合はその旨を明記し、コミュニティの公式ルールであるかのように誤認させないでください。改変した文章を公開する場合は、同じ CC BY-SA 4.0 で公開してください。
+- **ライセンスの変更**：文章のライセンスは、2026年10月11日に CC BY 4.0 から CC BY-SA 4.0 に変更しました。それより前に公開した版は、引き続き CC BY 4.0 で利用できます。
 - **画像アセット等の除外**：`background.jpg` は Mojang の著作物およびメンバー各自の建築作品を含み、`tiles/assets/` は申請用に配布しているサーバーの地図データであるため、オープンソースライセンスの適用対象外です（ただし、`tiles/assets/` の画像を個人開発領の申請に使うことは従来どおり可能です）。
 - **第三者ライセンス**：`rule/assets/dads/` はデジタル庁による MIT ライセンス（[`rule/assets/dads/LICENSE`](rule/assets/dads/LICENSE)）です。外部 CDN から読み込んでいる Phosphor Icons は MIT License、Google Fonts は SIL Open Font License 1.1 です。
 
