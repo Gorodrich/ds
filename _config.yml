@@ -14,7 +14,7 @@ collections:
     output: true
 
 # ガイドページの「Markdownを表示」で開く、元のMarkdownファイルの置き場所(GitHubの生ファイル)
-docs_source_base: https://raw.githubusercontent.com/gorodrich/ds/main/
+docs_source_base: https://raw.githubusercontent.com/ds-craft/portal/main/
 
 # ベンダー同梱の別リポジトリ(design-system-example-components-html)は
 # ファイル数が非常に多くビルド対象に含めると重いため除外する。
