@@ -44,11 +44,28 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
   // 表は狭い画面で横スクロールできるように囲む
+  // あわせて、中身がどれも短い列(全角12字以下)は折り返さないようにする。長い列は普通に折り返させ、
+  // 列の幅を中身の量に応じてブラウザーに配分させる
+  var SHORT_CELL = 12;
+  function textWidth(s) {
+    // 半角は全角の半分として数える
+    var w = 0;
+    for (var i = 0; i < s.length; i++) w += s.charCodeAt(i) < 0x80 ? 0.5 : 1;
+    return w;
+  }
   body.querySelectorAll('table').forEach(function (table) {
     var wrap = document.createElement('div');
     wrap.className = 'table-wrap';
     table.parentNode.insertBefore(wrap, table);
     wrap.appendChild(table);
+
+    var rows = Array.prototype.slice.call(table.querySelectorAll('tbody tr'));
+    var cols = rows.reduce(function (n, tr) { return Math.max(n, tr.cells.length); }, 0);
+    for (var c = 0; c < cols; c++) {
+      var cells = rows.map(function (tr) { return tr.cells[c]; }).filter(Boolean);
+      var isShort = cells.every(function (td) { return textWidth(td.textContent.trim()) <= SHORT_CELL; });
+      if (isShort) cells.forEach(function (td) { td.classList.add('nowrap'); });
+    }
   });
 
   // ===== このページの内容(h2・h3の目次) =====

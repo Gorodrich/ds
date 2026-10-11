@@ -341,9 +341,16 @@ a:focus-visible, button:focus-visible, summary:focus-visible{
   text-align:left; padding:0.75em 1em; background:var(--bg-elevated-2);
   color:var(--accent-soft); font-weight:700; border-bottom:1px solid var(--line); white-space:nowrap;
 }
-.prose tbody td{padding:0.75em 1em; border-bottom:1px solid var(--line); vertical-align:top;}
-/* 1列目は「条件」「形式」のような短い見出し語を想定し、途中で折り返さない */
-.prose tbody td:first-child{white-space:nowrap; color:var(--text);}
+/* 長い列が残りの幅を取りすぎて、ほかの列が数文字幅の縦長にならないように最小幅を付ける。
+   日本語は対応ブラウザーでは文節の切れ目で折り返す */
+.prose tbody td{
+  padding:0.75em 1em; border-bottom:1px solid var(--line); vertical-align:top;
+  min-width:6em; word-break:auto-phrase;
+}
+.prose tbody td:first-child{color:var(--text);}
+/* 中身がどれも短い列(docs-scripts.htmlで判定)は、最小幅を付けずに折り返さない */
+.prose tbody td.nowrap{white-space:nowrap; min-width:0;}
+.prose td code{white-space:nowrap;}
 .prose tbody tr:last-child td{border-bottom:none;}
 
 /* 折りたたみ: <details markdown="1"><summary>見出し</summary> 本文 </details> */
